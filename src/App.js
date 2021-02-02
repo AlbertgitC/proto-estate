@@ -1,21 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
-import { API } from 'aws-amplify';
+import { API, Auth } from 'aws-amplify';
 import * as queries from './graphql/queries';
 import { SignupForm, ConfirmSignUp } from './components/sign-up';
 import SignIn from './components/sign-in';
 
 function App() {
 	const [listings, setListings] = useState([]);
+	const [user, setUser] = useState("Not Sign In");
 	
 	useEffect(() => {
 		getListings().then((res) => {
-			console.log(res);
 			setListings(res.data.listListings.items);
 		}).catch((error) => {
 			console.log(error);
 		});
+
+		Auth.currentAuthenticatedUser()
+			.then(res => {
+				setUser(res);
+			})
+			.catch(err => {
+				console.log("error finding user:", err);
+			});
 	}, []);
 
 	async function getListings() {
@@ -40,6 +48,7 @@ function App() {
 				)}
 			</ul>
 			<div>
+				<p>{user}</p>
 				<SignIn />
 				<SignupForm />
 				<ConfirmSignUp />

@@ -20,30 +20,7 @@ function SignIn() {
     // }, [prop]);
 
     async function signIn() {
-        // e.preventDefault();
-        // if (email === "" || password === "") {
-        //     updateState({ ...state, err: "info missing" });
-        //     return;
-        // };
-
-        // updateState({ ...state, err: "loading..." });
-
-        try {
-            return await Auth.signIn(email, password)
-            // .then(
-            //     res => {
-            //         dispatch({
-            //             type: 'SIGN_IN',
-            //             payload: res
-            //         });
-            //         history.push("/user-panel");
-            //     }
-            // );
-        } catch (error) {
-            return error;
-            // console.log('error signing in', error);
-            // updateState({ ...state, err: error.message });
-        }
+        return await Auth.signIn(email, password);
     }
 
     // function resendConfirm() {
@@ -75,8 +52,8 @@ function SignIn() {
             .then(res => {
                 console.log(res);
                 updateState({ ...state, err: "" });
-            })
-            .catch(error => {
+            },
+            error => {
                 console.log('error signing in', error);
                 updateState({ ...state, err: error.message });
             });

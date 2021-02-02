@@ -19,56 +19,47 @@ export function SignupForm() {
     const [state, updateState] = useState(initialState);
     const { email, password, name, phone_number, err } = state;
 
-    // const [modalState, updateModal] = useState({ component: "" });
-
-    async function signUp() {
-
-        // let phoneNumber;
-        // if (!phone_number.match(/\d+/g)) {
-        //     phoneNumber = "";
-        // } else {
-        //     phoneNumber = "+1" + phone_number.match(/\d+/g).join("");
-        // };
-
-        // if (email === "" || password === "" || name === "" || phone_number === "") {
-        //     updateState({ ...state, err: "info missing" });
-        //     return;
-        // } else if (phoneNumber.length !== 12) {
-        //     updateState({ ...state, err: "invalid phone number" });
-        //     return;
-        // } else if (password.length < 8) {
-        //     updateState({ ...state, err: "password must be 8 characters or more" });
-        //     return;
-        // };
-
-        try {
-            return await Auth.signUp({
-                username: email,
-                password: password,
-                attributes: {
-                    name: name,
-                    phone_number: phone_number
-                }
-            });
-            // console.log({ user });
-
-            // updateModal({
-            //     component: <ConfirmSignUp
-            //         usernameProp={email}
-            //         modalAction={updateModal}
-            //     />
-            // });
-            // updateState(initialState);
-        } catch (error) {
-            return error;
-            // console.log('error signing up:', error);
-            // updateState({ ...state, err: error.message });
-        }
-    }
+    async function signUp(phoneNumber) {
+        return await Auth.signUp({
+            username: email,
+            password: password,
+            attributes: {
+                name: name,
+                phone_number: phoneNumber
+            }
+        });
+    };
 
     function handleSubmit(e) {
         e.preventDefault();
-        signUp()
+
+        let phoneNumber;
+        if (!phone_number.match(/\d+/g)) {
+            phoneNumber = "";
+        } else {
+            phoneNumber = "+1" + phone_number.match(/\d+/g).join("");
+        };
+
+        if (email === "" || password === "" || name === "" || phone_number === "") {
+            let missing = [];
+            if (email === "") missing.push("Email");
+            if (password === "") missing.push("Password");
+            if (name === "") missing.push("User Name");
+            if (phone_number === "") missing.push("Phone Number");
+            let missingString = missing.reduce((accu, val) => {
+                return accu + `, ${val}`;
+            });
+            updateState({ ...state, err: `Infomation missing: ${missingString}` });
+            return;
+        } else if (password.length < 8) {
+            updateState({ ...state, err: "Password must be 8 characters or more" });
+            return;
+        } else if (phoneNumber.length !== 12) {
+            updateState({ ...state, err: "Invalid phone number" });
+            return;
+        };
+
+        signUp(phoneNumber)
             .then(res => { 
                 console.log(res);
                 updateState(initialState); 
@@ -127,48 +118,22 @@ export function ConfirmSignUp() {
     const { email, code, err } = confirmState;
 
     async function confirmSignUp() {
-        // if (code === "") {
-        //     updateConfirm({ ...confirmState, err: "info missing" });
-        //     return;
-        // };
-
-        try {
-            return await Auth.confirmSignUp(email, code);
-            // updateConfirm(initialConfirm);
-            // prop.modalAction({
-            //     component: <SignIn
-            //         email={username}
-            //     />
-            // });
-        } catch (error) {
-            return error;
-            // console.log('error confirming sign up', error);
-            // updateConfirm({ ...confirmState, err: error.message });
-        }
-    }
+        return await Auth.confirmSignUp(email, code);
+    };
 
     async function resendConfirm() {
-        // if (email === "") {
-        //     updateConfirm({ ...confirmState, err: "info missing" });
-        //     return;
-        // };
-
-        try {
-            return await Auth.resendSignUp(email);
-            // updateConfirm({ ...confirmState, err: "" });
-        } catch (error) {
-            return error;
-            // console.log('error resending confirm', error);
-            // updateConfirm({ ...confirmState, err: error.message });
-        }
-    }
+        return await Auth.resendSignUp(email);
+    };
 
     function handleConfirm(e) {
         updateConfirm({ ...confirmState, [e.target.name]: e.target.value });
     };
 
     function submitConfirm() {
-        if (code === "") {
+        if (email === "") {
+            updateConfirm({ ...confirmState, err: "Please enter email" });
+            return;
+        } else if (code === "") {
             updateConfirm({ ...confirmState, err: "Please enter confirmation code" });
             return;
         };
