@@ -8,10 +8,10 @@ export const createListing = /* GraphQL */ `
   ) {
     createListing(input: $input, condition: $condition) {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }
@@ -23,10 +23,10 @@ export const updateListing = /* GraphQL */ `
   ) {
     updateListing(input: $input, condition: $condition) {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }
@@ -38,10 +38,10 @@ export const deleteListing = /* GraphQL */ `
   ) {
     deleteListing(input: $input, condition: $condition) {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }

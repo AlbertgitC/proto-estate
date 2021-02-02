@@ -5,10 +5,10 @@ export const getListing = /* GraphQL */ `
   query GetListing($id: ID!) {
     getListing(id: $id) {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }
@@ -22,10 +22,10 @@ export const listListings = /* GraphQL */ `
     listListings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        authorId
+        createdBy
+        createdAt
         title
         content
-        createdAt
         updatedAt
       }
       nextToken

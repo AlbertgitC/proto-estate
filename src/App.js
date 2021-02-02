@@ -1,14 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import * as queries from './graphql/queries';
+import { SignupForm, ConfirmSignUp } from './components/sign-up';
+import SignIn from './components/sign-in';
 
 function App() {
 	const [listings, setListings] = useState([]);
 	
 	useEffect(() => {
 		getListings().then((res) => {
+			console.log(res);
 			setListings(res.data.listListings.items);
 		}).catch((error) => {
 			console.log(error);
@@ -18,7 +21,8 @@ function App() {
 	async function getListings() {
 		try {
 			return await API.graphql({
-				query: queries.listListings
+				query: queries.listListings,
+				authMode: "AWS_IAM"
 			});
 		} catch (err) {
 			return err;
@@ -35,6 +39,11 @@ function App() {
 					</li>
 				)}
 			</ul>
+			<div>
+				<SignIn />
+				<SignupForm />
+				<ConfirmSignUp />
+			</div>
 		</div>
 	);
 }

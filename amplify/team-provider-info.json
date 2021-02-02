@@ -10,6 +10,11 @@
       "StackName": "amplify-protoestate-dev-10116",
       "StackId": "arn:aws:cloudformation:us-west-2:657690358143:stack/amplify-protoestate-dev-10116/36aa61e0-6535-11eb-87af-0a78e0a0710f",
       "AmplifyAppId": "dnlwbvnz2kspw"
+    },
+    "categories": {
+      "auth": {
+        "protoestatecc284989": {}
+      }
     }
   }
 }

@@ -5,10 +5,10 @@ export const onCreateListing = /* GraphQL */ `
   subscription OnCreateListing {
     onCreateListing {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }
@@ -17,10 +17,10 @@ export const onUpdateListing = /* GraphQL */ `
   subscription OnUpdateListing {
     onUpdateListing {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }
@@ -29,10 +29,10 @@ export const onDeleteListing = /* GraphQL */ `
   subscription OnDeleteListing {
     onDeleteListing {
       id
-      authorId
+      createdBy
+      createdAt
       title
       content
-      createdAt
       updatedAt
     }
   }

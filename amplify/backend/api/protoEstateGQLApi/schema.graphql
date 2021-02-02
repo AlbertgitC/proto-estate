@@ -1,6 +1,13 @@
-type Listing @model {
+type Listing @model @auth (
+    rules: [
+      { allow: owner, ownerField: "createdBy" },
+      { allow: private, operations: [read] },
+      { allow: public, operations: [read], provider: iam }
+    ]
+  ) {
   id: ID!
-  authorId: ID
+  createdBy: String
+  createdAt: String
   title: String!
   content: String
 }
