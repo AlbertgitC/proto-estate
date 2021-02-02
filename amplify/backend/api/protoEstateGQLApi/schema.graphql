@@ -1,0 +1,6 @@
+type Listing @model {
+  id: ID!
+  authorId: ID
+  title: String!
+  content: String
+}
