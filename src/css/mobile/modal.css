@@ -1,0 +1,46 @@
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+}
+
+.modal__wrapper {
+    background-color: #ffffff;
+    width: 75%;
+    margin-left: auto;
+    padding: 14px 15px;
+}
+
+.modal__wrapper--show {
+    animation-duration: 0.5s;
+    animation-name: slideIn;
+}
+
+.modal__wrapper--hide {
+    animation-duration: 0.5s;
+    animation-name: slideOut;
+}
+
+@keyframes slideIn {
+  from {
+    margin-left: 100%;
+  }
+
+  to {
+    margin-left: 25%;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    margin-left: 25%;
+  }
+
+  to {
+    margin-left: 100%;
+  }
+}

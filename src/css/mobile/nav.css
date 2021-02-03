@@ -1,0 +1,25 @@
+.nav {
+    color: var(--font-color-dark);
+}
+
+.nav__head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.nav__auth {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--font-color-light);
+}
+
+.nav__button {
+    display: block;
+    width: 49%;
+}
+
+.nav__li {
+    padding-top: 16px;
+}

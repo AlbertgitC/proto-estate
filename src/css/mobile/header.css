@@ -1,0 +1,13 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__logo {
+    color: var(--brand-green-color);
+    font-size: 24px;
+}
+
+.header__nav {
+    font-size: 23px;
+}
