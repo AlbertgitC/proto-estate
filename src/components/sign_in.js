@@ -60,7 +60,7 @@ function SignIn() {
     };
 
     return (
-        <div>
+        <>
             <h3>Sign In</h3>
             <form onSubmit={submitSignIn}>
                 <input
@@ -82,7 +82,7 @@ function SignIn() {
                 <button>Sign In</button>
             </form>
             <div>{err}</div>
-        </div>
+        </>
     );
 };
 

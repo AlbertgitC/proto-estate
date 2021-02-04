@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Modal from './modal';
 import { useState } from 'react';
-import NavLinks from './navLinks';
 
 function Header() {
     const [modalState, setModal] = useState({ show: false, animation: "modal__wrapper--hide" });
@@ -14,7 +13,7 @@ function Header() {
             setModal({ ...modalState, animation: "modal__wrapper--hide" });
             setTimeout(() => {
                 setModal({ ...modalState, show: false });
-            }, 500);
+            }, 300);
         };
     };
 
@@ -27,9 +26,7 @@ function Header() {
                 className="header__nav"
                 onClick={toggleNavLinks}
             />
-            <Modal show={modalState.show} animeState={modalState.animation} toggleNavLinks={toggleNavLinks}>
-                <NavLinks toggleNavLinks={toggleNavLinks}/>
-            </Modal>
+            <Modal modalState={modalState} toggleNavLinks={toggleNavLinks}/>
         </header>
     );
 }

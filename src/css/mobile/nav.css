@@ -2,12 +2,6 @@
     color: var(--font-color-dark);
 }
 
-.nav__head {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 14px;
-}
-
 .nav__auth {
     display: flex;
     justify-content: space-between;

@@ -1,22 +1,17 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import SignIn from './sign_in';
 
 function NavLinks(props) {
 
-    const { toggleNavLinks } = props;
+    const { setComponent } = props;
+
+    function clickSignIn() {
+        setComponent(<SignIn />);
+    };
 
     return (
         <div className="nav">
-            <div className="nav__head">
-                <div className="nav__logo">PState</div>
-                <FontAwesomeIcon
-                    icon={faTimes}
-                    transform="down-3"
-                    onClick={toggleNavLinks}
-                />
-            </div>
             <div className="nav__auth">
-                <button className="nav__button">登入</button>
+                <button className="nav__button" onClick={clickSignIn}>登入</button>
                 <button className="nav__button">註冊</button>
             </div>
             <ul className="nav__ul">
