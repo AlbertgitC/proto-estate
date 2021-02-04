@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Auth } from 'aws-amplify';
 import SignIn from './sign_in';
 
-export function SignUpForm() {
+export function SignUpForm(props) {
     const initialState = {
         email: "",
         password: "",
@@ -12,6 +12,7 @@ export function SignUpForm() {
     };
     const [state, updateState] = useState(initialState);
     const { email, password, name, phone_number, err } = state;
+    const { setComponent } = props;
 
     async function signUp(phoneNumber) {
         return await Auth.signUp({
@@ -58,9 +59,8 @@ export function SignUpForm() {
         updateState({ ...state, err: "讀取中..." });
 
         signUp(phoneNumber)
-            .then(res => { 
-                console.log(res);
-                updateState(initialState); 
+            .then(() => { 
+                setComponent(<ConfirmSignUp setComponent={setComponent} email={email}/>); 
             })
             .catch( error => {
                 console.log('error signing up:', error);
@@ -126,7 +126,11 @@ export function ConfirmSignUp(props) {
     const { setComponent } = props;
 
     useEffect(() => {
-        if (props.email) setState(s => ({ ...s, email: props.email }));
+        if (props.email) setState(s => ({ 
+            ...s, 
+            email: props.email, 
+            err: `驗證碼已寄到 ${props.email}` 
+        }));
     }, [props]);
 
     async function confirmSignUp() {

@@ -1,10 +1,9 @@
-const userReducer = (state = "temp user from reducer", action) => {
+const userReducer = (state = {}, action) => {
     switch (action.type) {
         case "SIGN_IN":
-            return {
-                ...state,
-                user: action.payload
-            };
+            return action.payload;
+        case "SIGN_OUT":
+            return {};
         default:
             return state;
     }

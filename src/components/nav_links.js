@@ -1,45 +1,73 @@
 import SignIn from './sign_in';
 import { SignUpForm } from './sign_up';
+import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { Auth } from 'aws-amplify';
+import { useDispatch } from 'react-redux';
+import * as AuthActions from '../util/actions/auth_actions';
 
 function NavLinks(props) {
-
+    const user = useSelector(state => state.user);
+    const dispatch = useDispatch();
     const { setComponent } = props;
+    const initialState = { navAuth: "", navLi: "nav--hide" };
+    const [state, setState] = useState(initialState);
+
+    useEffect(() => {
+        if (user.username) setState({ navAuth: "nav--hide", navLi: "" });
+    }, [user]);
 
     function clickSignIn() {
         setComponent(<SignIn setComponent={setComponent}/>);
     };
 
     function clickSignUp() {
-        setComponent(<SignUpForm />);
+        setComponent(<SignUpForm setComponent={setComponent}/>);
+    };
+
+    async function signOut() {
+        setState(initialState);
+        try {
+            await Auth.signOut();
+            dispatch(AuthActions.signOut());
+        } catch (error) {
+            console.log('error signing out: ', error);
+        };
     };
 
     return (
         <div className="nav">
-            <div className="nav__auth">
+            <div className={`nav__auth ${state.navAuth}`}>
                 <button className="nav__button" onClick={clickSignIn}>登入</button>
                 <button className="nav__button" onClick={clickSignUp}>註冊</button>
             </div>
             <ul className="nav__ul">
                 <li className="nav__li">
-                    <a>租房</a>
+                    <p>租房</p>
                 </li>
                 <li className="nav__li">
-                    <a>買房</a>
+                    <p>買房</p>
                 </li>
                 <li className="nav__li">
-                    <a>出租</a>
+                    <p>出租</p>
                 </li>
                 <li className="nav__li">
-                    <a>賣房</a>
+                    <p>賣房</p>
                 </li>
                 <li className="nav__li">
-                    <a>找仲介</a>
+                    <p>找仲介</p>
                 </li>
                 <li className="nav__li">
-                    <a>廣告</a>
+                    <p>廣告</p>
                 </li>
                 <li className="nav__li">
-                    <a>幫助</a>
+                    <p>幫助</p>
+                </li>
+                <li className={`nav__li ${state.navLi}`}>
+                    <p>帳號設定</p>
+                </li>
+                <li className={`nav__li ${state.navLi}`} onClick={signOut}>
+                    <p>登出</p>
                 </li>
             </ul>
         </div>

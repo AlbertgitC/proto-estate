@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 import { ConfirmSignUp } from './sign_up';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
+import NavLinks from './nav_links';
 
 
 function SignIn(props) {
@@ -35,6 +36,7 @@ function SignIn(props) {
             await Auth.signIn(email, password).then(
                 res => {
                     dispatch(AuthActions.signIn(res));
+                    setComponent(<NavLinks setComponent={setComponent}/>);
                 }
             );
         } catch (error) {
@@ -69,7 +71,7 @@ function SignIn(props) {
                     type='password'
                     onChange={handleInput}
                     value={password}
-                    placeholder='Password'
+                    placeholder='密碼'
                     autoComplete="password"
                 />
                 <button className="sign-in__button">登入</button>

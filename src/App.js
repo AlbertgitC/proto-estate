@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { API, Auth } from 'aws-amplify';
 import * as queries from './graphql/queries';
-import { SignupForm, ConfirmSignUp } from './components/sign_up';
-import SignIn from './components/sign_in';
 import Header from './components/header';
+import { useDispatch } from 'react-redux';
+import * as AuthActions from './util/actions/auth_actions';
 
 function App() {
 	const [listings, setListings] = useState([]);
-	const [user, setUser] = useState("Not Sign In");
+	const dispatch = useDispatch();
 	
 	useEffect(() => {
 		getListings().then((res) => {
@@ -18,7 +18,7 @@ function App() {
 
 		Auth.currentAuthenticatedUser()
 			.then(res => {
-				setUser(res);
+				dispatch(AuthActions.signIn(res));
 			})
 			.catch(err => {
 				console.log("error finding user:", err);
