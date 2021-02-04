@@ -1,3 +1,13 @@
+.sign-up {
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-up__form {
+    display: flex;
+    flex-direction: column;
+}
+
 .sign-up__input {
     margin-bottom: 10px;
 }

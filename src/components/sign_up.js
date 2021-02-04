@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Auth } from 'aws-amplify';
+import SignIn from './sign_in';
 
 export function SignUpForm() {
     const initialState = {
@@ -55,7 +56,7 @@ export function SignUpForm() {
         };
 
         updateState({ ...state, err: "讀取中..." });
-        
+
         signUp(phoneNumber)
             .then(res => { 
                 console.log(res);
@@ -73,7 +74,7 @@ export function SignUpForm() {
 
     return (
         <div className="sign-up sign-up--show">
-            <form onSubmit={handleSubmit}>
+            <form className='sign-up__form' onSubmit={handleSubmit}>
                 <input
                     className='sign-up__input'
                     name='email'
@@ -114,82 +115,78 @@ export function SignUpForm() {
     );
 };
 
-export function ConfirmSignUp() {
-    const initialConfirm = {
+export function ConfirmSignUp(props) {
+    const initialState = {
         email: "",
         code: "",
         err: ""
     };
-    const [confirmState, updateConfirm] = useState(initialConfirm);
-    const { email, code, err } = confirmState;
+    const [state, setState] = useState(initialState);
+    const { email, code, err } = state;
+    const { setComponent } = props;
+
+    useEffect(() => {
+        if (props.email) setState(s => ({ ...s, email: props.email }));
+    }, [props]);
 
     async function confirmSignUp() {
-        return await Auth.confirmSignUp(email, code);
-    };
+        if (code === "" || email === "") {
+            setState({ ...state, err: "請輸入Email和驗證碼" });
+            return;
+        };
+
+        setState({ ...state, err: "讀取中..." });
+
+        try {
+            await Auth.confirmSignUp(email, code);
+            setComponent(<SignIn setComponent={setComponent} email={email}/>);
+        } catch (error) {
+            console.log('error confirming sign up', error);
+            setState({ ...state, err: error.message });
+        }
+    }
 
     async function resendConfirm() {
-        return await Auth.resendSignUp(email);
-    };
-
-    function handleConfirm(e) {
-        updateConfirm({ ...confirmState, [e.target.name]: e.target.value });
-    };
-
-    function submitConfirm() {
         if (email === "") {
-            updateConfirm({ ...confirmState, err: "Please enter email" });
-            return;
-        } else if (code === "") {
-            updateConfirm({ ...confirmState, err: "Please enter confirmation code" });
-            return;
-        };
-        confirmSignUp()
-            .then(res => {
-                console.log(res);
-                updateConfirm(initialConfirm);
-            })
-            .catch(error => {
-                console.log('error confirming sign up', error);
-                updateConfirm({ ...confirmState, err: error.message });
-            });
-    };
-
-    function submitResend() {
-        if (email === "") {
-            updateConfirm({ ...confirmState, err: "Please enter email" });
+            setState({ ...state, err: "請輸入Email" });
             return;
         };
 
-        resendConfirm()
-            .then(res => {
-                console.log(res);
-                updateConfirm({ ...confirmState, err: "" });
-            })
-            .catch(error => {
-                console.log('error resending confirm', error);
-                updateConfirm({ ...confirmState, err: error.message });
-            });
+        setState({ ...state, err: "讀取中..." });
+
+        try {
+            await Auth.resendSignUp(email);
+            setState({ ...state, err: `驗證碼已寄到 ${email}` });
+        } catch (error) {
+            console.log('error resending confirm', error);
+            setState({ ...state, err: error.message });
+        }
+    }
+
+    function handleInput(e) {
+        setState({ ...state, [e.target.name]: e.target.value });
     };
 
     return (
-        <div>
-            <div>Confirmation Code Sent to: {email}</div>
+        <div className="confirm-user">
             <input
+                className='confirm-user__input'
                 name='email'
                 type='email'
-                onChange={handleConfirm}
+                onChange={handleInput}
                 value={email}
                 placeholder='Email'
                 autoComplete="username"
             />
             <input
+                className='confirm-user__input'
                 name='code'
-                onChange={handleConfirm}
+                onChange={handleInput}
                 value={code}
-                placeholder='Confirmation Code'
+                placeholder='驗證碼'
             />
-            <button onClick={submitConfirm}>Confirm User</button>
-            <button onClick={submitResend}>Resend Confirmation</button>
+            <button className='confirm-user__button' onClick={confirmSignUp}>驗證帳號</button>
+            <button className='confirm-user__button' onClick={resendConfirm}>重新寄出驗證碼</button>
             <div>{err}</div>
         </div>
     );

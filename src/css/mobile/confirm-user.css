@@ -1,0 +1,13 @@
+.confirm-user {
+    display: flex;
+    flex-direction: column;
+}
+
+.confirm-user__input {
+    margin-bottom: 10px;
+}
+
+.confirm-user__button {
+    width: 69%;
+    margin-bottom: 10px;
+}

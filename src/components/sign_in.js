@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Auth } from 'aws-amplify';
-// import ResendConfirm from './resend-confirm';
+import { ConfirmSignUp } from './sign_up';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 
@@ -14,6 +14,7 @@ function SignIn(props) {
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
+    const { setComponent } = props;
 
     useEffect(() => {
         if (props.email) {
@@ -42,13 +43,9 @@ function SignIn(props) {
         };
     };
 
-    // function resendConfirm() {
-    //     props.modalAction({
-    //         component: <ResendConfirm
-    //             modalAction={props.modalAction}
-    //         />
-    //     });
-    // };
+    function resendConfirm() {
+        setComponent(<ConfirmSignUp setComponent={setComponent}/>);
+    };
 
     function handleInput(e) {
         updateState({ ...state, [e.target.name]: e.target.value });
@@ -56,7 +53,7 @@ function SignIn(props) {
 
     return (
         <div className="sign-in sign-in--show">
-            <form onSubmit={signIn}>
+            <form className="sign-in__form" onSubmit={signIn}>
                 <input
                     className="sign-in__input"
                     name='email'
@@ -77,8 +74,8 @@ function SignIn(props) {
                 />
                 <button className="sign-in__button">登入</button>
             </form>
-            <div className="sign-in__msg">{err}</div>
-            {/* <div onClick={resendConfirm}>Resend Confirmation</div> */}
+            <div onClick={resendConfirm} className="sign-in__resend">重新寄出驗證碼</div>
+            <div>{err}</div>
         </div>
     );
 };

@@ -6,7 +6,7 @@ function NavLinks(props) {
     const { setComponent } = props;
 
     function clickSignIn() {
-        setComponent(<SignIn />);
+        setComponent(<SignIn setComponent={setComponent}/>);
     };
 
     function clickSignUp() {
