@@ -4,12 +4,37 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
+import { createStore } from 'redux';
+import rootReducer from './util/reducers';
+import { Provider } from 'react-redux';
 Amplify.configure(config);
 require("./css");
 
+let preloadedState;
+
+/* when localStorage is utilized
+
+const persistedData = localStorage.getItem("data");
+
+if (persistedData) {
+  preloadedState = {
+    data: JSON.parse(persistedData)
+  };
+};
+*/
+
+preloadedState = {
+  user: null,
+  listings: []
+};
+
+const store = createStore(rootReducer, preloadedState);
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

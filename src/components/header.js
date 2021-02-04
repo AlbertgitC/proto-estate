@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Modal from './modal';
 import { useState } from 'react';
-import NavLinks from './nav-links';
+import NavLinks from './navLinks';
 
 function Header() {
     const [modalState, setModal] = useState({ show: false, animation: "modal__wrapper--hide" });

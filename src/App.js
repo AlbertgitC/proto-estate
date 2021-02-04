@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { API, Auth } from 'aws-amplify';
 import * as queries from './graphql/queries';
-import { SignupForm, ConfirmSignUp } from './components/sign-up';
-import SignIn from './components/sign-in';
+import { SignupForm, ConfirmSignUp } from './components/signUp';
+import SignIn from './components/signIn';
 import Header from './components/header';
 
 function App() {
