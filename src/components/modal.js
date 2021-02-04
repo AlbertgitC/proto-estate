@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import NavLinks from './nav_links';
+import { useSelector } from 'react-redux';
 
 function Modal(props) {
     const { toggleNavLinks, modalState } = props;
     const [component, setComponent] = useState(null);
+    const user = useSelector(state => state.user);
 
     if (!modalState.show) {
         return null;
@@ -22,7 +24,9 @@ function Modal(props) {
         <div className="modal" onClick={closeModal}>
             <div className={`modal__wrapper ${modalState.animation}`} onClick={e => e.stopPropagation()}>
                 <div className="modal__head">
-                    <div className="modal__logo">PState</div>
+                    <div className="modal__logo">
+                        { user.username ? user.attributes.name : "PState" }
+                    </div>
                     <FontAwesomeIcon
                         icon={faTimes}
                         transform="down-3"
