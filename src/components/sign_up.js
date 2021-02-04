@@ -1,21 +1,14 @@
 import { useState } from 'react';
 import { Auth } from 'aws-amplify';
 
-const initialState = {
-    email: "",
-    password: "",
-    name: "",
-    phone_number: "",
-    err: ""
-};
-
-const initialConfirm = {
-    email: "",
-    code: "",
-    err: ""
-};
-
-export function SignupForm() {
+export function SignUpForm() {
+    const initialState = {
+        email: "",
+        password: "",
+        name: "",
+        phone_number: "",
+        err: ""
+    };
     const [state, updateState] = useState(initialState);
     const { email, password, name, phone_number, err } = state;
 
@@ -37,28 +30,32 @@ export function SignupForm() {
         if (!phone_number.match(/\d+/g)) {
             phoneNumber = "";
         } else {
-            phoneNumber = "+1" + phone_number.match(/\d+/g).join("");
+            let digits = phone_number.match(/\d+/g).join("");
+            if (digits[0] === "0") digits = digits.slice(1);
+            phoneNumber = "+886" + digits;
         };
 
         if (email === "" || password === "" || name === "" || phone_number === "") {
             let missing = [];
             if (email === "") missing.push("Email");
-            if (password === "") missing.push("Password");
-            if (name === "") missing.push("User Name");
-            if (phone_number === "") missing.push("Phone Number");
+            if (password === "") missing.push("密碼");
+            if (name === "") missing.push("姓名");
+            if (phone_number === "") missing.push("手機號碼");
             let missingString = missing.reduce((accu, val) => {
                 return accu + `, ${val}`;
             });
-            updateState({ ...state, err: `Infomation missing: ${missingString}` });
+            updateState({ ...state, err: `資料不完全: ${missingString}` });
             return;
-        } else if (password.length < 8) {
-            updateState({ ...state, err: "Password must be 8 characters or more" });
+        } else if (password.length < 8 || password.length > 20) {
+            updateState({ ...state, err: "密碼長度必須在8-20內" });
             return;
-        } else if (phoneNumber.length !== 12) {
-            updateState({ ...state, err: "Invalid phone number" });
+        } else if (phoneNumber.length !== 13) {
+            updateState({ ...state, err: "手機號碼不正確" });
             return;
         };
 
+        updateState({ ...state, err: "讀取中..." });
+        
         signUp(phoneNumber)
             .then(res => { 
                 console.log(res);
@@ -75,9 +72,10 @@ export function SignupForm() {
     };
 
     return (
-        <div>
+        <div className="sign-up sign-up--show">
             <form onSubmit={handleSubmit}>
                 <input
+                    className='sign-up__input'
                     name='email'
                     type='email'
                     onChange={handleInput}
@@ -86,26 +84,29 @@ export function SignupForm() {
                     autoComplete="username"
                 />
                 <input
+                    className='sign-up__input'
                     name='password'
                     type='password'
                     onChange={handleInput}
                     value={password}
-                    placeholder='Password'
+                    placeholder='密碼'
                     autoComplete="new-password"
                 />
                 <input
+                    className='sign-up__input'
                     name='name'
                     onChange={handleInput}
                     value={name}
-                    placeholder='User Name'
+                    placeholder='姓名'
                 />
                 <input
+                    className='sign-up__input'
                     name='phone_number'
                     onChange={handleInput}
                     value={phone_number}
-                    placeholder='Phone Number'
+                    placeholder='手機號碼'
                 />
-                <button>Create User</button>
+                <button className="sign-up__button">註冊帳號</button>
             </form>
             <div>{err}</div>
         </div>
@@ -114,6 +115,11 @@ export function SignupForm() {
 };
 
 export function ConfirmSignUp() {
+    const initialConfirm = {
+        email: "",
+        code: "",
+        err: ""
+    };
     const [confirmState, updateConfirm] = useState(initialConfirm);
     const { email, code, err } = confirmState;
 

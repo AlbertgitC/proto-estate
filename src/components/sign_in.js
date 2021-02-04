@@ -1,30 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Auth } from 'aws-amplify';
 // import ResendConfirm from './resend-confirm';
-// import './sign-in.css';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
-// import { useHistory } from 'react-router-dom';
-// import { UserContext } from './util/global-store';
 
 
-function SignIn(prop) {
+function SignIn(props) {
     const initialState = {
         email: "",
         password: "",
         err: ""
     };
-    // const [authState, dispatch] = useContext(UserContext);
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
-    // const history = useHistory();
 
     useEffect(() => {
-        if (prop.email) {
-            updateState(s => ({ ...s, email: prop.email }));
+        if (props.email) {
+            updateState(s => ({ ...s, email: props.email }));
         };
-    }, [prop]);
+    }, [props]);
 
     async function signIn(e) {
         e.preventDefault();
@@ -39,11 +34,6 @@ function SignIn(prop) {
             await Auth.signIn(email, password).then(
                 res => {
                     dispatch(AuthActions.signIn(res));
-                    // dispatch({
-                    //     type: 'SIGN_IN',
-                    //     payload: res
-                    // });
-                    // history.push("/user-panel");
                 }
             );
         } catch (error) {
@@ -53,15 +43,11 @@ function SignIn(prop) {
     };
 
     // function resendConfirm() {
-    //     prop.modalAction({
+    //     props.modalAction({
     //         component: <ResendConfirm
-    //             modalAction={prop.modalAction}
+    //             modalAction={props.modalAction}
     //         />
     //     });
-    // };
-
-    // function close() {
-    //     prop.modalAction({ component: "" });
     // };
 
     function handleInput(e) {
@@ -69,10 +55,10 @@ function SignIn(prop) {
     };
 
     return (
-        <div className="sign-in">
-            <h3>Online Menu Merchant</h3>
+        <div className="sign-in sign-in--show">
             <form onSubmit={signIn}>
                 <input
+                    className="sign-in__input"
                     name='email'
                     type='email'
                     onChange={handleInput}
@@ -81,6 +67,7 @@ function SignIn(prop) {
                     autoComplete="username"
                 />
                 <input
+                    className="sign-in__input"
                     name='password'
                     type='password'
                     onChange={handleInput}
@@ -88,11 +75,10 @@ function SignIn(prop) {
                     placeholder='Password'
                     autoComplete="password"
                 />
-                <button>Sign In</button>
+                <button className="sign-in__button">登入</button>
             </form>
-            <div>{err}</div>
+            <div className="sign-in__msg">{err}</div>
             {/* <div onClick={resendConfirm}>Resend Confirmation</div> */}
-            {/* <button onClick={close}>Close</button> */}
         </div>
     );
 };
