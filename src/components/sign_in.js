@@ -1,27 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Auth } from 'aws-amplify';
+// import ResendConfirm from './resend-confirm';
+// import './sign-in.css';
+import { useDispatch } from 'react-redux';
+import * as AuthActions from '../util/actions/auth_actions';
+// import { useHistory } from 'react-router-dom';
+// import { UserContext } from './util/global-store';
 
-const initialState = {
-    email: "",
-    password: "",
-    err: ""
-};
 
-function SignIn() {
+function SignIn(prop) {
+    const initialState = {
+        email: "",
+        password: "",
+        err: ""
+    };
     // const [authState, dispatch] = useContext(UserContext);
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
+    const dispatch = useDispatch();
     // const history = useHistory();
 
-    // useEffect(() => {
-    //     if (prop.email) {
-    //         updateState(s => ({ ...s, email: prop.email }));
-    //     };
-    // }, [prop]);
+    useEffect(() => {
+        if (prop.email) {
+            updateState(s => ({ ...s, email: prop.email }));
+        };
+    }, [prop]);
 
-    async function signIn() {
-        return await Auth.signIn(email, password);
-    }
+    async function signIn(e) {
+        e.preventDefault();
+        if (email === "" || password === "") {
+            updateState({ ...state, err: "Email / 密碼錯誤" });
+            return;
+        };
+
+        updateState({ ...state, err: "讀取中..." });
+
+        try {
+            await Auth.signIn(email, password).then(
+                res => {
+                    dispatch(AuthActions.signIn(res));
+                    // dispatch({
+                    //     type: 'SIGN_IN',
+                    //     payload: res
+                    // });
+                    // history.push("/user-panel");
+                }
+            );
+        } catch (error) {
+            console.log('error signing in', error);
+            updateState({ ...state, err: error.message });
+        };
+    };
 
     // function resendConfirm() {
     //     prop.modalAction({
@@ -39,30 +68,10 @@ function SignIn() {
         updateState({ ...state, [e.target.name]: e.target.value });
     };
 
-    function submitSignIn(e) {
-        e.preventDefault();
-        if (email === "" || password === "") {
-            updateState({ ...state, err: "Wrong Credential" });
-            return;
-        };
-
-        updateState({ ...state, err: "loading..." });
-
-        signIn()
-            .then(res => {
-                console.log(res);
-                updateState({ ...state, err: "" });
-            },
-            error => {
-                console.log('error signing in', error);
-                updateState({ ...state, err: error.message });
-            });
-    };
-
     return (
-        <>
-            <h3>Sign In</h3>
-            <form onSubmit={submitSignIn}>
+        <div className="sign-in">
+            <h3>Online Menu Merchant</h3>
+            <form onSubmit={signIn}>
                 <input
                     name='email'
                     type='email'
@@ -82,7 +91,9 @@ function SignIn() {
                 <button>Sign In</button>
             </form>
             <div>{err}</div>
-        </>
+            {/* <div onClick={resendConfirm}>Resend Confirmation</div> */}
+            {/* <button onClick={close}>Close</button> */}
+        </div>
     );
 };
 

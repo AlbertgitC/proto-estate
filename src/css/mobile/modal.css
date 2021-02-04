@@ -12,12 +12,11 @@
     background-color: #ffffff;
     width: 75%;
     margin-left: auto;
-    padding: 14px 15px;
-    
+	padding: 14px 15px;
+	color: var(--font-color-dark);
 }
 
 .modal__head {
-	color: var(--font-color-dark);
 	display: flex;
     justify-content: space-between;
     margin-bottom: 14px;

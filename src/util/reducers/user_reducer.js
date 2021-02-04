@@ -1,6 +1,6 @@
-const userReducer = (state = null, action) => {
+const userReducer = (state = "temp user from reducer", action) => {
     switch (action.type) {
-        case 'SIGN_IN':
+        case "SIGN_IN":
             return {
                 ...state,
                 user: action.payload
