@@ -1,0 +1,19 @@
+.search-bar {
+    text-align: center;
+    margin-top: 11px;
+}
+
+.search-bar__input {
+    width: 75%;
+    min-width: 230px;
+    height: 35px;
+}
+
+.search-bar__button {
+    border: none;
+    background-color: var(--brand-green-color);
+    width: 33px;
+    height: 33px;
+    border-radius: 0 3px 3px 0;
+    color: #ffffff;
+}
