@@ -14,17 +14,6 @@ export function SignUpForm(props) {
     const { email, password, name, phone_number, err } = state;
     const { setComponent } = props;
 
-    async function signUp(phoneNumber) {
-        return await Auth.signUp({
-            username: email,
-            password: password,
-            attributes: {
-                name: name,
-                phone_number: phoneNumber
-            }
-        });
-    };
-
     function handleSubmit(e) {
         e.preventDefault();
 
@@ -58,12 +47,18 @@ export function SignUpForm(props) {
 
         updateState({ ...state, err: "讀取中..." });
 
-        signUp(phoneNumber)
-            .then(() => { 
+        Auth.signUp({
+            username: email,
+            password: password,
+            attributes: {
+                name: name,
+                phone_number: phoneNumber
+            }
+        }).then(() => { 
                 setComponent(<ConfirmSignUp setComponent={setComponent} email={email}/>); 
             })
             .catch( error => {
-                console.log('error signing up:', error);
+                console.log("sign up error:", error);
                 updateState({ ...state, err: error.message });
             });
     };
@@ -133,7 +128,7 @@ export function ConfirmSignUp(props) {
         }));
     }, [props]);
 
-    async function confirmSignUp() {
+    function confirmSignUp() {
         if (code === "" || email === "") {
             setState({ ...state, err: "請輸入Email和驗證碼" });
             return;
@@ -141,16 +136,17 @@ export function ConfirmSignUp(props) {
 
         setState({ ...state, err: "讀取中..." });
 
-        try {
-            await Auth.confirmSignUp(email, code);
-            setComponent(<SignIn setComponent={setComponent} email={email}/>);
-        } catch (error) {
-            console.log('error confirming sign up', error);
-            setState({ ...state, err: error.message });
-        }
-    }
+        Auth.confirmSignUp(email, code)
+            .then(() => {
+                setComponent(<SignIn setComponent={setComponent} email={email}/>);
+            })
+            .catch(err => {
+                console.log("confirm sign up error:", err);
+                setState({ ...state, err: err.message });
+            });
+    };
 
-    async function resendConfirm() {
+    function resendConfirm() {
         if (email === "") {
             setState({ ...state, err: "請輸入Email" });
             return;
@@ -158,14 +154,15 @@ export function ConfirmSignUp(props) {
 
         setState({ ...state, err: "讀取中..." });
 
-        try {
-            await Auth.resendSignUp(email);
-            setState({ ...state, err: `驗證碼已寄到 ${email}` });
-        } catch (error) {
-            console.log('error resending confirm', error);
-            setState({ ...state, err: error.message });
-        }
-    }
+        Auth.resendSignUp(email)
+            .then(() => {
+                setState({ ...state, err: `驗證碼已寄到 ${email}` });
+            })
+            .catch(err => {
+                console.log("resend confirm error:", err);
+                setState({ ...state, err: err.message });
+            });
+    };
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });

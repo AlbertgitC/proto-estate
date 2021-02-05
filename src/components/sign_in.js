@@ -23,7 +23,7 @@ function SignIn(props) {
         };
     }, [props]);
 
-    async function signIn(e) {
+    function signIn(e) {
         e.preventDefault();
         if (email === "" || password === "") {
             updateState({ ...state, err: "Email / 密碼錯誤" });
@@ -32,17 +32,14 @@ function SignIn(props) {
 
         updateState({ ...state, err: "讀取中..." });
 
-        try {
-            await Auth.signIn(email, password).then(
-                res => {
-                    dispatch(AuthActions.signIn(res));
-                    setComponent(<NavLinks setComponent={setComponent}/>);
-                }
-            );
-        } catch (error) {
-            console.log('error signing in', error);
-            updateState({ ...state, err: error.message });
-        };
+        Auth.signIn(email, password)
+            .then(res => {
+                dispatch(AuthActions.signIn(res));
+                setComponent(<NavLinks setComponent={setComponent}/>);})
+            .catch(err => {
+                console.log("sign in error:", err);
+                updateState({ ...state, err: err.message });
+            });
     };
 
     function resendConfirm() {
