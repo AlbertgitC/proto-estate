@@ -1,0 +1,12 @@
+.promo {
+    padding: 36px 0;
+}
+
+.promo__img {
+    margin-bottom: 15px;
+}
+
+.promo__button {
+    margin-top: 10px;
+    background-color: var(--brand-green-color);
+}

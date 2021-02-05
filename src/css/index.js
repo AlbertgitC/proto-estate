@@ -7,3 +7,4 @@ exports.sign_up = require("./mobile/sign-up.css");
 exports.confirm_user = require("./mobile/confirm-user.css");
 exports.landing = require("./mobile/landing.css");
 exports.search_bar = require("./mobile/search-bar.css");
+exports.promo = require("./mobile/promo.css");
