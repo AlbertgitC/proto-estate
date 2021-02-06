@@ -1,9 +1,8 @@
 .landing {
-    background-image: url(../../images/patrick-perkins-3wylDrjxH-E-unsplash.jpg);
     background-size: cover;
     padding: 15px 15px 0 15px;
     margin: -15px -15px 24px -15px;
-    min-height: 320px;
+    height: 455px;
     position: relative;
 }
 
@@ -13,9 +12,16 @@
     background-color: rgba(0, 0, 0, 0.3);
     padding: 15px 15px 0 15px;
     margin: -15px 0 0 -15px;
-    min-height: 320px;
+    height: 455px;
 }
 
-.landing__h1 {
-    margin-top: 63px;
+.landing__title {
+    margin-top: 90px;
+}
+
+.landing__content {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding: 0 10px;
+    min-height: 16px;
 }

@@ -6,8 +6,9 @@ import { useDispatch } from 'react-redux';
 import * as AuthActions from './util/actions/auth_actions';
 import Landing from './components/landing';
 import Promo from './components/promo';
-import { promos } from './util/test_data';
+import { testPromos } from './util/test_data';
 import Footer from './components/footer';
+import SearchBar from './components/search_bar';
 
 function App() {
 	// const [listings, setListings] = useState([]);
@@ -43,12 +44,14 @@ function App() {
 	return (
 		<div className="App">
 			<Header />
-			<div>
-				<Landing />
-				{promos.map((promo, i) => (
-					<Promo key={i} imgFile={promo.imgFile} title={promo.title} content={promo.content} />
-				))}
-			</div>
+			<Landing 
+				imgFileName="patrick-perkins-3wylDrjxH-E-unsplash.jpg" 
+				title="Some Cheesy Slogan01 廣告01放這"
+				component={<SearchBar />}
+			/>
+			{testPromos.map((promo, i) => (
+				<Promo key={i} imgFile={promo.imgFile} title={promo.title} content={promo.content} />
+			))}
 			<Footer />
 		</div>
 	);

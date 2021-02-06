@@ -10,3 +10,7 @@
     margin-top: 10px;
     background-color: var(--brand-green-color);
 }
+
+.promo__content {
+    padding: 0 10px;
+}

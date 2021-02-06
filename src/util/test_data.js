@@ -1,4 +1,4 @@
-export const promos = [
+export const testPromos = [
     {
         imgFile: "deborah-cortelazzi-gREquCUXQLI-unsplash.jpg",
         title: "大住中到像有家印世是以克",
