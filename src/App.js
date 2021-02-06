@@ -7,6 +7,7 @@ import * as AuthActions from './util/actions/auth_actions';
 import Landing from './components/landing';
 import Promo from './components/promo';
 import { promos } from './util/test_data';
+import Footer from './components/footer';
 
 function App() {
 	// const [listings, setListings] = useState([]);
@@ -48,7 +49,7 @@ function App() {
 					<Promo key={i} imgFile={promo.imgFile} title={promo.title} content={promo.content} />
 				))}
 			</div>
-			<footer></footer>
+			<Footer />
 		</div>
 	);
 }

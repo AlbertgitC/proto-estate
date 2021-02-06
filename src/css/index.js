@@ -8,3 +8,4 @@ exports.confirm_user = require("./mobile/confirm-user.css");
 exports.landing = require("./mobile/landing.css");
 exports.search_bar = require("./mobile/search-bar.css");
 exports.promo = require("./mobile/promo.css");
+exports.footer = require("./mobile/footer.css");

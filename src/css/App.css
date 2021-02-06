@@ -83,6 +83,7 @@ select {
 
 :root {
   --main-bg-color: #18191a;
+  --bg-color-gray: #242526;
   --brand-green-color: #00ced1;
   --font-color-dark: #374045;
   --font-color-light: #d3d3d3;
