@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Modal from './modal';
 import { useState } from 'react';
+import { Link } from "react-router-dom";
 
 function Header() {
     const [modalState, setModal] = useState({ show: false, animation: "modal__wrapper--hide" });
@@ -19,7 +20,7 @@ function Header() {
 
     return (
         <header className="header">
-            <div className="header__logo">PState</div>
+            <Link to="/" className="header__logo">PState</Link>
             <FontAwesomeIcon 
                 icon={faBars} 
                 transform="down-3" 

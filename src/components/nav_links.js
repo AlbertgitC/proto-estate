@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Auth } from 'aws-amplify';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
+import { Link } from "react-router-dom";
 
 function NavLinks(props) {
     const user = useSelector(state => state.user);
@@ -49,7 +50,7 @@ function NavLinks(props) {
                     <p>買房</p>
                 </li>
                 <li className="nav__li">
-                    <p>出租</p>
+                    <Link to="/list-rental" onClick={props.closeModal}>出租</Link>
                 </li>
                 <li className="nav__li">
                     <p>賣房</p>

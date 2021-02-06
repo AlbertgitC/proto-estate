@@ -33,7 +33,7 @@ function Modal(props) {
                         onClick={closeModal}
                     />
                 </div>
-                {component ? component : <NavLinks setComponent={setComponent}/>}
+                {component ? component : <NavLinks setComponent={setComponent} closeModal={closeModal}/>}
             </div>
         </div>
     );

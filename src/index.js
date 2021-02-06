@@ -7,6 +7,7 @@ import config from './aws-exports';
 import { createStore } from 'redux';
 import rootReducer from './util/reducers';
 import { Provider } from 'react-redux';
+import { HashRouter } from "react-router-dom";
 Amplify.configure(config);
 require("./css");
 
@@ -28,9 +29,11 @@ const store = createStore(rootReducer, preloadedState,
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <HashRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

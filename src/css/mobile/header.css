@@ -9,6 +9,7 @@
 }
 
 .header__logo {
+    text-decoration: none;
     color: var(--brand-green-color);
     font-size: 24px;
 }
