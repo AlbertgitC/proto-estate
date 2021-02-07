@@ -9,3 +9,4 @@ exports.landing = require("./mobile/landing.css");
 exports.search_bar = require("./mobile/search-bar.css");
 exports.promo = require("./mobile/promo.css");
 exports.footer = require("./mobile/footer.css");
+exports.sign_in_page = require("./mobile/sign-in-page.css");

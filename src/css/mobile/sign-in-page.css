@@ -1,0 +1,12 @@
+.sign-in-page {
+    margin: 90px 0;
+    padding: 0 15px;
+}
+
+.sign-in-page__tab {
+    margin-bottom: 10px;
+}
+
+.sign-in-page--selected {
+    color: var(--brand-green-color);
+}

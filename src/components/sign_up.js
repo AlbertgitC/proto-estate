@@ -13,6 +13,7 @@ export function SignUpForm(props) {
     const [state, updateState] = useState(initialState);
     const { email, password, name, phone_number, err } = state;
     const { setComponent } = props;
+    const animation = props.animation ? props.animation : "";
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -68,7 +69,7 @@ export function SignUpForm(props) {
     };
 
     return (
-        <div className="sign-up sign-up--show">
+        <div className={`sign-up ${animation}`}>
             <form className='sign-up__form' onSubmit={handleSubmit}>
                 <input
                     className='sign-up__input'

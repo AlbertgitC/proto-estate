@@ -15,7 +15,8 @@ function SignIn(props) {
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
-    const { setComponent } = props;
+    const { setComponent, setAuthPage } = props;
+    const animation = props.animation ? props.animation : "";
 
     useEffect(() => {
         if (props.email) {
@@ -43,7 +44,8 @@ function SignIn(props) {
     };
 
     function resendConfirm() {
-        setComponent(<ConfirmSignUp setComponent={setComponent}/>);
+        if (setComponent) setComponent(<ConfirmSignUp setComponent={setComponent}/>);
+        if (setAuthPage) setAuthPage(<ConfirmSignUp />);
     };
 
     function handleInput(e) {
@@ -51,7 +53,7 @@ function SignIn(props) {
     };
 
     return (
-        <div className="sign-in sign-in--show">
+        <div className={`sign-in ${animation}`}>
             <form className="sign-in__form" onSubmit={signIn}>
                 <input
                     className="sign-in__input"

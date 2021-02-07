@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 
 function Landing(props) {
-    const initialState = { imgUrl: "", title: "", content: "", component: null };
+    const initialState = { imgUrl: "", title: "", content: "" };
     const [state, setState] = useState(initialState);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ function Landing(props) {
             <div className="landing__over-lay">
                 <h1 className="landing__title">{state.title}</h1>
                 <p className="landing__content">{state.content}</p>
-                {state.component}
+                {props.children}
             </div>
         </div>
     );

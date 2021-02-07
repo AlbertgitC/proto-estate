@@ -93,8 +93,13 @@ body {
   background-color: var(--main-bg-color);
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 button {
-  background: none;
+  background-color: #ffffff;
   border: 1px solid var(--font-color-light);
   border-radius: 3px;
   cursor: pointer;

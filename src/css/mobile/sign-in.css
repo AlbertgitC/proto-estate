@@ -19,6 +19,7 @@
 
 .sign-in__resend {
     font-size: 14px;
+    width: fit-content;
 }
 
 .sign-in--show {

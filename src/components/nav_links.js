@@ -19,11 +19,11 @@ function NavLinks(props) {
     }, [user]);
 
     function clickSignIn() {
-        setComponent(<SignIn setComponent={setComponent}/>);
+        setComponent(<SignIn setComponent={setComponent} animation="sign-in--show"/>);
     };
 
     function clickSignUp() {
-        setComponent(<SignUpForm setComponent={setComponent}/>);
+        setComponent(<SignUpForm setComponent={setComponent} animation="sign-up--show"/>);
     };
 
     async function signOut() {

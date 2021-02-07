@@ -4,11 +4,10 @@ import * as queries from './graphql/queries';
 import Header from './components/header';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from './util/actions/auth_actions';
-import Landing from './components/landing';
-import Promo from './components/promo';
-import { testPromos } from './util/test_data';
+import HomePage from './components/home_page';
+import ListingRentalLanding from './components/listing_rental_landing';
+import SignInPage from './components/sign_in_page';
 import Footer from './components/footer';
-import SearchBar from './components/search_bar';
 import { Route, Switch } from "react-router-dom";
 
 function App() {
@@ -46,27 +45,12 @@ function App() {
 		<div className="App">
 			<Header />
 			<Switch>
+				<Route path="/sign-in" render={(routeProps) => <SignInPage {...routeProps}/>} />
 				<Route path="/list-rental">
-					<Landing
-						key="list-rental"
-						imgFileName="jarek-ceborski-jn7uVeCdf6U-unsplash.jpg"
-						title="Promo for Listing Rental Here"
-						content="馬推型美外心果四制也造論期馬、業精的人夜常如，心一媽；提變人合包目者取士書太，故只區車課驗。"
-					/>
-					{testPromos.map((promo, i) => (
-						<Promo key={`list-rental-${i}`} imgFile={promo.imgFile} title={promo.title} content={promo.content} />
-					))}
+					<ListingRentalLanding />
 				</Route>
 				<Route path="/">
-					<Landing
-						key="home" 
-						imgFileName="patrick-perkins-3wylDrjxH-E-unsplash.jpg" 
-						title="Some Cheesy Slogan01 廣告01放這"
-						component={<SearchBar />}
-					/>
-					{testPromos.map((promo, i) => (
-						<Promo key={`home-${i}`} imgFile={promo.imgFile} title={promo.title} content={promo.content} />
-					))}
+					<HomePage />
 				</Route>
 			</Switch>
 			<Footer />
