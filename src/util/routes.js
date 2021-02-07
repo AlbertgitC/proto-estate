@@ -1,17 +1,19 @@
 import { Route, Redirect } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export function ProtectedRoute({ children, user, ...rest }) {
+export function ProtectedRoute({ component: Component, ...rest }) {
+    const user = useSelector(state => state.user);
     return (
         <Route
             {...rest}
-            render={({ location }) => {
+            render={routeProps => {
                 if (user) {
-                    return children;
+                    return <Component {...routeProps} />;
                 } else {
                     return (<Redirect
                         to={{
                             pathname: "/",
-                            state: { from: location }
+                            state: { from: routeProps.location }
                         }}
                     />);
                 }
@@ -20,18 +22,19 @@ export function ProtectedRoute({ children, user, ...rest }) {
     );
 };
 
-export function PublicRoute({ children, user, ...rest }) {
+export function PublicRoute({ component: Component, ...rest }) {
+    const user = useSelector(state => state.user);
     return (
         <Route
             {...rest}
-            render={({ location }) => {
+            render={routeProps => {
                 if (!user) {
-                    return children;
+                    return <Component {...routeProps} />;
                 } else {
                     return (<Redirect
                         to={{
-                            pathname: "/user-panel",
-                            state: { from: location }
+                            pathname: "/",
+                            state: { from: routeProps.location }
                         }}
                     />);
                 }

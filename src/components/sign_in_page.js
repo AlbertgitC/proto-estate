@@ -11,8 +11,7 @@ function SignInPage(props) {
     const [component, setAuthPage] = useState(null);
 
     useEffect(() => {
-        setAuthPage(<SignIn setAuthPage={setAuthPage} />);
-        console.log(props)
+        setAuthPage(<SignIn setAuthPage={setAuthPage} location={props.location}/>);
     }, []);
 
     function clickSignIn() {
@@ -20,7 +19,7 @@ function SignInPage(props) {
             signIn: "sign-in-page--selected",
             signUp: ""
         });
-        setAuthPage(<SignIn setAuthPage={setAuthPage} />);
+        setAuthPage(<SignIn setAuthPage={setAuthPage} location={props.location}/>);
     };
 
     function clickSignUp() {
@@ -28,13 +27,13 @@ function SignInPage(props) {
             signIn: "",
             signUp: "sign-in-page--selected"
         });
-        setAuthPage(<SignUpForm />);
+        setAuthPage(<SignUpForm setAuthPage={setAuthPage} location={props.location}/>);
     };
 
     return (
         <div className="sign-in-page">
             <h2 className="sign-in-page__tab">
-                <span className={state.signIn} onClick={clickSignIn}>登入</span> / 
+                <span className={state.signIn} onClick={clickSignIn}>登入</span> | 
                 <span className={state.signUp} onClick={clickSignUp}> 用戶註冊</span>
             </h2>
             {component}

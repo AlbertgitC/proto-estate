@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Auth } from 'aws-amplify';
 import SignIn from './sign_in';
+import { useHistory } from "react-router-dom";
 
 export function SignUpForm(props) {
     const initialState = {
@@ -12,7 +13,7 @@ export function SignUpForm(props) {
     };
     const [state, updateState] = useState(initialState);
     const { email, password, name, phone_number, err } = state;
-    const { setComponent } = props;
+    const { setComponent, setAuthPage, location } = props;
     const animation = props.animation ? props.animation : "";
 
     function handleSubmit(e) {
@@ -55,13 +56,15 @@ export function SignUpForm(props) {
                 name: name,
                 phone_number: phoneNumber
             }
-        }).then(() => { 
-                setComponent(<ConfirmSignUp setComponent={setComponent} email={email}/>); 
-            })
-            .catch( error => {
-                console.log("sign up error:", error);
-                updateState({ ...state, err: error.message });
-            });
+        })
+        .then(() => { 
+            if (setComponent) setComponent(<ConfirmSignUp setComponent={setComponent} email={email}/>);
+            if (setAuthPage) setAuthPage(<ConfirmSignUp setAuthPage={setAuthPage} email={email} location={location}/>); 
+        })
+        .catch( error => {
+            console.log("sign up error:", error);
+            updateState({ ...state, err: error.message });
+        });
     };
 
     function handleInput(e) {
@@ -119,7 +122,8 @@ export function ConfirmSignUp(props) {
     };
     const [state, setState] = useState(initialState);
     const { email, code, err } = state;
-    const { setComponent } = props;
+    const { setComponent, setAuthPage, location } = props;
+    const history = useHistory();
 
     useEffect(() => {
         if (props.email) setState(s => ({ 
@@ -139,7 +143,8 @@ export function ConfirmSignUp(props) {
 
         Auth.confirmSignUp(email, code)
             .then(() => {
-                setComponent(<SignIn setComponent={setComponent} email={email}/>);
+                if (setComponent) setComponent(<SignIn setComponent={setComponent} email={email}/>);
+                if (setAuthPage) setAuthPage(<SignIn setAuthPage={setAuthPage} email={email} location={location}/>);
             })
             .catch(err => {
                 console.log("confirm sign up error:", err);

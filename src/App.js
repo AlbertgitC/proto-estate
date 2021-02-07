@@ -8,7 +8,9 @@ import HomePage from './components/home_page';
 import ListingRentalLanding from './components/listing_rental_landing';
 import SignInPage from './components/sign_in_page';
 import Footer from './components/footer';
-import { Route, Switch } from "react-router-dom";
+import RentalPanel from './components/rental_panel';
+import { Route, Switch } from 'react-router-dom';
+import { ProtectedRoute, PublicRoute } from './util/routes';
 
 function App() {
 	// const [listings, setListings] = useState([]);
@@ -45,10 +47,12 @@ function App() {
 		<div className="App">
 			<Header />
 			<Switch>
-				<Route path="/sign-in" render={(routeProps) => <SignInPage {...routeProps}/>} />
-				<Route path="/list-rental">
+				<PublicRoute path="/sign-in" component={SignInPage} />
+				{/* <Route path="/sign-in" render={(routeProps) => <SignInPage {...routeProps}/>} /> */}
+				<Route path="/list-rental-promo">
 					<ListingRentalLanding />
 				</Route>
+				<ProtectedRoute path="/rental-panel" component={RentalPanel} />
 				<Route path="/">
 					<HomePage />
 				</Route>

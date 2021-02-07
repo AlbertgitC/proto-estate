@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import Modal from './modal';
+import Modal from './header_modal';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 

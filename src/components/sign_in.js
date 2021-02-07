@@ -4,6 +4,7 @@ import { ConfirmSignUp } from './sign_up';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 import NavLinks from './nav_links';
+import { useHistory } from "react-router-dom";
 
 
 function SignIn(props) {
@@ -15,8 +16,9 @@ function SignIn(props) {
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
-    const { setComponent, setAuthPage } = props;
+    const { setComponent, setAuthPage, location } = props;
     const animation = props.animation ? props.animation : "";
+    const history = useHistory();
 
     useEffect(() => {
         if (props.email) {
@@ -36,7 +38,23 @@ function SignIn(props) {
         Auth.signIn(email, password)
             .then(res => {
                 dispatch(AuthActions.signIn(res));
-                setComponent(<NavLinks setComponent={setComponent}/>);})
+                if (setComponent) setComponent(<NavLinks setComponent={setComponent}/>);
+                if (location) {
+                    if (!location.state) {
+                        history.push("/");
+                    } else {
+                        let previousPath = location.state.from.pathname;
+                        switch (previousPath) {
+                            case "/list-rental-promo":
+                                history.push("/rental-panel");
+                                return;
+                            default:
+                                history.push("/");
+                                return;
+                        }
+                    };
+                };
+            })
             .catch(err => {
                 console.log("sign in error:", err);
                 updateState({ ...state, err: err.message });
@@ -45,7 +63,7 @@ function SignIn(props) {
 
     function resendConfirm() {
         if (setComponent) setComponent(<ConfirmSignUp setComponent={setComponent}/>);
-        if (setAuthPage) setAuthPage(<ConfirmSignUp />);
+        if (setAuthPage) setAuthPage(<ConfirmSignUp setAuthPage={setAuthPage} location={location}/>);
     };
 
     function handleInput(e) {

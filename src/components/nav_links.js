@@ -15,7 +15,7 @@ function NavLinks(props) {
     const [state, setState] = useState(initialState);
 
     useEffect(() => {
-        if (user.username) setState({ navAuth: "nav--hide", navLi: "" });
+        if (user) setState({ navAuth: "nav--hide", navLi: "" });
     }, [user]);
 
     function clickSignIn() {
@@ -50,7 +50,7 @@ function NavLinks(props) {
                     <p>買房</p>
                 </li>
                 <li className="nav__li">
-                    <Link to="/list-rental" onClick={props.closeModal}>出租</Link>
+                    <Link to="/list-rental-promo" onClick={props.closeModal}>出租</Link>
                 </li>
                 <li className="nav__li">
                     <p>賣房</p>
