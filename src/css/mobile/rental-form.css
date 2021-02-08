@@ -9,4 +9,5 @@
 
 .rental-form__button {
     margin-top: 24px;
+    background-color: var(--brand-green-color);
 }
