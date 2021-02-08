@@ -1,31 +1,39 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getListing = /* GraphQL */ `
-  query GetListing($id: ID!) {
-    getListing(id: $id) {
+export const getRentalListing = /* GraphQL */ `
+  query GetRentalListing($id: ID!) {
+    getRentalListing(id: $id) {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }
 `;
-export const listListings = /* GraphQL */ `
-  query ListListings(
-    $filter: ModelListingFilterInput
+export const listRentalListings = /* GraphQL */ `
+  query ListRentalListings(
+    $filter: ModelRentalListingFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listListings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listRentalListings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         createdBy
         createdAt
-        title
-        content
+        address
+        type
+        monthlyRent
+        numberRooms
+        areaPin
+        description
         updatedAt
       }
       nextToken

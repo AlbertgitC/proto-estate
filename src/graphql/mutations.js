@@ -1,47 +1,59 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createListing = /* GraphQL */ `
-  mutation CreateListing(
-    $input: CreateListingInput!
-    $condition: ModelListingConditionInput
+export const createRentalListing = /* GraphQL */ `
+  mutation CreateRentalListing(
+    $input: CreateRentalListingInput!
+    $condition: ModelRentalListingConditionInput
   ) {
-    createListing(input: $input, condition: $condition) {
+    createRentalListing(input: $input, condition: $condition) {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }
 `;
-export const updateListing = /* GraphQL */ `
-  mutation UpdateListing(
-    $input: UpdateListingInput!
-    $condition: ModelListingConditionInput
+export const updateRentalListing = /* GraphQL */ `
+  mutation UpdateRentalListing(
+    $input: UpdateRentalListingInput!
+    $condition: ModelRentalListingConditionInput
   ) {
-    updateListing(input: $input, condition: $condition) {
+    updateRentalListing(input: $input, condition: $condition) {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }
 `;
-export const deleteListing = /* GraphQL */ `
-  mutation DeleteListing(
-    $input: DeleteListingInput!
-    $condition: ModelListingConditionInput
+export const deleteRentalListing = /* GraphQL */ `
+  mutation DeleteRentalListing(
+    $input: DeleteRentalListingInput!
+    $condition: ModelRentalListingConditionInput
   ) {
-    deleteListing(input: $input, condition: $condition) {
+    deleteRentalListing(input: $input, condition: $condition) {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }

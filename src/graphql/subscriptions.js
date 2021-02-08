@@ -1,38 +1,50 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateListing = /* GraphQL */ `
-  subscription OnCreateListing {
-    onCreateListing {
+export const onCreateRentalListing = /* GraphQL */ `
+  subscription OnCreateRentalListing {
+    onCreateRentalListing {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }
 `;
-export const onUpdateListing = /* GraphQL */ `
-  subscription OnUpdateListing {
-    onUpdateListing {
+export const onUpdateRentalListing = /* GraphQL */ `
+  subscription OnUpdateRentalListing {
+    onUpdateRentalListing {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }
 `;
-export const onDeleteListing = /* GraphQL */ `
-  subscription OnDeleteListing {
-    onDeleteListing {
+export const onDeleteRentalListing = /* GraphQL */ `
+  subscription OnDeleteRentalListing {
+    onDeleteRentalListing {
       id
       createdBy
       createdAt
-      title
-      content
+      address
+      type
+      monthlyRent
+      numberRooms
+      areaPin
+      description
       updatedAt
     }
   }

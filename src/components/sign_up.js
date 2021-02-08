@@ -183,7 +183,6 @@ export function ConfirmSignUp(props) {
                 onChange={handleInput}
                 value={email}
                 placeholder='Email'
-                autoComplete="username"
             />
             <input
                 className='confirm-user__input'
@@ -191,6 +190,7 @@ export function ConfirmSignUp(props) {
                 onChange={handleInput}
                 value={code}
                 placeholder='驗證碼'
+                autocomplete="off"
             />
             <button className='confirm-user__button' onClick={confirmSignUp}>驗證帳號</button>
             <button className='confirm-user__button' onClick={resendConfirm}>重新寄出驗證碼</button>

@@ -1,4 +1,4 @@
-type Listing @model @auth (
+type RentalListing @model @auth (
     rules: [
       { allow: owner, ownerField: "createdBy" },
       { allow: private, operations: [read] },
@@ -8,6 +8,10 @@ type Listing @model @auth (
   id: ID!
   createdBy: String
   createdAt: String
-  title: String!
-  content: String
+  address: String!
+  type: String!
+  monthlyRent: Float!
+  numberRooms: Float!
+  areaPin: Float
+  description: String
 }

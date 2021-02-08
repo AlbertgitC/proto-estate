@@ -1,0 +1,12 @@
+.rental-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.rental-form__label {
+    padding-top: 24px;
+}
+
+.rental-form__button {
+    margin-top: 24px;
+}

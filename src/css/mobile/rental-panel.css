@@ -1,0 +1,13 @@
+.rental-panel {
+    margin-top: 90px;
+    position: relative;
+}
+
+.rental-panel__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.rental-panel__add {
+    color: var(--brand-green-color);
+}

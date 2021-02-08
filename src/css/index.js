@@ -10,3 +10,6 @@ exports.search_bar = require("./mobile/search-bar.css");
 exports.promo = require("./mobile/promo.css");
 exports.footer = require("./mobile/footer.css");
 exports.sign_in_page = require("./mobile/sign-in-page.css");
+exports.rental_panel = require("./mobile/rental-panel.css");
+exports.rental_modal = require("./mobile/rental-modal.css");
+exports.rental_form = require("./mobile/rental-form.css");
