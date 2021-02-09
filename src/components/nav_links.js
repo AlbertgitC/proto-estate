@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 function NavLinks(props) {
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
-    const { setComponent } = props;
+    const { setComponent, closeModal } = props;
     const initialState = { navAuth: "", navLi: "nav--hide" };
     const [state, setState] = useState(initialState);
 
@@ -19,7 +19,7 @@ function NavLinks(props) {
     }, [user]);
 
     function clickSignIn() {
-        setComponent(<SignIn setComponent={setComponent} animation="sign-in--show"/>);
+        setComponent(<SignIn setComponent={setComponent} animation="sign-in--show" closeModal={closeModal}/>);
     };
 
     function clickSignUp() {
@@ -27,6 +27,7 @@ function NavLinks(props) {
     };
 
     async function signOut() {
+        closeModal();
         setState(initialState);
         try {
             await Auth.signOut();
@@ -50,7 +51,7 @@ function NavLinks(props) {
                     <p>買房</p>
                 </li>
                 <li className="nav__li">
-                    <Link to="/list-rental-promo" onClick={props.closeModal}>出租</Link>
+                    <Link to="/list-rental-promo" onClick={closeModal}>出租</Link>
                 </li>
                 <li className="nav__li">
                     <p>賣房</p>

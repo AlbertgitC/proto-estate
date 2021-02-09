@@ -16,7 +16,7 @@ function SignIn(props) {
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
-    const { setComponent, setAuthPage, location } = props;
+    const { setComponent, setAuthPage, location, closeModal } = props;
     const animation = props.animation ? props.animation : "";
     const history = useHistory();
 
@@ -38,7 +38,7 @@ function SignIn(props) {
         Auth.signIn(email, password)
             .then(res => {
                 dispatch(AuthActions.signIn(res));
-                if (setComponent) setComponent(<NavLinks setComponent={setComponent}/>);
+                if (setComponent) setComponent(<NavLinks setComponent={setComponent} closeModal={closeModal}/>);
                 if (location) {
                     if (!location.state) {
                         history.push("/");

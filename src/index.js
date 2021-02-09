@@ -8,13 +8,13 @@ import { createStore } from 'redux';
 import rootReducer from './util/reducers';
 import { Provider } from 'react-redux';
 import { HashRouter } from "react-router-dom";
+import { Auth } from 'aws-amplify';
 Amplify.configure(config);
 require("./css");
 
-let preloadedState;
-
 /* when localStorage is utilized
 
+let preloadedState;
 const persistedData = localStorage.getItem("data");
 
 if (persistedData) {
@@ -24,20 +24,42 @@ if (persistedData) {
 };
 */
 
-const store = createStore(rootReducer, preloadedState,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+Auth.currentAuthenticatedUser()
+  .then(res => { 
+    const preloadedState = { user: res };
+    const store = createStore(rootReducer, preloadedState,
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-ReactDOM.render(
-  <React.StrictMode>
-    <HashRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </HashRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
+    return(
+      ReactDOM.render(
+        <React.StrictMode>
+          <HashRouter>
+            <Provider store={store}>
+              <App />
+            </Provider>
+          </HashRouter>
+        </React.StrictMode>,
+        document.getElementById('root')
+      )
+    );
+  })
+  .catch(err => { 
+    console.log(err);
+    const store = createStore(rootReducer, ...[,],
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    return (
+      ReactDOM.render(
+        <React.StrictMode>
+          <HashRouter>
+            <Provider store={store}>
+              <App />
+            </Provider>
+          </HashRouter>
+        </React.StrictMode>,
+        document.getElementById('root')
+      )
+    );
+  });
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
