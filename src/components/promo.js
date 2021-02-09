@@ -5,10 +5,14 @@ function Promo(props) {
     const { imgFile, title, content } = props;
 
     useEffect(() => {
-        import(`../images/${imgFile}`)
-            .then(res => {
-                setLink(res.default);
-            });
+        let isSubscribed = true;
+        if (isSubscribed) {
+            import(`../images/${imgFile}`)
+                .then(res => {
+                    setLink(res.default);
+                });
+        };
+        return () => (isSubscribed = false);
     },[imgFile]);
     
     return (

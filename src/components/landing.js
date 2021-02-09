@@ -6,24 +6,26 @@ function Landing(props) {
     const [state, setState] = useState(initialState);
 
     useEffect(() => {
-        import(`../images/${props.imgFileName}`)
-            .then(res => {
-                setState(s => ({ ...s, imgUrl: res.default }));
-            })
-            .catch(err => console.log(err));
+        let isSubscribed = true;
+        if (isSubscribed) {
+            import(`../images/${props.imgFileName}`)
+                .then(res => {
+                    setState(s => ({ ...s, imgUrl: res.default }));
+                })
+                .catch(err => console.log(err));
 
-        for (let prop in props) {
-            setState(s => ({ ...s, [prop]: props[prop] }));
+            for (let prop in props) {
+                setState(s => ({ ...s, [prop]: props[prop] }));
+            };
         };
+        return () => (isSubscribed = false);
     }, [props]);
 
     return (
-        <div className="landing" style={{backgroundImage: `url(${state.imgUrl})`}}>
-            <div className="landing__over-lay">
-                <h1 className="landing__title">{state.title}</h1>
-                <p className="landing__content">{state.content}</p>
-                {props.children}
-            </div>
+        <div className="landing" style={{ backgroundImage: `url(${state.imgUrl})` }}>
+            <h1 className="landing__title">{state.title}</h1>
+            <p className="landing__content">{state.content}</p>
+            {props.children}
         </div>
     );
 };
