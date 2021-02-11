@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { API } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
+import { useDispatch } from 'react-redux';
+import * as RentalListingActions from '../util/actions/rental_listing_actions';
 
 function RentalForm(props) {
     const initialState = {
@@ -12,17 +14,35 @@ function RentalForm(props) {
         description: ""
     };
     const [state, setState] = useState(initialState);
-    const { address, monthlyRent, areaPin, description } = state;
+    const { address, type, monthlyRent, numberRooms, areaPin, description } = state;
     const [error, setError] = useState("");
-    const { closeModal } = props;
+    const { closeModal, action, listing } = props;
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (action === "Update") setState({
+            id: listing.id,
+            address: listing.address,
+            type: listing.type,
+            monthlyRent: listing.monthlyRent,
+            numberRooms: listing.numberRooms,
+            areaPin: listing.areaPin,
+            description: listing.description
+        });
+    },[action, listing]);
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });
     };
 
     function handleNumInput(e) {
-        let numVal = parseFloat(e.target.value);
-        setState({ ...state, [e.target.name]: numVal });
+        let val = e.target.value;
+        if (val === "") {
+            setState({ ...state, [e.target.name]: val });
+        } else {
+            let numVal = parseFloat(val);
+            setState({ ...state, [e.target.name]: numVal });
+        };
     };
 
     function handleSubmit(e) {
@@ -30,20 +50,37 @@ function RentalForm(props) {
         
         setError("讀取中...");
 
-        API.graphql({
-            query: mutations.createRentalListing,
-            variables: { input: state }
-        })
-        .then(res => {
-            setError("");
-            // add to own listings: dispatch to store
-            console.log(res.data.createRentalListing);
-            closeModal();
-        })
-        .catch(err => {
-            console.log("create rental listing error:", err);
-            setError("Error creating reantal listing");
-        });
+        if (action === "Create") {
+            API.graphql({
+                query: mutations.createRentalListing,
+                variables: { input: state }
+            })
+                .then(res => {
+                    setError("");
+                    let listing = res.data.createRentalListing;
+                    dispatch(RentalListingActions.createRentalListing(listing));
+                    closeModal();
+                })
+                .catch(err => {
+                    console.log("create rental listing error:", err);
+                    setError("Error creating reantal listing");
+                });
+        } else if (action === "Update") {
+            API.graphql({
+                query: mutations.updateRentalListing,
+                variables: { input: state }
+            })
+                .then(res => {
+                    setError("");
+                    let listing = res.data.updateRentalListing;
+                    dispatch(RentalListingActions.updateRentalListing(listing));
+                    closeModal();
+                })
+                .catch(err => {
+                    console.log("update rental listing error:", err);
+                    setError("Error updating reantal listing");
+                });
+        };
     };
 
     return (
@@ -64,7 +101,7 @@ function RentalForm(props) {
                 name="type"
                 onChange={handleInput}
                 required
-                defaultValue={""}
+                value={type}
             >
                 <option value="" disabled hidden>選擇類型</option>
                 <option value="整層住家">整層住家</option>
@@ -88,7 +125,7 @@ function RentalForm(props) {
                 name="numberRooms"
                 onChange={handleNumInput}
                 required
-                defaultValue={""}
+                value={numberRooms}
             >
                 <option value="" disabled hidden>選擇格局</option>
                 <option value="1">1房</option>

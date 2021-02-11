@@ -3,7 +3,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import RentalForm from './rental_form';
 
 function RentalModal(props) {
-    const { show, action } = props.modalState;
+    const { show, action, listing } = props.modalState;
     const { setModal } = props;
 
     if (!show) {
@@ -11,7 +11,7 @@ function RentalModal(props) {
     };
 
     function closeModal() {
-        setModal({ show: false, action: "Create" });
+        setModal({ show: false, action: "Create", listing: null });
     };
 
     return (
@@ -27,7 +27,7 @@ function RentalModal(props) {
                         onClick={closeModal}
                     />
                 </div>
-                <RentalForm closeModal={closeModal}/>
+                <RentalForm closeModal={closeModal} action={action} listing={listing}/>
             </div>
         </div>
     );

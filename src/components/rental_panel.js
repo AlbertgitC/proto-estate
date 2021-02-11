@@ -6,9 +6,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { API } from 'aws-amplify';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/rental_listing_actions';
+import OwnerListing from './listing_owner';
 
 function RentalPanel() {
-    const [modalState, setModal] = useState({ show: false, action: "Create" });
+    const initialState = { show: false, action: "Create", listing: null };
+    const [modalState, setModal] = useState(initialState);
     const user = useSelector(state => state.user);
     const listings = useSelector(state => state.rentalListings);
     const dispatch = useDispatch();
@@ -30,21 +32,27 @@ function RentalPanel() {
             });
     }, [user, listings, dispatch]);
 
+    // function editListing(props) {
+    //     console.log(props);
+    // };
+
     return (
         <div className="rental-panel">
             <RentalModal modalState={modalState} setModal={setModal}/>
             <div className="rental-panel__header">
                 <h3>Rental Properties</h3>
-                <div className="rental-panel__add" onClick={() => { setModal({ show: true, action: "Create" })}}>
+                <div className="rental-panel__add" onClick={() => { setModal({ show: true, action: "Create", listing: null })}}>
                     <FontAwesomeIcon
                         icon={faPlusSquare}
                         transform="left-5"
                     />Add a property
                 </div>
             </div>
-            <ul>
+            <ul className="rental-panel__item-list">
                 {listings[0] ? listings.map((listing, i) => (
-                    <li key={i}>{listing.address}</li>
+                    <OwnerListing key={i} listing={listing} callBack={() => { 
+                        setModal({ show: true, action: "Update", listing: listing }); 
+                    }}/>
                 )) : null}
             </ul>
         </div>
