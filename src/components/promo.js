@@ -17,7 +17,7 @@ function Promo(props) {
     
     return (
         <div className="promo">
-            <img className="promo__img" src={imgLink} alt="promo img"></img>
+            <img className="promo__img" src={imgLink} alt="promo img" />
             <div className="promo__content">
                 <h2>{title}</h2>
                 <p>{content}</p>

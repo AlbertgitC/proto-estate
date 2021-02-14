@@ -32,10 +32,6 @@ function RentalPanel() {
             });
     }, [user, listings, dispatch]);
 
-    // function editListing(props) {
-    //     console.log(props);
-    // };
-
     return (
         <div className="rental-panel">
             <RentalModal modalState={modalState} setModal={setModal}/>

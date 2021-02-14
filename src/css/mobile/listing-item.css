@@ -1,0 +1,30 @@
+.listing-item {
+    margin-top: 15px;
+    background-color: var(--bg-color-whitesmoke);
+    color: var(--font-color-dark);
+    border-radius: 3px;
+}
+
+.listing-item__image {
+    height: 200px;
+    background-size: cover;
+    padding: 5px;
+    border-radius: 3px 3px 0 0;
+}
+
+.listing-item__tag {
+    background-color: var(--brand-green-color);
+    width: fit-content;
+    font-size: 15px;
+    padding: 1px 3px;
+    border-radius: 10px;
+}
+
+.listing-item__info {
+    padding: 5px;
+}
+
+.listing-item__price {
+    font-weight: 600;
+    font-size: 18px;
+}
