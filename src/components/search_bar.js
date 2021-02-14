@@ -1,16 +1,44 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import * as queries from '../graphql/queries';
+import * as ListingAction from '../util/actions/public_rental_listing_actions';
+import { API } from 'aws-amplify';
+import { useDispatch } from 'react-redux';
+import { useLocation, useHistory } from 'react-router-dom';
+
 
 function SearchBar() {
     const [searchInput, setInput] = useState("");
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const location = useLocation();
 
     function handleInput(e) {
         setInput(e.target.value);
     };
-
+    
     function search(e) {
         e.preventDefault();
+        if (!searchInput) return;
+
+        if (location.pathname !== "/rental-listings") {
+            history.push("/rental-listings");
+        };
+
+        API.graphql({
+            query: queries.listRentalListings,
+            authMode: "AWS_IAM",
+            variables: {
+                filter: { address: { contains: searchInput } }
+            }
+        })
+            .then(res => {
+                dispatch(ListingAction.fetchPublicRentalListings(res.data.listRentalListings.items));
+            })
+            .catch(err => {
+                console.log("fetch rental listing error:", err);
+            });
     };
 
     return (

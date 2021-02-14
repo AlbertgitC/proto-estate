@@ -45,28 +45,28 @@ function NavLinks(props) {
             </div>
             <ul className="nav__ul">
                 <li className="nav__li">
-                    <p>租房</p>
+                    <Link to="/rental-listings" onClick={closeModal}>租房</Link>
                 </li>
                 <li className="nav__li">
-                    <p>買房</p>
+                    <p style={{ textDecoration: "line-through" }}>買房</p>
                 </li>
                 <li className="nav__li">
                     <Link to="/list-rental-promo" onClick={closeModal}>出租</Link>
                 </li>
                 <li className="nav__li">
-                    <p>賣房</p>
+                    <p style={{ textDecoration: "line-through" }}>賣房</p>
                 </li>
                 <li className="nav__li">
-                    <p>找仲介</p>
+                    <p style={{ textDecoration: "line-through" }}>找仲介</p>
                 </li>
                 <li className="nav__li">
-                    <p>廣告</p>
+                    <p style={{ textDecoration: "line-through" }}>廣告</p>
                 </li>
                 <li className="nav__li">
-                    <p>幫助</p>
+                    <p style={{ textDecoration: "line-through" }}>幫助</p>
                 </li>
                 <li className={`nav__li ${state.navLi}`}>
-                    <p>帳號設定</p>
+                    <p style={{ textDecoration: "line-through" }}>帳號設定</p>
                 </li>
                 <li className={`nav__li ${state.navLi}`} onClick={signOut}>
                     <p>登出</p>
