@@ -1,18 +1,24 @@
 .search-bar {
-    text-align: center;
-}
-
-.search-bar__input {
     width: 75%;
     min-width: 230px;
     height: 35px;
+    background-color: #ffffff;
+    display: flex;
+    margin: 0 auto;
+    border-radius: 3px;
+}
+
+.search-bar__input {
+    border: none;
+    width: 100%;
+    border-radius: 3px 0 0 3px;
 }
 
 .search-bar__button {
     border: none;
     background-color: var(--brand-green-color);
-    width: 33px;
-    height: 33px;
-    border-radius: 0 3px 3px 0;
     color: #ffffff;
+    width: 46px;
+    height: 100%;
+    border-radius: 0 3px 3px 0;
 }
