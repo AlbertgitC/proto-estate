@@ -4,6 +4,10 @@ type RentalListing @model @auth (
       { allow: private, operations: [read] },
       { allow: public, operations: [read], provider: iam }
     ]
+  ) @key (
+    name: "ByAuthor", 
+    fields: ["createdBy", "createdAt"],
+    queryField: "rentalListingsByAuthor"
   ) {
   id: ID!
   createdBy: String

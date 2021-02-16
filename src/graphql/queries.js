@@ -40,3 +40,36 @@ export const listRentalListings = /* GraphQL */ `
     }
   }
 `;
+export const rentalListingsByAuthor = /* GraphQL */ `
+  query RentalListingsByAuthor(
+    $createdBy: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRentalListingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    rentalListingsByAuthor(
+      createdBy: $createdBy
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdBy
+        createdAt
+        address
+        type
+        monthlyRent
+        numberRooms
+        areaPin
+        description
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

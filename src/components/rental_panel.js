@@ -19,13 +19,13 @@ function RentalPanel() {
         if (rentalListings.initialFetch) return;
         
         API.graphql({
-            query: queries.listRentalListings,
+            query: queries.rentalListingsByAuthor,
             variables: {
-                createdBy: user.username, sortDirection: "ASC"
+                createdBy: user.username, sortDirection: "DESC"
             }
         })
             .then(res => {
-                dispatch(ListingAction.fetchRentalListings(res.data.listRentalListings.items));
+                dispatch(ListingAction.fetchRentalListings(res.data.rentalListingsByAuthor.items));
             })
             .catch(err => {
                 console.log("fetch rental listing error:", err);
