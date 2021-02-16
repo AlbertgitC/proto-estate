@@ -1,24 +1,23 @@
-const rentalListingReducer = (state = [], action) => {
+const rentalListingReducer = (state = { initialFetch: false, listings: [] }, action) => {
+    let nextState = { ...state };
     switch (action.type) {
         case "CREATE_RENTAL_LISTING":
-            if (state.length > 0) {
-                state.unshift(action.payload);
-                return state;
-            } else {
-                return [];
-            };
+            nextState.listings.unshift(action.payload);
+            return nextState;
         case "FETCH_RENTAL_LISTINGS":
-            return action.payload;
+            if (!nextState.initialFetch) nextState.initialFetch = true;
+            nextState.listings = action.payload;
+            return nextState;
         case "UPDATE_RENTAL_LISTING":
-            for (let i = 0; i < state.length; i++) {
-                if (state[i].id === action.payload.id) {
-                    state.splice(i, 1, action.payload);
+            for (let i = 0; i < nextState.listings.length; i++) {
+                if (nextState.listings[i].id === action.payload.id) {
+                    nextState.listings.splice(i, 1, action.payload);
                     break;
                 };
             };
-            return state;
+            return nextState;
         case "SIGN_OUT":
-            return [];
+            return { initialFetch: false, listings: [] };
         default:
             return state;
     }

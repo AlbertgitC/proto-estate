@@ -12,12 +12,12 @@ function RentalPanel() {
     const initialState = { show: false, action: "Create", listing: null };
     const [modalState, setModal] = useState(initialState);
     const user = useSelector(state => state.user);
-    const listings = useSelector(state => state.rentalListings);
+    const rentalListings = useSelector(state => state.rentalListings);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (listings[0]) return;
-
+        if (rentalListings.initialFetch) return;
+        
         API.graphql({
             query: queries.listRentalListings,
             variables: {
@@ -30,7 +30,7 @@ function RentalPanel() {
             .catch(err => {
                 console.log("fetch rental listing error:", err);
             });
-    }, [user, listings, dispatch]);
+    }, [user, rentalListings, dispatch]);
 
     return (
         <div className="rental-panel">
@@ -45,11 +45,16 @@ function RentalPanel() {
                 </div>
             </div>
             <ul className="rental-panel__item-list">
-                {listings[0] ? listings.map((listing, i) => (
-                    <OwnerListing key={i} listing={listing} callBack={() => { 
-                        setModal({ show: true, action: "Update", listing: listing }); 
-                    }}/>
-                )) : null}
+                {
+                    rentalListings.listings.map((listing, i) => (
+                        <OwnerListing 
+                            key={i} 
+                            listing={listing} 
+                            callBack={() => { 
+                                setModal({ show: true, action: "Update", listing: listing }); }}
+                        />
+                    ))
+                }
             </ul>
         </div>
     );

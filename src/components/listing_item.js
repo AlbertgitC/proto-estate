@@ -23,7 +23,7 @@ function ListingItem(props) {
             <div className="listing-item__info">
                 <p>
                     <span className="listing-item__price">{listing.monthlyRent}</span> 元/月<br />
-                    {listing.numberRooms}房 {listing.areaPin}坪<br />
+                    {listing.numberRooms}房 {listing.areaPin ? `${listing.areaPin}坪` : ""}<br />
                     {listing.address}
                 </p>
             </div>
