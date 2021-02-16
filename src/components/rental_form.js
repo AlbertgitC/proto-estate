@@ -26,7 +26,7 @@ function RentalForm(props) {
             type: listing.type,
             monthlyRent: listing.monthlyRent,
             numberRooms: listing.numberRooms,
-            areaPin: listing.areaPin,
+            areaPin: listing.areaPin > 0 ? listing.areaPin : "",
             description: listing.description
         });
     },[action, listing]);
@@ -50,10 +50,15 @@ function RentalForm(props) {
         
         setError("讀取中...");
 
+        let data = { ...state };
+        if (state.areaPin === "") {
+            data.areaPin = 0;
+        };
+
         if (action === "Create") {
             API.graphql({
                 query: mutations.createRentalListing,
-                variables: { input: state }
+                variables: { input: data }
             })
                 .then(res => {
                     setError("");
@@ -68,7 +73,7 @@ function RentalForm(props) {
         } else if (action === "Update") {
             API.graphql({
                 query: mutations.updateRentalListing,
-                variables: { input: state }
+                variables: { input: data }
             })
                 .then(res => {
                     setError("");

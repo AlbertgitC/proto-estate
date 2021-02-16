@@ -1,8 +1,12 @@
 const rentalListingReducer = (state = [], action) => {
     switch (action.type) {
         case "CREATE_RENTAL_LISTING":
-            state.unshift(action.payload);
-            return state;
+            if (state.length > 0) {
+                state.unshift(action.payload);
+                return state;
+            } else {
+                return [];
+            };
         case "FETCH_RENTAL_LISTINGS":
             return action.payload;
         case "UPDATE_RENTAL_LISTING":

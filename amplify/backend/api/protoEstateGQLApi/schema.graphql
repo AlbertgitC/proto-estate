@@ -12,6 +12,6 @@ type RentalListing @model @auth (
   type: String!
   monthlyRent: Float!
   numberRooms: Float!
-  areaPin: Float
-  description: String
+  areaPin: Float!
+  description: String!
 }

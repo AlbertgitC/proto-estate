@@ -12,7 +12,7 @@ function RentalListings() {
 
     useEffect(() => {
         if (listings[0]) return;
-
+        console.log("fetching")
         API.graphql({
             query: queries.listRentalListings,
             authMode: "AWS_IAM",
@@ -27,6 +27,21 @@ function RentalListings() {
                 console.log("fetch rental listing error:", err);
             });
     }, [listings, dispatch]);
+
+    // API.graphql({
+    //     query: queries.listRentalListings,
+    //     authMode: "AWS_IAM",
+    //     variables: {
+    //         filter: { address: { contains: "台北市" } }
+    //     }
+    // })
+    //     .then(res => {
+    //         console.log("fetching")
+    //         dispatch(ListingAction.fetchPublicRentalListings(res.data.listRentalListings.items));
+    //     })
+    //     .catch(err => {
+    //         console.log("fetch rental listing error:", err);
+    //     });
 
     return (
         <div className="rental-listings">
