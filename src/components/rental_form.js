@@ -6,15 +6,16 @@ import * as RentalListingActions from '../util/actions/rental_listing_actions';
 
 function RentalForm(props) {
     const initialState = {
+        type: "RentalListing",
         address: "",
-        type: "",
+        propertyType: "",
         monthlyRent: "",
         numberRooms: "",
         areaPin: "",
         description: ""
     };
     const [state, setState] = useState(initialState);
-    const { address, type, monthlyRent, numberRooms, areaPin, description } = state;
+    const { address, propertyType, monthlyRent, numberRooms, areaPin, description } = state;
     const [error, setError] = useState("");
     const { closeModal, action, listing } = props;
     const dispatch = useDispatch();
@@ -22,8 +23,9 @@ function RentalForm(props) {
     useEffect(() => {
         if (action === "Update") setState({
             id: listing.id,
+            type: "RentalListing",
             address: listing.address,
-            type: listing.type,
+            propertyType: listing.propertyType,
             monthlyRent: listing.monthlyRent,
             numberRooms: listing.numberRooms,
             areaPin: listing.areaPin > 0 ? listing.areaPin : "",
@@ -101,12 +103,12 @@ function RentalForm(props) {
                 placeholder="地址"
                 autoComplete="off"
             />
-            <label htmlFor="type" className="rental-form__label">類型<span style={{ color: "crimson" }}>*</span></label>
+            <label htmlFor="propertyType" className="rental-form__label">類型<span style={{ color: "crimson" }}>*</span></label>
             <select
-                name="type"
+                name="propertyType"
                 onChange={handleInput}
                 required
-                value={type}
+                value={propertyType}
             >
                 <option value="" disabled hidden>選擇類型</option>
                 <option value="整層住家">整層住家</option>

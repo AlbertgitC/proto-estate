@@ -14,14 +14,16 @@ function RentalListings() {
         if (publicRentalListings.initialFetch) return;
         
         API.graphql({
-            query: queries.listRentalListings,
+            query: queries.rentalListingsSortByCreatedAt,
             authMode: "AWS_IAM",
             variables: {
+                type: "RentalListing",
+                sortDirection: "DESC",
                 filter: { address: { contains: "台北市" } }
             }
         })
             .then(res => {
-                dispatch(ListingAction.fetchPublicRentalListings(res.data.listRentalListings.items));
+                dispatch(ListingAction.fetchPublicRentalListings(res.data.rentalListingsSortByCreatedAt.items));
             })
             .catch(err => {
                 console.log("fetch rental listing error:", err);

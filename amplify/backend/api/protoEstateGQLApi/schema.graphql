@@ -8,12 +8,17 @@ type RentalListing @model @auth (
     name: "ByAuthor", 
     fields: ["createdBy", "createdAt"],
     queryField: "rentalListingsByAuthor"
+  ) @key (
+    name: "ByType", 
+    fields: ["type", "createdAt"],
+    queryField: "rentalListingsSortByCreatedAt"
   ) {
   id: ID!
   createdBy: String
   createdAt: String
-  address: String!
   type: String!
+  address: String!
+  propertyType: String!
   monthlyRent: Float!
   numberRooms: Float!
   areaPin: Float!

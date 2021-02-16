@@ -7,8 +7,9 @@ export const getRentalListing = /* GraphQL */ `
       id
       createdBy
       createdAt
-      address
       type
+      address
+      propertyType
       monthlyRent
       numberRooms
       areaPin
@@ -28,8 +29,9 @@ export const listRentalListings = /* GraphQL */ `
         id
         createdBy
         createdAt
-        address
         type
+        address
+        propertyType
         monthlyRent
         numberRooms
         areaPin
@@ -61,8 +63,43 @@ export const rentalListingsByAuthor = /* GraphQL */ `
         id
         createdBy
         createdAt
-        address
         type
+        address
+        propertyType
+        monthlyRent
+        numberRooms
+        areaPin
+        description
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const rentalListingsSortByCreatedAt = /* GraphQL */ `
+  query RentalListingsSortByCreatedAt(
+    $type: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRentalListingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    rentalListingsSortByCreatedAt(
+      type: $type
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdBy
+        createdAt
+        type
+        address
+        propertyType
         monthlyRent
         numberRooms
         areaPin

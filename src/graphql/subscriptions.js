@@ -7,8 +7,9 @@ export const onCreateRentalListing = /* GraphQL */ `
       id
       createdBy
       createdAt
-      address
       type
+      address
+      propertyType
       monthlyRent
       numberRooms
       areaPin
@@ -23,8 +24,9 @@ export const onUpdateRentalListing = /* GraphQL */ `
       id
       createdBy
       createdAt
-      address
       type
+      address
+      propertyType
       monthlyRent
       numberRooms
       areaPin
@@ -39,8 +41,9 @@ export const onDeleteRentalListing = /* GraphQL */ `
       id
       createdBy
       createdAt
-      address
       type
+      address
+      propertyType
       monthlyRent
       numberRooms
       areaPin

@@ -27,14 +27,16 @@ function SearchBar() {
         };
 
         API.graphql({
-            query: queries.listRentalListings,
+            query: queries.rentalListingsSortByCreatedAt,
             authMode: "AWS_IAM",
             variables: {
+                type: "RentalListing",
+                sortDirection: "DESC",
                 filter: { address: { contains: searchInput } }
             }
         })
             .then(res => {
-                dispatch(ListingAction.fetchPublicRentalListings(res.data.listRentalListings.items));
+                dispatch(ListingAction.fetchPublicRentalListings(res.data.rentalListingsSortByCreatedAt.items));
             })
             .catch(err => {
                 console.log("fetch rental listing error:", err);
