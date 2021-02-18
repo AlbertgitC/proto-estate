@@ -16,11 +16,13 @@ type RentalListing @model @auth (
   id: ID!
   createdBy: String
   createdAt: String
-  type: String!
-  address: String!
-  propertyType: String!
-  monthlyRent: Float!
-  numberRooms: Float!
-  areaPin: Float!
-  description: String!
+  type: String
+  address: String
+  propertyType: String
+  monthlyRent: Float
+  numberRooms: Float
+  areaPin: Float
+  description: String
+  photos: [String]
+  postPhoto: String
 }

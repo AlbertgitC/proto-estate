@@ -14,6 +14,8 @@ export const getRentalListing = /* GraphQL */ `
       numberRooms
       areaPin
       description
+      photos
+      postPhoto
       updatedAt
     }
   }
@@ -36,6 +38,8 @@ export const listRentalListings = /* GraphQL */ `
         numberRooms
         areaPin
         description
+        photos
+        postPhoto
         updatedAt
       }
       nextToken
@@ -70,6 +74,8 @@ export const rentalListingsByAuthor = /* GraphQL */ `
         numberRooms
         areaPin
         description
+        photos
+        postPhoto
         updatedAt
       }
       nextToken
@@ -104,6 +110,8 @@ export const rentalListingsSortByCreatedAt = /* GraphQL */ `
         numberRooms
         areaPin
         description
+        photos
+        postPhoto
         updatedAt
       }
       nextToken

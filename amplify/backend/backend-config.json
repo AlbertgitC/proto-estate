@@ -27,5 +27,11 @@
       "dependsOn": [],
       "customAuth": false
     }
+  },
+  "storage": {
+    "protoEstateS3": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }

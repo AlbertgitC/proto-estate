@@ -3,6 +3,9 @@ import { API } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 import { useDispatch } from 'react-redux';
 import * as RentalListingActions from '../util/actions/rental_listing_actions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusSquare, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function RentalForm(props) {
     const initialState = {
@@ -19,6 +22,7 @@ function RentalForm(props) {
     const [error, setError] = useState("");
     const { closeModal, action, listing } = props;
     const dispatch = useDispatch();
+    const [imageState, setImage] = useState([]);
 
     useEffect(() => {
         if (action === "Update") setState({
@@ -45,6 +49,21 @@ function RentalForm(props) {
             let numVal = parseFloat(val);
             setState({ ...state, [e.target.name]: numVal });
         };
+    };
+
+    function handleImageInput(e) {
+        let file = e.target.files[0];
+        if (!file) return;
+        let nextState = imageState.slice();
+        nextState.push(file);
+        setImage(nextState);
+    };
+
+    function removeImage(e, idx) {
+        e.stopPropagation();
+        let nextState = imageState.slice();
+        nextState.splice(idx, 1);
+        setImage(nextState);
     };
 
     function handleSubmit(e) {
@@ -163,6 +182,40 @@ function RentalForm(props) {
                 value={description}
                 autoComplete="off"
             />
+            <label className="rental-form__label">上傳照片(最多3張)</label>
+            <div className="rental-form__image-wrapper">
+                {
+                    imageState.map((image, i) => (
+                        <div key={i} className="rental-form__image" 
+                            style={{ backgroundImage: `url(${URL.createObjectURL(image)})`}}>
+                            <div className="rental-form__image-tag">封面照片</div>
+                            <FontAwesomeIcon
+                                className="rental-form__remove-image"
+                                icon={faTimes}
+                                size="2x"
+                                transform="up-0.2"
+                                onClick={e => {removeImage(e, i)}}
+                            />
+                        </div>
+                    ))
+                }
+                <div className="rental-form__add-image">
+                    <label htmlFor="image-uploads">
+                        <FontAwesomeIcon
+                            icon={faPlusSquare}
+                            size="4x"
+                            transform="right-0.9"
+                        />
+                    </label>
+                    <input 
+                        type="file" 
+                        id="image-uploads" 
+                        accept="image/*"
+                        onChange={handleImageInput}
+                        style={{ opacity: "0", width: "0" }}
+                    />
+                </div>
+            </div>
             <button className="rental-form__button">確定</button>
             <p>{error}</p>
         </form>
