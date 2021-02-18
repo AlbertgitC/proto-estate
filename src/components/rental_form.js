@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
-import { API } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 import { useDispatch } from 'react-redux';
 import * as RentalListingActions from '../util/actions/rental_listing_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusSquare, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { v4 as uuid } from 'uuid';
+import config from '../aws-exports';
+
+const {
+    aws_user_files_s3_bucket_region: region,
+    aws_user_files_s3_bucket: bucket
+} = config
 
 function RentalForm(props) {
     const initialState = {
@@ -22,7 +29,7 @@ function RentalForm(props) {
     const [error, setError] = useState("");
     const { closeModal, action, listing } = props;
     const dispatch = useDispatch();
-    const [imageState, setImage] = useState([]);
+    const [imageState, setImage] = useState({ images: [], display: "block" });
 
     useEffect(() => {
         if (action === "Update") setState({
@@ -53,16 +60,21 @@ function RentalForm(props) {
 
     function handleImageInput(e) {
         let file = e.target.files[0];
+        e.target.value = "";
         if (!file) return;
-        let nextState = imageState.slice();
-        nextState.push(file);
+        let nextState = { ...imageState };
+        nextState.images.push(file);
+        if (nextState.images.length >= 3) {
+            nextState.display = "none";
+        };
         setImage(nextState);
     };
 
     function removeImage(e, idx) {
         e.stopPropagation();
-        let nextState = imageState.slice();
-        nextState.splice(idx, 1);
+        let nextState = { ...imageState };
+        nextState.images.splice(idx, 1);
+        nextState.display = "block";
         setImage(nextState);
     };
 
@@ -82,9 +94,37 @@ function RentalForm(props) {
                 variables: { input: data }
             })
                 .then(res => {
-                    setError("");
+                    setError("uploading");
                     let listing = res.data.createRentalListing;
                     dispatch(RentalListingActions.createRentalListing(listing));
+
+                    if (imageState.images[0]) {
+                        let imageUrls = [];
+                        for (let file of imageState.images) {
+                            const extension = file.name.split(".")[1];
+                            const { type: mimeType } = file;
+                            const key = `images/${uuid()}_${listing.id}.${extension}`;
+                            const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+                            imageUrls.push(url);
+
+                            Storage.put(key, file, {
+                                contentType: mimeType
+                            });
+                        };
+
+                        API.graphql({
+                            query: mutations.updateRentalListing,
+                            variables: { input: {
+                                id: listing.id,
+                                photos: imageUrls,
+                                postPhoto: imageUrls[0]
+                            } }
+                        })
+                    };
+                })
+                .then(res => {
+                    console.log(res);
+                    setError("");
                     closeModal();
                 })
                 .catch(err => {
@@ -185,10 +225,10 @@ function RentalForm(props) {
             <label className="rental-form__label">上傳照片(最多3張)</label>
             <div className="rental-form__image-wrapper">
                 {
-                    imageState.map((image, i) => (
+                    imageState.images.map((image, i) => (
                         <div key={i} className="rental-form__image" 
                             style={{ backgroundImage: `url(${URL.createObjectURL(image)})`}}>
-                            <div className="rental-form__image-tag">封面照片</div>
+                            {/* <div className="rental-form__image-tag">封面照片</div> */}
                             <FontAwesomeIcon
                                 className="rental-form__remove-image"
                                 icon={faTimes}
@@ -199,7 +239,7 @@ function RentalForm(props) {
                         </div>
                     ))
                 }
-                <div className="rental-form__add-image">
+                <div className="rental-form__add-image" style={{ display: `${imageState.display}` }}>
                     <label htmlFor="image-uploads">
                         <FontAwesomeIcon
                             icon={faPlusSquare}
