@@ -19,12 +19,12 @@
 
 .sign-up--show {
     animation-duration: 0.5s;
-    animation-name: slideUp;
+    animation-name: signUpSlideUp;
 }
 
-@keyframes slideUp {
+@keyframes signUpSlideUp {
     from {
-        margin-top: 60%;
+        margin-top: 48px;
     }
 
     to {

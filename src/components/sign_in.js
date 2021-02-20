@@ -73,22 +73,26 @@ function SignIn(props) {
     return (
         <div className={`sign-in ${animation}`}>
             <form className="sign-in__form" onSubmit={signIn}>
+                <label htmlFor="email">Email</label>
                 <input
                     className="sign-in__input"
-                    name='email'
-                    type='email'
+                    id="email"
+                    name="email"
+                    type="email"
                     onChange={handleInput}
                     value={email}
-                    placeholder='Email'
+                    placeholder="輸入Email"
                     autoComplete="username"
                 />
+                <label htmlFor="password">密碼</label>
                 <input
                     className="sign-in__input"
-                    name='password'
-                    type='password'
+                    id="password"
+                    name="password"
+                    type="password"
                     onChange={handleInput}
                     value={password}
-                    placeholder='密碼'
+                    placeholder="輸入密碼"
                     autoComplete="password"
                 />
                 <button className="sign-in__button">登入</button>

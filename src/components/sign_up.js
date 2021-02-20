@@ -28,21 +28,23 @@ export function SignUpForm(props) {
             phoneNumber = "+886" + digits;
         };
 
-        if (email === "" || password === "" || name === "" || phone_number === "") {
-            let missing = [];
-            if (email === "") missing.push("Email");
-            if (password === "") missing.push("密碼");
-            if (name === "") missing.push("姓名");
-            if (phone_number === "") missing.push("手機號碼");
-            let missingString = missing.reduce((accu, val) => {
-                return accu + `, ${val}`;
-            });
-            updateState({ ...state, err: `資料不完全: ${missingString}` });
-            return;
-        } else if (password.length < 8 || password.length > 20) {
-            updateState({ ...state, err: "密碼長度必須在8-20內" });
-            return;
-        } else if (phoneNumber.length !== 13) {
+        /* data check */
+        // if (email === "" || password === "" || name === "" || phone_number === "") {
+        //     let missing = [];
+        //     if (email === "") missing.push("Email");
+        //     if (password === "") missing.push("密碼");
+        //     if (name === "") missing.push("姓名");
+        //     if (phone_number === "") missing.push("手機號碼");
+        //     let missingString = missing.reduce((accu, val) => {
+        //         return accu + `, ${val}`;
+        //     });
+        //     updateState({ ...state, err: `資料不完全: ${missingString}` });
+        //     return;
+        // } else if (password.length < 8 || password.length > 20) {
+        //     updateState({ ...state, err: "密碼長度必須在8-20內" });
+        //     return;
+        // } else 
+        if (phoneNumber.length !== 13) {
             updateState({ ...state, err: "手機號碼不正確" });
             return;
         };
@@ -73,38 +75,55 @@ export function SignUpForm(props) {
 
     return (
         <div className={`sign-up ${animation}`}>
-            <form className='sign-up__form' onSubmit={handleSubmit}>
+            <form className="sign-up__form" onSubmit={handleSubmit}>
+                <label htmlFor="email">Email</label>
                 <input
-                    className='sign-up__input'
-                    name='email'
-                    type='email'
+                    className="sign-up__input"
+                    id="email"
+                    name="email"
+                    required
+                    type="email"
+                    maxLength="250"
                     onChange={handleInput}
                     value={email}
-                    placeholder='Email'
+                    placeholder="輸入Email"
                     autoComplete="username"
                 />
+                <label htmlFor="password">密碼</label>
                 <input
-                    className='sign-up__input'
-                    name='password'
-                    type='password'
+                    className="sign-up__input"
+                    id="password"
+                    name="password"
+                    required
+                    type="password"
+                    minLength="8"
+                    maxLength="20"
                     onChange={handleInput}
                     value={password}
-                    placeholder='密碼'
+                    placeholder="輸入密碼"
                     autoComplete="new-password"
                 />
+                <label htmlFor="name">姓名</label>
                 <input
-                    className='sign-up__input'
-                    name='name'
+                    className="sign-up__input"
+                    id="name"
+                    name="name"
+                    required
+                    maxLength="250"
                     onChange={handleInput}
                     value={name}
-                    placeholder='姓名'
+                    placeholder="輸入姓名"
                 />
+                <label htmlFor="phone_number">手機號碼</label>
                 <input
-                    className='sign-up__input'
-                    name='phone_number'
+                    className="sign-up__input"
+                    id="phone_number"
+                    name="phone_number"
+                    required
+                    maxLength="250"
                     onChange={handleInput}
                     value={phone_number}
-                    placeholder='手機號碼'
+                    placeholder="輸入手機號碼"
                 />
                 <button className="sign-up__button">註冊帳號</button>
             </form>

@@ -169,6 +169,7 @@ function RentalForm(props) {
             <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
             <input
                 className="rental-form__input"
+                id="address"
                 name="address"
                 required
                 maxLength="250"
@@ -179,6 +180,7 @@ function RentalForm(props) {
             />
             <label htmlFor="propertyType" className="rental-form__label">類型<span style={{ color: "crimson" }}>*</span></label>
             <select
+                id="propertyType"
                 name="propertyType"
                 onChange={handleInput}
                 required
@@ -193,6 +195,7 @@ function RentalForm(props) {
             <label htmlFor="monthlyRent" className="rental-form__label">租金(月租)<span style={{ color: "crimson" }}>*</span></label>
             <input
                 className="rental-form__input"
+                id="monthlyRent"
                 type="number"
                 name="monthlyRent"
                 required
@@ -203,6 +206,7 @@ function RentalForm(props) {
             />
             <label htmlFor="numberRooms" className="rental-form__label">格局<span style={{ color: "crimson" }}>*</span></label>
             <select
+                id="numberRooms"
                 name="numberRooms"
                 onChange={handleNumInput}
                 required
@@ -221,6 +225,7 @@ function RentalForm(props) {
             <label htmlFor="areaPin" className="rental-form__label">坪數</label>
             <input
                 className="rental-form__input"
+                id="areaPin"
                 type="number"
                 name="areaPin"
                 onChange={handleNumInput}
@@ -230,13 +235,15 @@ function RentalForm(props) {
             />
             <label htmlFor="description" className="rental-form__label">Detailed description</label>
             <textarea
-                className="rental-form__input"
-                maxLength="250"
+                className="rental-form__textarea"
+                id="description"
+                maxLength="500"
                 name="description"
                 onChange={handleInput}
                 value={description}
                 autoComplete="off"
             />
+            <small>{`${description.length}/500`}</small>
             <label className="rental-form__label">上傳照片(最多3張)</label>
             <div className="rental-form__image-wrapper">
                 {

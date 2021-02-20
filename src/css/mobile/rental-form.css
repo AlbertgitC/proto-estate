@@ -7,6 +7,10 @@
     padding-top: 24px;
 }
 
+.rental-form__textarea {
+    height: 120px;
+}
+
 .rental-form__image-wrapper {
     display: flex;
     flex-direction: column;
