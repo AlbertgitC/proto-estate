@@ -12,7 +12,6 @@ function RentalListings() {
 
     useEffect(() => {
         if (publicRentalListings.initialFetch) return;
-        
         API.graphql({
             query: queries.rentalListingsSortByCreatedAt,
             authMode: "AWS_IAM",
@@ -36,7 +35,7 @@ function RentalListings() {
             <h2 className="rental-listings__header">Rental Listings</h2>
             <ul className="rental-listings__ul">
                 {publicRentalListings.listings.map((listing, i) => {
-                    return (<ListingItem key={i} listing={listing} imgFile="norbert-levajsics-oTJ92KUXHls-unsplash.jpg" />);
+                    return (<ListingItem key={i} listing={listing} />);
                 })}
             </ul>
         </div>

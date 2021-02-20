@@ -8,6 +8,7 @@
 .listing-item__image {
     height: 200px;
     background-size: cover;
+    background-position: center;
     padding: 5px;
     border-radius: 3px 3px 0 0;
 }

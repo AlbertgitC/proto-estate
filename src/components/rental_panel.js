@@ -3,7 +3,7 @@ import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import RentalModal from './rental_panel_modal';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { API, Storage } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/rental_listing_actions';
 import OwnerListing from './listing_owner';
@@ -17,7 +17,6 @@ function RentalPanel() {
 
     useEffect(() => {
         if (rentalListings.initialFetch) return;
-        
         API.graphql({
             query: queries.rentalListingsByAuthor,
             variables: {

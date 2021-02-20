@@ -99,20 +99,20 @@ function RentalForm(props) {
                     dispatch(RentalListingActions.createRentalListing(listing));
 
                     if (imageState.images[0]) {
-                        let imageUrls = [];
+                        let imageKeys = [];
                         let uploadPromise = [];
 
                         for (let file of imageState.images) {
                             const extension = file.name.split(".")[1];
                             const { type: mimeType } = file;
                             const key = `images/${uuid()}_${listing.id}.${extension}`;
-                            // live site url:
+                            // live site url
                             // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
 
                             // mock storage url
-                            const url = `http://localhost:20005/${bucket}/public/${key}`;
+                            // const url = `http://localhost:20005/${bucket}/public/${key}`;
 
-                            imageUrls.push(url);
+                            imageKeys.push(key);
 
                             let promise = Storage.put(key, file, {
                                 contentType: mimeType
@@ -121,20 +121,21 @@ function RentalForm(props) {
                             uploadPromise.push(promise);
                         };
 
-                        Promise.all(uploadPromise).then(res => {
-                            API.graphql({
-                                query: mutations.updateRentalListing,
-                                variables: { input: {
-                                    id: listing.id,
-                                    photos: imageUrls,
-                                    postPhoto: imageUrls[0]
-                                } }
-                            })
-                                .then(res => {
-                                    let listing = res.data.updateRentalListing;
-                                    dispatch(RentalListingActions.updateRentalListing(listing));
+                        Promise.all(uploadPromise)
+                            .then(() => {
+                                return API.graphql({
+                                    query: mutations.updateRentalListing,
+                                    variables: { input: {
+                                        id: listing.id,
+                                        photos: imageKeys,
+                                        postPhoto: imageKeys[0]
+                                    } }
                                 });
-                        });
+                            })
+                            .then(res => {
+                                let listing = res.data.updateRentalListing;
+                                dispatch(RentalListingActions.updateRentalListing(listing));
+                            });
                     };
                 })
                 .then(() => {

@@ -1,23 +1,18 @@
-import { useState, useEffect } from 'react';
+import defaultImg from '../images/home-1294564_640.jpg';
+import config from '../aws-exports';
+
+const {
+    aws_user_files_s3_bucket: bucket
+} = config
 
 function ListingItem(props) {
-    const [imgLink, setLink] = useState("");
-    const { listing, imgFile } = props;
-
-    useEffect(() => {
-        let isSubscribed = true;
-        if (isSubscribed) {
-            import(`../images/${imgFile}`)
-                .then(res => {
-                    setLink(res.default);
-                });
-        };
-        return () => (isSubscribed = false);
-    }, [imgFile]);
+    const { listing } = props;
+    let imgUrl = listing.postPhoto ? `http://localhost:20005/${bucket}/public/${listing.postPhoto}` : defaultImg;
 
     return (
         <li className="listing-item">
-            <div className="listing-item__image" style={{ backgroundImage: `url(${imgLink})` }}>
+            <div className="listing-item__image" style={{ 
+                backgroundImage: `url(${imgUrl})` }}>
                 <div className="listing-item__tag">New</div>
             </div>
             <div className="listing-item__info">
