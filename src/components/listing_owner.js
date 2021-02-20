@@ -1,21 +1,9 @@
-import { useState, useEffect } from 'react';
+import defaultImg from '../images/home-1294564_640.jpg';
 
 export default function OwnerListing(props) {
-    const [imgLink, setLink] = useState("");
     const { listing, callBack } = props;
 
-    useEffect(() => {
-        let isSubscribed = true;
-        if (isSubscribed && !listing.postPhoto) {
-            import("../images/home-1294564_640.jpg")
-                .then(res => {
-                    setLink(res.default);
-                });
-        } else if (isSubscribed && listing.postPhoto) {
-            setLink(listing.postPhoto);
-        };
-        return () => (isSubscribed = false);
-    }, [listing]);
+    let imgLink = listing.postPhoto ? listing.postPhoto : defaultImg;
 
     return (
         <li className="rental-panel__item">

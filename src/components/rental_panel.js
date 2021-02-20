@@ -3,7 +3,7 @@ import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import RentalModal from './rental_panel_modal';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { API } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/rental_listing_actions';
 import OwnerListing from './listing_owner';
