@@ -36,7 +36,7 @@ function RentalPanel() {
             <RentalModal modalState={modalState} setModal={setModal}/>
             <div className="rental-panel__header">
                 <h3>Rental Properties</h3>
-                <div className="rental-panel__add" onClick={() => { setModal({ show: true, action: "Create", listing: null })}}>
+                <div className="rental-panel__add" onClick={() => { setModal({ show: true, action: "Create" })}}>
                     <FontAwesomeIcon
                         icon={faPlusSquare}
                         transform="left-5"

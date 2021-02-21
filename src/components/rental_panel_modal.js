@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import RentalForm from './rental_form';
+import RentalUpdateForm from './rental_update_form';
 
 function RentalModal(props) {
     const { show, action, listing } = props.modalState;
@@ -13,6 +14,10 @@ function RentalModal(props) {
     function closeModal() {
         setModal({ show: false, action: "Create", listing: null });
     };
+
+    let component;
+    if (action === "Create") component = <RentalForm closeModal={closeModal} />;
+    if (action === "Update") component = <RentalUpdateForm closeModal={closeModal} listing={listing} />;
 
     return (
         <div className="rental-modal" onClick={closeModal}>
@@ -27,7 +32,8 @@ function RentalModal(props) {
                         onClick={closeModal}
                     />
                 </div>
-                <RentalForm closeModal={closeModal} action={action} listing={listing}/>
+                {/* <RentalForm closeModal={closeModal} action={action} listing={listing}/> */}
+                {component}
             </div>
         </div>
     );
