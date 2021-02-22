@@ -31,7 +31,8 @@ function RentalUpdateForm({ closeModal, listing }) {
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ 
         images: [], 
-        display: photos.length < 3 ? "block" : "none"
+        displayPlus: photos.length < 3 ? "block" : "none",
+        displayConfirm: "none"
     });
 
     // useEffect(() => {
@@ -67,8 +68,9 @@ function RentalUpdateForm({ closeModal, listing }) {
         if (!file) return;
         let nextState = { ...imageState };
         nextState.images.push(file);
-        if (nextState.images.length >= 3) {
-            nextState.display = "none";
+        let totalImg = photos.length + nextState.images.length;
+        if (totalImg >= 3) {
+            nextState.displayPlus = "none";
         };
         setImage(nextState);
     };
@@ -77,12 +79,18 @@ function RentalUpdateForm({ closeModal, listing }) {
         e.stopPropagation();
         let nextState = { ...imageState };
         nextState.images.splice(idx, 1);
-        nextState.display = "block";
+        nextState.displayPlus = "block";
         setImage(nextState);
+        setState({ ...state, postPhoto: listing.postPhoto });
     };
 
     function setPostPhoto(imageKey) {
-        setState({ ...state, postPhoto: imageKey });
+        if (postPhoto !== imageKey) setState({ ...state, postPhoto: imageKey });
+    };
+
+    function showDeleteConfirm(e) {
+        e.stopPropagation();
+        setImage({ ...imageState, displayConfirm: "block" });
     };
 
     function handleSubmit(e) {
@@ -284,28 +292,33 @@ function RentalUpdateForm({ closeModal, listing }) {
                                     icon={faTimes}
                                     size="2x"
                                     transform="up-0.2"
-                                    // onClick={e => { removeImage(e, i) }}
+                                    onClick={e => { showDeleteConfirm(e) }}
                                 />
                             </div>
                         );
                     })
                 }
                 {
-                    imageState.images.map((image, i) => (
-                        <div key={i} className="rental-form__image"
-                            style={{ backgroundImage: `url(${URL.createObjectURL(image)})` }}>
-                            {/* <div className="rental-form__image-tag">封面照片</div> */}
-                            <FontAwesomeIcon
-                                className="rental-form__remove-image"
-                                icon={faTimes}
-                                size="2x"
-                                transform="up-0.2"
-                                onClick={e => { removeImage(e, i) }}
-                            />
-                        </div>
-                    ))
+                    imageState.images.map((image, i) => {
+                        let tag = null;
+                        if (postPhoto === image.name) tag = <div className="rental-form__image-tag">封面照片</div>;
+                        return (
+                            <div key={i} className="rental-form__image"
+                                style={{ backgroundImage: `url(${URL.createObjectURL(image)})` }}
+                                onClick={() => { setPostPhoto(image.name) }}>
+                                {tag}
+                                <FontAwesomeIcon
+                                    className="rental-form__remove-image"
+                                    icon={faTimes}
+                                    size="2x"
+                                    transform="up-0.2"
+                                    onClick={e => { removeImage(e, i) }}
+                                />
+                            </div>
+                        );
+                    })
                 }
-                <div className="rental-form__add-image" style={{ display: `${imageState.display}` }}>
+                <div className="rental-form__add-image" style={{ display: `${imageState.displayPlus}` }}>
                     <label htmlFor="image-uploads">
                         <FontAwesomeIcon
                             icon={faPlusSquare}
@@ -324,6 +337,19 @@ function RentalUpdateForm({ closeModal, listing }) {
             </div>
             <button className="rental-form__button">確定</button>
             <p>{error}</p>
+            <div className="rental-form__modal" style={{ display: `${imageState.displayConfirm}` }}>
+                <div className="rental-form__delete-confirm">
+                    <p>確定刪除照片?</p>
+                    <div className="rental-form__confirm-wrapper">
+                        <div className="rental-form__confirm-button">確定</div>
+                        <div 
+                            className="rental-form__confirm-button"
+                            onClick={() => { 
+                                setImage({ ...imageState, displayConfirm: "none" });
+                        }}>取消</div>
+                    </div>
+                </div>
+            </div>
         </form>
     );
 };

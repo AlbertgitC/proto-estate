@@ -25,7 +25,7 @@
     background-position: center;
     margin-bottom: 5px;
     display: flex;
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
     justify-content: space-between;
     padding: 5px;
 }
@@ -42,6 +42,7 @@
     border-radius: 20px;
     height: 22px;
     border: 2px solid;
+    margin-left: auto;
 }
 
 .rental-form__add-image {
@@ -51,4 +52,39 @@
 .rental-form__button {
     margin-top: 24px;
     background-color: var(--brand-green-color);
+}
+
+.rental-form__modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.rental-form__delete-confirm {
+    background-color: #ffffff;
+    width: 260px;
+    margin: 50% auto 0 auto;
+    border-radius: 3px;
+	padding: 15px;
+	color: var(--font-color-dark);
+    text-align: center;
+}
+
+.rental-form__confirm-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 7px;
+}
+
+.rental-form__confirm-button {
+    border: 1px solid var(--font-color-light);
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 2px 25px;
 }
