@@ -28,10 +28,6 @@ function SignIn(props) {
 
     function signIn(e) {
         e.preventDefault();
-        if (email === "" || password === "") {
-            updateState({ ...state, err: "Email / 密碼錯誤" });
-            return;
-        };
 
         updateState({ ...state, err: "讀取中..." });
 
@@ -78,6 +74,7 @@ function SignIn(props) {
                     className="sign-in__input"
                     id="email"
                     name="email"
+                    required
                     type="email"
                     onChange={handleInput}
                     value={email}
@@ -89,6 +86,7 @@ function SignIn(props) {
                     className="sign-in__input"
                     id="password"
                     name="password"
+                    required
                     type="password"
                     onChange={handleInput}
                     value={password}

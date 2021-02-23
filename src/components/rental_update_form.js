@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { API, Storage } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 import { useDispatch } from 'react-redux';
@@ -15,38 +15,18 @@ const {
 } = config
 
 function RentalUpdateForm({ closeModal, listing }) {
-    // const initialState = {
-    //     type: "RentalListing",
-    //     address: "",
-    //     propertyType: "",
-    //     monthlyRent: "",
-    //     numberRooms: "",
-    //     areaPin: "",
-    //     description: ""
-    // };
-    const [state, setState] = useState(listing);
-    const { address, propertyType, monthlyRent, numberRooms, areaPin, description, photos, postPhoto } = state;
+    const initialState = { ...listing };
+    initialState.photos = listing.photos.slice();
+    const [state, setState] = useState(initialState);
+    const { id, address, propertyType, monthlyRent, numberRooms, areaPin, description, photos, postPhoto } = state;
     const [error, setError] = useState("");
-    // const { closeModal, action, listing } = props;
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ 
         images: [], 
         displayPlus: photos.length < 3 ? "block" : "none",
         displayConfirm: "none"
     });
-
-    // useEffect(() => {
-    //     if (action === "Update") setState({
-    //         id: listing.id,
-    //         type: "RentalListing",
-    //         address: listing.address,
-    //         propertyType: listing.propertyType,
-    //         monthlyRent: listing.monthlyRent,
-    //         numberRooms: listing.numberRooms,
-    //         areaPin: listing.areaPin > 0 ? listing.areaPin : "",
-    //         description: listing.description
-    //     });
-    // }, [action, listing]);
+    const deleteImg = useRef(null);
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -78,20 +58,68 @@ function RentalUpdateForm({ closeModal, listing }) {
     function removeImage(e, idx) {
         e.stopPropagation();
         let nextState = { ...imageState };
+        let imgName = imageState.images[idx].name;
         nextState.images.splice(idx, 1);
         nextState.displayPlus = "block";
         setImage(nextState);
-        setState({ ...state, postPhoto: listing.postPhoto });
+
+        if (postPhoto === imgName) {
+            let nextPostPhoto;
+            if (photos[0]) {
+                nextPostPhoto = photos[0];
+            } else if (nextState.images[0]) {
+                nextPostPhoto = nextState.images[0].name;
+            } else {
+                nextPostPhoto = "";
+            };
+            setState({ ...state, postPhoto: nextPostPhoto });
+        };
     };
 
     function setPostPhoto(imageKey) {
         if (postPhoto !== imageKey) setState({ ...state, postPhoto: imageKey });
     };
 
-    function showDeleteConfirm(e) {
+    function showDeleteConfirm(e, imageKey) {
         e.stopPropagation();
+        deleteImg.current = imageKey;
         setImage({ ...imageState, displayConfirm: "block" });
     };
+
+    function deletePhoto() {
+        const key = deleteImg.current;
+        let idx = photos.indexOf(key);
+        let photosCopy = photos.slice();
+        photosCopy.splice(idx, 1);
+        let postPhotoCopy = postPhoto;
+        if (!photosCopy.includes(postPhotoCopy)) {
+            photosCopy.length > 0 ? postPhotoCopy = photosCopy[0] : postPhotoCopy = "";
+        }
+
+        const data = { id, photos: photosCopy, postPhoto: postPhotoCopy };
+        const deleteImgS3 = Storage.remove(key);
+        const updateListing = API.graphql({
+            query: mutations.updateRentalListing,
+            variables: { input: data }
+        });
+
+        Promise.all([
+            deleteImgS3.catch(error => { return error }), 
+            updateListing.catch(error => { return error })
+        ])
+            .then(res => {
+                setError("");
+                let newListing = res[1].data.updateRentalListing;
+                dispatch(RentalListingActions.updateRentalListing(newListing));
+                setState({ ...state, photos: photosCopy, postPhoto: postPhotoCopy });
+                setImage({ ...imageState, displayConfirm: "none" });
+            })
+            .catch(err => {
+                console.log("delete photo error: ", err);
+                setError("Error deleting photo");
+                setImage({ ...imageState, displayConfirm: "none" });
+            });
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -109,95 +137,19 @@ function RentalUpdateForm({ closeModal, listing }) {
         })
             .then(res => {
                 setError("");
-                let listing = res.data.updateRentalListing;
-                dispatch(RentalListingActions.updateRentalListing(listing));
+                let newListing = res.data.updateRentalListing;
+                dispatch(RentalListingActions.updateRentalListing(newListing));
                 closeModal();
             })
             .catch(err => {
                 console.log("update rental listing error:", err);
                 setError("Error updating reantal listing");
             });
-
-        // if (action === "Create") {
-        //     API.graphql({
-        //         query: mutations.createRentalListing,
-        //         variables: { input: data }
-        //     })
-        //         .then(res => {
-        //             setError("uploading");
-        //             let listing = res.data.createRentalListing;
-        //             dispatch(RentalListingActions.createRentalListing(listing));
-
-        //             if (imageState.images[0]) {
-        //                 let imageKeys = [];
-        //                 let uploadPromise = [];
-
-        //                 for (let file of imageState.images) {
-        //                     const extension = file.name.split(".")[1];
-        //                     const { type: mimeType } = file;
-        //                     const key = `images/${uuid()}_${listing.id}.${extension}`;
-        //                     // live site url
-        //                     // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-
-        //                     // mock storage url
-        //                     // const url = `http://localhost:20005/${bucket}/public/${key}`;
-
-        //                     imageKeys.push(key);
-
-        //                     let promise = Storage.put(key, file, {
-        //                         contentType: mimeType
-        //                     });
-
-        //                     uploadPromise.push(promise);
-        //                 };
-
-        //                 Promise.all(uploadPromise)
-        //                     .then(() => {
-        //                         return API.graphql({
-        //                             query: mutations.updateRentalListing,
-        //                             variables: {
-        //                                 input: {
-        //                                     id: listing.id,
-        //                                     photos: imageKeys,
-        //                                     postPhoto: imageKeys[0]
-        //                                 }
-        //                             }
-        //                         });
-        //                     })
-        //                     .then(res => {
-        //                         let listing = res.data.updateRentalListing;
-        //                         dispatch(RentalListingActions.updateRentalListing(listing));
-        //                     });
-        //             };
-        //         })
-        //         .then(() => {
-        //             setError("");
-        //             closeModal();
-        //         })
-        //         .catch(err => {
-        //             console.log("create rental listing error:", err);
-        //             setError("Error creating reantal listing");
-        //         });
-        // } else if (action === "Update") {
-        //     API.graphql({
-        //         query: mutations.updateRentalListing,
-        //         variables: { input: data }
-        //     })
-        //         .then(res => {
-        //             setError("");
-        //             let listing = res.data.updateRentalListing;
-        //             dispatch(RentalListingActions.updateRentalListing(listing));
-        //             closeModal();
-        //         })
-        //         .catch(err => {
-        //             console.log("update rental listing error:", err);
-        //             setError("Error updating reantal listing");
-        //         });
-        // };
     };
 
     return (
         <form className="rental-form" onSubmit={handleSubmit}>
+            <button disabled style={{ display: "none" }} />
             <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
             <input
                 className="rental-form__input"
@@ -283,7 +235,13 @@ function RentalUpdateForm({ closeModal, listing }) {
                         let tag = null;
                         if (postPhoto === imageKey) tag = <div className="rental-form__image-tag">封面照片</div>;
                         return (
-                            <div key={i} className="rental-form__image"
+                            <div 
+                                key={i} className="rental-form__image"
+                                // live site url
+                                // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${imageKey}`;
+
+                                // mock storage url
+                                // const url = `http://localhost:20005/${bucket}/public/${imageKey}`;
                                 style={{ backgroundImage: `url(http://localhost:20005/${bucket}/public/${imageKey})` }}
                                 onClick={() => { setPostPhoto(imageKey) }}>
                                 {tag}
@@ -292,7 +250,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                                     icon={faTimes}
                                     size="2x"
                                     transform="up-0.2"
-                                    onClick={e => { showDeleteConfirm(e) }}
+                                    onClick={e => { showDeleteConfirm(e, imageKey) }}
                                 />
                             </div>
                         );
@@ -341,12 +299,17 @@ function RentalUpdateForm({ closeModal, listing }) {
                 <div className="rental-form__delete-confirm">
                     <p>確定刪除照片?</p>
                     <div className="rental-form__confirm-wrapper">
-                        <div className="rental-form__confirm-button">確定</div>
-                        <div 
+                        <button 
                             className="rental-form__confirm-button"
+                            type="button"
+                            onClick={deletePhoto}
+                        >確定</button>
+                        <button 
+                            className="rental-form__confirm-button"
+                            type="button"
                             onClick={() => { 
                                 setImage({ ...imageState, displayConfirm: "none" });
-                        }}>取消</div>
+                        }}>取消</button>
                     </div>
                 </div>
             </div>

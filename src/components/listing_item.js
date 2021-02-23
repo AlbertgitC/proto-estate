@@ -2,11 +2,17 @@ import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
 
 const {
+    aws_user_files_s3_bucket_region: region,
     aws_user_files_s3_bucket: bucket
 } = config
 
 function ListingItem(props) {
     const { listing } = props;
+    // live site url
+    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.postPhoto}`;
+
+    // mock storage url
+    // const url = `http://localhost:20005/${bucket}/public/${listing.postPhoto}`;
     let imgUrl = listing.postPhoto ? `http://localhost:20005/${bucket}/public/${listing.postPhoto}` : defaultImg;
 
     return (

@@ -76,6 +76,7 @@ export function SignUpForm(props) {
     return (
         <div className={`sign-up ${animation}`}>
             <form className="sign-up__form" onSubmit={handleSubmit}>
+                <button disabled style={{ display: "none" }} />
                 <label htmlFor="email">Email</label>
                 <input
                     className="sign-up__input"
@@ -209,7 +210,7 @@ export function ConfirmSignUp(props) {
                 onChange={handleInput}
                 value={code}
                 placeholder='驗證碼'
-                autocomplete="off"
+                autoComplete="off"
             />
             <button className='confirm-user__button' onClick={confirmSignUp}>驗證帳號</button>
             <button className='confirm-user__button' onClick={resendConfirm}>重新寄出驗證碼</button>

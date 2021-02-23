@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import RentalModal from './rental_panel_modal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { API } from 'aws-amplify';
 import * as queries from '../graphql/queries';
@@ -15,8 +15,7 @@ function RentalPanel() {
     const rentalListings = useSelector(state => state.rentalListings);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (rentalListings.initialFetch) return;
+    if (!rentalListings.initialFetch) {
         API.graphql({
             query: queries.rentalListingsByAuthor,
             variables: {
@@ -29,7 +28,8 @@ function RentalPanel() {
             .catch(err => {
                 console.log("fetch rental listing error:", err);
             });
-    }, [user, rentalListings, dispatch]);
+    };
+    
 
     return (
         <div className="rental-panel">

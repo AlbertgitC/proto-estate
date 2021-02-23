@@ -32,7 +32,6 @@ function RentalModal(props) {
                         onClick={closeModal}
                     />
                 </div>
-                {/* <RentalForm closeModal={closeModal} action={action} listing={listing}/> */}
                 {component}
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { API, Storage } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 import { useDispatch } from 'react-redux';
@@ -7,12 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuid } from 'uuid';
-import config from '../aws-exports';
-
-const {
-    aws_user_files_s3_bucket_region: region,
-    aws_user_files_s3_bucket: bucket
-} = config
 
 function RentalForm({ closeModal }) {
     const initialState = {
@@ -28,22 +22,8 @@ function RentalForm({ closeModal }) {
     const [state, setState] = useState(initialState);
     const { address, propertyType, monthlyRent, numberRooms, areaPin, description } = state;
     const [error, setError] = useState("");
-    // const { closeModal, action, listing } = props;
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ images: [], display: "block" });
-
-    // useEffect(() => {
-    //     if (action === "Update") setState({
-    //         id: listing.id,
-    //         type: "RentalListing",
-    //         address: listing.address,
-    //         propertyType: listing.propertyType,
-    //         monthlyRent: listing.monthlyRent,
-    //         numberRooms: listing.numberRooms,
-    //         areaPin: listing.areaPin > 0 ? listing.areaPin : "",
-    //         description: listing.description
-    //     });
-    // },[action, listing]);
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -106,11 +86,6 @@ function RentalForm({ closeModal }) {
                         const extension = file.name.split(".")[1];
                         const { type: mimeType } = file;
                         const key = `images/${uuid()}_${listing.id}.${extension}`;
-                        // live site url
-                        // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-
-                        // mock storage url
-                        // const url = `http://localhost:20005/${bucket}/public/${key}`;
 
                         imageKeys.push(key);
 
@@ -148,85 +123,11 @@ function RentalForm({ closeModal }) {
                 console.log("create rental listing error:", err);
                 setError("Error creating reantal listing");
             });
-
-        // if (action === "Create") {
-            // API.graphql({
-            //     query: mutations.createRentalListing,
-            //     variables: { input: data }
-            // })
-            //     .then(res => {
-            //         setError("uploading");
-            //         let listing = res.data.createRentalListing;
-            //         dispatch(RentalListingActions.createRentalListing(listing));
-
-            //         if (imageState.images[0]) {
-            //             let imageKeys = [];
-            //             let uploadPromise = [];
-
-            //             for (let file of imageState.images) {
-            //                 const extension = file.name.split(".")[1];
-            //                 const { type: mimeType } = file;
-            //                 const key = `images/${uuid()}_${listing.id}.${extension}`;
-            //                 // live site url
-            //                 // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-
-            //                 // mock storage url
-            //                 // const url = `http://localhost:20005/${bucket}/public/${key}`;
-
-            //                 imageKeys.push(key);
-
-            //                 let promise = Storage.put(key, file, {
-            //                     contentType: mimeType
-            //                 });
-
-            //                 uploadPromise.push(promise);
-            //             };
-
-            //             Promise.all(uploadPromise)
-            //                 .then(() => {
-            //                     return API.graphql({
-            //                         query: mutations.updateRentalListing,
-            //                         variables: { input: {
-            //                             id: listing.id,
-            //                             photos: imageKeys,
-            //                             postPhoto: imageKeys[0]
-            //                         } }
-            //                     });
-            //                 })
-            //                 .then(res => {
-            //                     let listing = res.data.updateRentalListing;
-            //                     dispatch(RentalListingActions.updateRentalListing(listing));
-            //                 });
-            //         };
-            //     })
-            //     .then(() => {
-            //         setError("");
-            //         closeModal();
-            //     })
-            //     .catch(err => {
-            //         console.log("create rental listing error:", err);
-            //         setError("Error creating reantal listing");
-            //     });
-        // } else if (action === "Update") {
-        //     API.graphql({
-        //         query: mutations.updateRentalListing,
-        //         variables: { input: data }
-        //     })
-        //         .then(res => {
-        //             setError("");
-        //             let listing = res.data.updateRentalListing;
-        //             dispatch(RentalListingActions.updateRentalListing(listing));
-        //             closeModal();
-        //         })
-        //         .catch(err => {
-        //             console.log("update rental listing error:", err);
-        //             setError("Error updating reantal listing");
-        //         });
-        // };
     };
 
     return (
         <form className="rental-form" onSubmit={handleSubmit}>
+            <button disabled style={{ display: "none" }} />
             <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
             <input
                 className="rental-form__input"
@@ -311,7 +212,6 @@ function RentalForm({ closeModal }) {
                     imageState.images.map((image, i) => (
                         <div key={i} className="rental-form__image" 
                             style={{ backgroundImage: `url(${URL.createObjectURL(image)})`}}>
-                            {/* <div className="rental-form__image-tag">封面照片</div> */}
                             <FontAwesomeIcon
                                 className="rental-form__remove-image"
                                 icon={faTimes}
