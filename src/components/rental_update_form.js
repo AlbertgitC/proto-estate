@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { API, Storage } from 'aws-amplify';
 import * as mutations from '../graphql/mutations';
 import { useDispatch } from 'react-redux';
@@ -15,19 +15,50 @@ const {
 } = config
 
 function RentalUpdateForm({ closeModal, listing }) {
-    const initialState = { ...listing };
-    initialState.photos = listing.photos.slice();
+    const initialState = { 
+        id: listing.id,
+        address: listing.address,
+        propertyType: listing.propertyType,
+        monthlyRent: listing.monthlyRent,
+        numberRooms: listing.numberRooms,
+        areaPin: listing.areaPin,
+        description: listing.description,
+        photos: listing.photos.slice(),
+        postPhoto: listing.postPhoto
+    };
     const [state, setState] = useState(initialState);
     const { id, address, propertyType, monthlyRent, numberRooms, areaPin, description, photos, postPhoto } = state;
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ 
         images: [],
-        deleteQueue: [], 
-        displayPlus: photos.length < 3 ? "block" : "none",
-        // displayConfirm: "none"
+        deleteQueue: []
     });
-    // const deleteImg = useRef(null);
+    const { images, deleteQueue } = imageState;
+
+    function renderPlus() {
+        let display = photos.length - deleteQueue.length +
+            images.length < 3 ? "block" : "none";
+
+        return (
+            <div className="rental-form__add-image" style={{ display: `${display}` }}>
+                <label htmlFor="image-uploads">
+                    <FontAwesomeIcon
+                        icon={faPlusSquare}
+                        size="4x"
+                        transform="right-0.9"
+                    />
+                </label>
+                <input
+                    type="file"
+                    id="image-uploads"
+                    accept="image/*"
+                    onChange={handleImageInput}
+                    style={{ opacity: "0", width: "0" }}
+                />
+            </div>
+        );
+    };
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -49,25 +80,22 @@ function RentalUpdateForm({ closeModal, listing }) {
         if (!file) return;
         let nextState = { ...imageState };
         nextState.images.push(file);
-        let totalImg = photos.length + nextState.images.length;
-        if (totalImg >= 3) {
-            nextState.displayPlus = "none";
-        };
         setImage(nextState);
+        if (postPhoto === "") setState({ ...state, postPhoto: file.name });
     };
 
     function removeImage(e, idx) {
         e.stopPropagation();
         let nextState = { ...imageState };
-        let imgName = imageState.images[idx].name;
+        let imgName = images[idx].name;
         nextState.images.splice(idx, 1);
-        nextState.displayPlus = "block";
         setImage(nextState);
 
         if (postPhoto === imgName) {
             let nextPostPhoto;
-            if (photos[0]) {
-                nextPostPhoto = photos[0];
+            if (photos.length > deleteQueue.length) {
+                let diff = photos.filter(key => !deleteQueue.includes(key));
+                nextPostPhoto = diff[0];
             } else if (nextState.images[0]) {
                 nextPostPhoto = nextState.images[0].name;
             } else {
@@ -78,18 +106,12 @@ function RentalUpdateForm({ closeModal, listing }) {
     };
 
     function setPostPhoto(imageKey) {
-        if (postPhoto !== imageKey) setState({ ...state, postPhoto: imageKey });
+        if (postPhoto !== imageKey && !(deleteQueue.includes(imageKey))) 
+            setState({ ...state, postPhoto: imageKey });
     };
 
-    // function showDeleteConfirm(e, imageKey) {
-    //     e.stopPropagation();
-    //     deleteImg.current = imageKey;
-    //     setImage({ ...imageState, displayConfirm: "block" });
-    // };
-
-    function addToDeleteQueue(e, imageKey) {
+    function deleteQueueAction(e, imageKey) {
         e.stopPropagation();
-        const deleteQueue = imageState.deleteQueue;
         if (!deleteQueue.includes(imageKey)) {
             deleteQueue.push(imageKey);
             if (postPhoto === imageKey) {
@@ -97,8 +119,8 @@ function RentalUpdateForm({ closeModal, listing }) {
                 if (photos.length > deleteQueue.length) {
                     let diff = photos.filter(key => !deleteQueue.includes(key));
                     nextPostPhoto = diff[0];
-                } else if (imageState.images[0]) {
-                    nextPostPhoto = imageState.images[0].name;
+                } else if (images[0]) {
+                    nextPostPhoto = images[0].name;
                 } else {
                     nextPostPhoto = "";
                 };
@@ -107,63 +129,55 @@ function RentalUpdateForm({ closeModal, listing }) {
         } else {
             let idx = deleteQueue.indexOf(imageKey);
             deleteQueue.splice(idx, 1);
+            let total = photos.length - deleteQueue.length + images.length;
+            if (total > 3) {
+                let i = images.length - 1;
+                removeImage(e, i);
+            };
             if (postPhoto === "") setState({ ...state, postPhoto: imageKey });
         }
         setImage({ ...imageState });
     };
-
-    // function deletePhoto() {
-    //     const key = deleteImg.current;
-    //     let idx = photos.indexOf(key);
-    //     let photosCopy = photos.slice();
-    //     photosCopy.splice(idx, 1);
-    //     let postPhotoCopy = postPhoto;
-    //     if (!photosCopy.includes(postPhotoCopy)) {
-    //         photosCopy.length > 0 ? postPhotoCopy = photosCopy[0] : postPhotoCopy = "";
-    //     }
-
-    //     const data = { id, photos: photosCopy, postPhoto: postPhotoCopy };
-    //     const deleteImgS3 = Storage.remove(key);
-    //     const updateListing = API.graphql({
-    //         query: mutations.updateRentalListing,
-    //         variables: { input: data }
-    //     });
-
-    //     Promise.all([
-    //         deleteImgS3.catch(error => { return error }), 
-    //         updateListing.catch(error => { return error })
-    //     ])
-    //         .then(res => {
-    //             setError("");
-    //             let newListing = res[1].data.updateRentalListing;
-    //             dispatch(RentalListingActions.updateRentalListing(newListing));
-    //             setState({ ...state, photos: photosCopy, postPhoto: postPhotoCopy });
-    //             setImage({ ...imageState, displayConfirm: "none" });
-    //         })
-    //         .catch(err => {
-    //             console.log("delete photo error: ", err);
-    //             setError("Error deleting photo");
-    //             setImage({ ...imageState, displayConfirm: "none" });
-    //         });
-    // }
 
     function handleSubmit(e) {
         e.preventDefault();
 
         setError("讀取中...");
 
-        let data = { ...state };
-        if (state.areaPin === "") {
+        let data = { ...state, photos: state.photos.slice() };
+        if (data.areaPin === "") {
             data.areaPin = 0;
         };
 
-        API.graphql({
+        const actionItems = [];
+        if (images[0]) {
+            for (let file of images) {
+                const extension = file.name.split(".")[1];
+                const { type: mimeType } = file;
+                const key = `images/${uuid()}_${id}.${extension}`;
+                data.photos.push(key);
+                if (file.name === postPhoto) data.postPhoto = key;
+                actionItems.push(Storage.put(key, file, { contentType: mimeType }));
+            };
+        };
+
+        if (deleteQueue[0]) {
+            for (let key of deleteQueue) {
+                let idx = data.photos.indexOf(key);
+                data.photos.splice(idx, 1);
+                actionItems.push(Storage.remove(key));
+            };
+        };
+
+        actionItems.push(API.graphql({ 
             query: mutations.updateRentalListing,
             variables: { input: data }
-        })
+        }));
+
+        Promise.all(actionItems)
             .then(res => {
                 setError("");
-                let newListing = res.data.updateRentalListing;
+                let newListing = res[res.length - 1].data.updateRentalListing;
                 dispatch(RentalListingActions.updateRentalListing(newListing));
                 closeModal();
             })
@@ -254,7 +268,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 autoComplete="off"
             />
             <small>{`${description.length}/500`}</small>
-            <label className="rental-form__label">上傳照片(最多3張)</label>
+            <label className="rental-form__label">上傳照片(最多3張，點擊照片選擇封面照片)</label>
             <div className="rental-form__image-wrapper">
                 {
                     photos.map((imageKey, i) => {
@@ -262,7 +276,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                         if (postPhoto === imageKey) tag = <div className="rental-form__image-tag">封面照片</div>;
                         let whiteOut = "";
                         let red = "";
-                        if (imageState.deleteQueue.includes(imageKey)) {
+                        if (deleteQueue.includes(imageKey)) {
                             whiteOut = "rental-form__image-overlay--white-out";
                             red = "rental-form__remove-image--selected";
                         };
@@ -285,7 +299,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                                         icon={faTimes}
                                         size="2x"
                                         transform="up-0.2"
-                                        onClick={e => { addToDeleteQueue(e, imageKey) }}
+                                        onClick={e => { deleteQueueAction(e, imageKey) }}
                                     />
                                 </div>
                             </div>
@@ -293,7 +307,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                     })
                 }
                 {
-                    imageState.images.map((image, i) => {
+                    images.map((image, i) => {
                         let tag = null;
                         if (postPhoto === image.name) tag = <div className="rental-form__image-tag">封面照片</div>;
                         return (
@@ -314,43 +328,11 @@ function RentalUpdateForm({ closeModal, listing }) {
                         );
                     })
                 }
-                <div className="rental-form__add-image" style={{ display: `${imageState.displayPlus}` }}>
-                    <label htmlFor="image-uploads">
-                        <FontAwesomeIcon
-                            icon={faPlusSquare}
-                            size="4x"
-                            transform="right-0.9"
-                        />
-                    </label>
-                    <input
-                        type="file"
-                        id="image-uploads"
-                        accept="image/*"
-                        onChange={handleImageInput}
-                        style={{ opacity: "0", width: "0" }}
-                    />
-                </div>
+                {renderPlus()}
             </div>
-            <button className="rental-form__button">確定</button>
             <p>{error}</p>
-            {/* <div className="rental-form__modal" style={{ display: `${imageState.displayConfirm}` }}>
-                <div className="rental-form__delete-confirm">
-                    <p>確定刪除照片?</p>
-                    <div className="rental-form__confirm-wrapper">
-                        <button 
-                            className="rental-form__confirm-button"
-                            type="button"
-                            onClick={deletePhoto}
-                        >確定</button>
-                        <button 
-                            className="rental-form__confirm-button"
-                            type="button"
-                            onClick={() => { 
-                                setImage({ ...imageState, displayConfirm: "none" });
-                        }}>取消</button>
-                    </div>
-                </div>
-            </div> */}
+            <button className="rental-form__button">確定</button>
+            <button className="rental-form__cancel-button" type="button" onClick={closeModal}>取消</button>
         </form>
     );
 };

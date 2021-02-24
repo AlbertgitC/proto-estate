@@ -68,6 +68,10 @@
     background-color: var(--brand-green-color);
 }
 
+.rental-form__cancel-button {
+    margin-top: 15px;
+}
+
 .rental-form__modal {
     position: fixed;
     top: 0;
