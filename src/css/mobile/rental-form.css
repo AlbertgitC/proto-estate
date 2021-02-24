@@ -24,10 +24,20 @@
     background-size: cover;
     background-position: center;
     margin-bottom: 5px;
+    /* display: flex;
+    justify-content: space-between;
+    padding: 5px; */
+}
+
+.rental-form__image-overlay {
+    height: 200px;
     display: flex;
-    /* flex-direction: row-reverse; */
     justify-content: space-between;
     padding: 5px;
+}
+
+.rental-form__image-overlay--white-out {
+    background-color: rgb(255, 255, 255, 0.7);
 }
 
 .rental-form__image-tag {
@@ -43,6 +53,10 @@
     height: 22px;
     border: 2px solid;
     margin-left: auto;
+}
+
+.rental-form__remove-image--selected {
+    background-color: var(--warning-red);
 }
 
 .rental-form__add-image {

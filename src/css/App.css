@@ -88,6 +88,7 @@ select {
   --brand-green-color: #00ced1;
   --font-color-dark: #374045;
   --font-color-light: #d3d3d3;
+  --warning-red: #ec4646;
 }
 
 body {

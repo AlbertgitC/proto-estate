@@ -22,11 +22,12 @@ function RentalUpdateForm({ closeModal, listing }) {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ 
-        images: [], 
+        images: [],
+        deleteQueue: [], 
         displayPlus: photos.length < 3 ? "block" : "none",
-        displayConfirm: "none"
+        // displayConfirm: "none"
     });
-    const deleteImg = useRef(null);
+    // const deleteImg = useRef(null);
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -80,46 +81,71 @@ function RentalUpdateForm({ closeModal, listing }) {
         if (postPhoto !== imageKey) setState({ ...state, postPhoto: imageKey });
     };
 
-    function showDeleteConfirm(e, imageKey) {
+    // function showDeleteConfirm(e, imageKey) {
+    //     e.stopPropagation();
+    //     deleteImg.current = imageKey;
+    //     setImage({ ...imageState, displayConfirm: "block" });
+    // };
+
+    function addToDeleteQueue(e, imageKey) {
         e.stopPropagation();
-        deleteImg.current = imageKey;
-        setImage({ ...imageState, displayConfirm: "block" });
+        const deleteQueue = imageState.deleteQueue;
+        if (!deleteQueue.includes(imageKey)) {
+            deleteQueue.push(imageKey);
+            if (postPhoto === imageKey) {
+                let nextPostPhoto;
+                if (photos.length > deleteQueue.length) {
+                    let diff = photos.filter(key => !deleteQueue.includes(key));
+                    nextPostPhoto = diff[0];
+                } else if (imageState.images[0]) {
+                    nextPostPhoto = imageState.images[0].name;
+                } else {
+                    nextPostPhoto = "";
+                };
+                setState({ ...state, postPhoto: nextPostPhoto });
+            };
+        } else {
+            let idx = deleteQueue.indexOf(imageKey);
+            deleteQueue.splice(idx, 1);
+            if (postPhoto === "") setState({ ...state, postPhoto: imageKey });
+        }
+        setImage({ ...imageState });
     };
 
-    function deletePhoto() {
-        const key = deleteImg.current;
-        let idx = photos.indexOf(key);
-        let photosCopy = photos.slice();
-        photosCopy.splice(idx, 1);
-        let postPhotoCopy = postPhoto;
-        if (!photosCopy.includes(postPhotoCopy)) {
-            photosCopy.length > 0 ? postPhotoCopy = photosCopy[0] : postPhotoCopy = "";
-        }
+    // function deletePhoto() {
+    //     const key = deleteImg.current;
+    //     let idx = photos.indexOf(key);
+    //     let photosCopy = photos.slice();
+    //     photosCopy.splice(idx, 1);
+    //     let postPhotoCopy = postPhoto;
+    //     if (!photosCopy.includes(postPhotoCopy)) {
+    //         photosCopy.length > 0 ? postPhotoCopy = photosCopy[0] : postPhotoCopy = "";
+    //     }
 
-        const data = { id, photos: photosCopy, postPhoto: postPhotoCopy };
-        const deleteImgS3 = Storage.remove(key);
-        const updateListing = API.graphql({
-            query: mutations.updateRentalListing,
-            variables: { input: data }
-        });
+    //     const data = { id, photos: photosCopy, postPhoto: postPhotoCopy };
+    //     const deleteImgS3 = Storage.remove(key);
+    //     const updateListing = API.graphql({
+    //         query: mutations.updateRentalListing,
+    //         variables: { input: data }
+    //     });
 
-        Promise.all([
-            deleteImgS3.catch(error => { return error }), 
-            updateListing.catch(error => { return error })
-        ])
-            .then(res => {
-                setError("");
-                let newListing = res[1].data.updateRentalListing;
-                dispatch(RentalListingActions.updateRentalListing(newListing));
-                setState({ ...state, photos: photosCopy, postPhoto: postPhotoCopy });
-                setImage({ ...imageState, displayConfirm: "none" });
-            })
-            .catch(err => {
-                console.log("delete photo error: ", err);
-                setError("Error deleting photo");
-                setImage({ ...imageState, displayConfirm: "none" });
-            });
-    }
+    //     Promise.all([
+    //         deleteImgS3.catch(error => { return error }), 
+    //         updateListing.catch(error => { return error })
+    //     ])
+    //         .then(res => {
+    //             setError("");
+    //             let newListing = res[1].data.updateRentalListing;
+    //             dispatch(RentalListingActions.updateRentalListing(newListing));
+    //             setState({ ...state, photos: photosCopy, postPhoto: postPhotoCopy });
+    //             setImage({ ...imageState, displayConfirm: "none" });
+    //         })
+    //         .catch(err => {
+    //             console.log("delete photo error: ", err);
+    //             setError("Error deleting photo");
+    //             setImage({ ...imageState, displayConfirm: "none" });
+    //         });
+    // }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -234,24 +260,34 @@ function RentalUpdateForm({ closeModal, listing }) {
                     photos.map((imageKey, i) => {
                         let tag = null;
                         if (postPhoto === imageKey) tag = <div className="rental-form__image-tag">封面照片</div>;
+                        let whiteOut = "";
+                        let red = "";
+                        if (imageState.deleteQueue.includes(imageKey)) {
+                            whiteOut = "rental-form__image-overlay--white-out";
+                            red = "rental-form__remove-image--selected";
+                        };
                         return (
                             <div 
-                                key={i} className="rental-form__image"
+                                key={i} 
+                                className="rental-form__image"
                                 // live site url
                                 // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${imageKey}`;
 
                                 // mock storage url
                                 // const url = `http://localhost:20005/${bucket}/public/${imageKey}`;
                                 style={{ backgroundImage: `url(http://localhost:20005/${bucket}/public/${imageKey})` }}
-                                onClick={() => { setPostPhoto(imageKey) }}>
-                                {tag}
-                                <FontAwesomeIcon
-                                    className="rental-form__remove-image"
-                                    icon={faTimes}
-                                    size="2x"
-                                    transform="up-0.2"
-                                    onClick={e => { showDeleteConfirm(e, imageKey) }}
-                                />
+                                onClick={() => { setPostPhoto(imageKey) }}
+                            >
+                                <div className={`rental-form__image-overlay ${whiteOut}`}>
+                                    {tag}
+                                    <FontAwesomeIcon
+                                        className={`rental-form__remove-image ${red}`}
+                                        icon={faTimes}
+                                        size="2x"
+                                        transform="up-0.2"
+                                        onClick={e => { addToDeleteQueue(e, imageKey) }}
+                                    />
+                                </div>
                             </div>
                         );
                     })
@@ -261,7 +297,9 @@ function RentalUpdateForm({ closeModal, listing }) {
                         let tag = null;
                         if (postPhoto === image.name) tag = <div className="rental-form__image-tag">封面照片</div>;
                         return (
-                            <div key={i} className="rental-form__image"
+                            <div 
+                                key={i} 
+                                className="rental-form__image rental-form__image-overlay"
                                 style={{ backgroundImage: `url(${URL.createObjectURL(image)})` }}
                                 onClick={() => { setPostPhoto(image.name) }}>
                                 {tag}
@@ -295,7 +333,7 @@ function RentalUpdateForm({ closeModal, listing }) {
             </div>
             <button className="rental-form__button">確定</button>
             <p>{error}</p>
-            <div className="rental-form__modal" style={{ display: `${imageState.displayConfirm}` }}>
+            {/* <div className="rental-form__modal" style={{ display: `${imageState.displayConfirm}` }}>
                 <div className="rental-form__delete-confirm">
                     <p>確定刪除照片?</p>
                     <div className="rental-form__confirm-wrapper">
@@ -312,7 +350,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                         }}>取消</button>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </form>
     );
 };
