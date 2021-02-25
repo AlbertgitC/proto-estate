@@ -1,0 +1,37 @@
+@media only screen and (min-width: 768px) {
+    .nav__desktop {
+        display: flex;
+    }
+
+    .nav__ul {
+        display: flex;
+        border: none;
+    }
+
+    .nav__li {
+        padding: 0 16px;
+        margin-top: 16px;
+    }
+
+    .nav__li > a:hover, .nav__li > p:hover {
+        color: var(--brand-green-color);
+    }
+
+    .nav__button {
+        width: 70px;
+        background-color: transparent;
+        color: #ffffff;
+    }
+
+    .nav__button:hover {
+        color: var(--brand-green-color);
+    }
+
+    .nav__user-options {
+        padding: 16px;
+    }
+
+    .nav--hidden {
+        display: none;
+    }
+}

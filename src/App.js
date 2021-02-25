@@ -11,23 +11,26 @@ import RentalListings from './components/rental_listings';
 function App() {
 
 	return (
-		<div className="App">
-			<Header />
-			<Switch>
-				<PublicRoute path="/sign-in" component={SignInPage} />
-				<Route path="/list-rental-promo">
-					<ListingRentalLanding />
-				</Route>
-				<Route path="/rental-listings">
-					<RentalListings />
-				</Route>
-				<ProtectedRoute path="/rental-panel" component={RentalPanel} />
-				<Route path="/">
-					<HomePage />
-				</Route>
-			</Switch>
+		<div className="App__wrapper">
+			<div className="App">
+				<Header />
+				<Switch>
+					<PublicRoute path="/sign-in" component={SignInPage} />
+					<Route path="/list-rental-promo">
+						<ListingRentalLanding />
+					</Route>
+					<Route path="/rental-listings">
+						<RentalListings />
+					</Route>
+					<ProtectedRoute path="/rental-panel" component={RentalPanel} />
+					<Route path="/">
+						<HomePage />
+					</Route>
+				</Switch>
+			</div>
 			<Footer />
 		</div>
+		
 	);
 }
 

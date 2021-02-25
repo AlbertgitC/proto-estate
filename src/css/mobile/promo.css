@@ -1,9 +1,12 @@
 .promo {
-    padding: 36px 0;
+    margin: 36px 15px;
 }
 
 .promo__img {
+    height: 240px;
     margin-bottom: 15px;
+    background-size: cover;
+    background-position: center;
 }
 
 .promo__button {

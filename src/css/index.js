@@ -15,3 +15,10 @@ exports.rental_modal = require("./mobile/rental-modal.css");
 exports.rental_form = require("./mobile/rental-form.css");
 exports.rental_listings = require("./mobile/rental-listings.css");
 exports.listing_item = require("./mobile/listing-item.css");
+
+// for desktop
+exports.landing_d = require("./desktop/landing.css");
+exports.search_bar_d = require("./desktop/search-bar.css");
+exports.promo_d = require("./desktop/promo.css");
+exports.header_d = require("./desktop/header.css");
+exports.nav_d = require("./desktop/nav.css");

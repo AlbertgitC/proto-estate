@@ -6,7 +6,7 @@ import { testPromos } from '../util/test_data';
 function HomePage() {
 
     return (
-        <div>
+        <div className="home-page">
             <Landing
                 imgFileName="patrick-perkins-3wylDrjxH-E-unsplash.jpg"
                 title="Some Cheesy Slogan01 廣告01放這"

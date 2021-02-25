@@ -23,9 +23,11 @@ function Landing(props) {
 
     return (
         <div className="landing" style={{ backgroundImage: `url(${state.imgUrl})` }}>
-            <h1 className="landing__title">{state.title}</h1>
-            <p className="landing__content">{state.content}</p>
-            {props.children}
+            <div className="landing__wrapper">
+                <h1 className="landing__title">{state.title}</h1>
+                <p className="landing__content">{state.content}</p>
+                {props.children}
+            </div>
         </div>
     );
 };

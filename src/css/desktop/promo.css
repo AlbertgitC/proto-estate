@@ -1,0 +1,25 @@
+@media only screen and (min-width: 768px) {
+    .promo {
+        max-width: 1250px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        font-size: 19px;
+        margin: 36px auto;
+    }
+
+    .promo__img {
+        height: 340px;
+        min-width: 570px;
+        margin: 0 15px;
+    }
+
+    .promo__content-wrapper {
+        max-width: 400px;
+        margin: 0 15px;
+    }
+
+    .promo__content {
+        padding: 0;
+    }
+}

@@ -1,0 +1,7 @@
+@media only screen and (min-width: 768px) {
+    .landing__wrapper {
+        max-width: 1250px;
+        padding: 90px 0 0 4%;
+        margin: 0 auto;
+    }
+}

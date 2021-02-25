@@ -24,3 +24,7 @@
 .nav--hide {
     display: none;
 }
+
+.nav__desktop {
+    display: none;
+}

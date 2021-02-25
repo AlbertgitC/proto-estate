@@ -15,7 +15,7 @@ function ListingRentalLanding() {
                 title="Promo for Listing Rental Here"
                 content="馬推型美外心果四制也造論期馬、業精的人夜常如，心一媽；提變人合包目者取士書太，故只區車課驗。"
             >
-                <button className="promo__button">
+                <button type="button" className="promo__button">
                     <Link to={location => {
                         if (user) return { pathname: "/rental-panel" };
                         return { pathname: "/sign-in", state: { from: location } };

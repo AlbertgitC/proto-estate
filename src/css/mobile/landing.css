@@ -1,15 +1,13 @@
 .landing {
     background-size: cover;
+    background-position: center;
     background-color: rgba(0, 0, 0, 0.3);
     background-blend-mode: overlay;
-    padding: 15px 15px 0 15px;
-    margin: -15px -15px 24px -15px;
     height: 455px;
-    position: relative;
 }
 
-.landing__title {
-    margin-top: 90px;
+.landing__wrapper {
+    padding: 90px 15px 0 15px;
 }
 
 .landing__content {

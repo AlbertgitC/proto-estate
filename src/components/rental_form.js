@@ -239,8 +239,9 @@ function RentalForm({ closeModal }) {
                     />
                 </div>
             </div>
-            <button className="rental-form__button">確定</button>
             <p>{error}</p>
+            <button className="rental-form__button">確定</button>
+            <button className="rental-form__cancel-button" type="button" onClick={closeModal}>取消</button>
         </form>
     );
 };
