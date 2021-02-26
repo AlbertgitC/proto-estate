@@ -28,10 +28,44 @@
     }
 
     .nav__user-options {
+        position: relative;
+        width: 160px;
         padding: 16px;
+    }
+
+    .nav__user-wrapper {
+        position: absolute;
+        top: 5px;
+        display: none;
+        width: 128px;
+    }
+
+    ul.nav__user-ul {
+        border: 1px solid;
+        border-radius: 3px;
+        padding: 0 10px;
+        margin-top: 40px;
+    }
+
+    .nav__user-li {
+        margin: 10px 0;
+        width: fit-content;
+        cursor: pointer;
+    }
+
+    .nav__user-li:hover {
+        color: var(--brand-green-color);
     }
 
     .nav--hidden {
         display: none;
+    }
+
+    .nav__user-options--hidden {
+        display: none;
+    }
+
+    .nav__user-wrapper--show {
+        display: block;
     }
 }

@@ -4,15 +4,35 @@ import Modal from './header_modal';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { Auth } from 'aws-amplify';
+import { useDispatch } from 'react-redux';
+import * as AuthActions from '../util/actions/auth_actions';
+import { useHistory } from 'react-router-dom';
 
 function Header() {
     const user = useSelector(state => state.user);
     const [modalState, setModal] = useState({ show: false, animation: "modal__wrapper--hide" });
-    let display;
+    const [optionState, setOptionState] = useState("");
+    const dispatch = useDispatch();
+    const history = useHistory();
+    let displaySignIn;
+    let displayUser;
     if (user) {
-        display = "nav--hidden";
+        displaySignIn = "nav--hidden";
+        displayUser = "";
     } else {
-        display = "";
+        displaySignIn = "";
+        displayUser = "nav__user-options--hidden";
+    };
+
+    async function signOut() {
+        history.push("/");
+        try {
+            await Auth.signOut();
+            dispatch(AuthActions.signOut());
+        } catch (error) {
+            console.log('error signing out: ', error);
+        };
     };
 
     function toggleNavLinks() {
@@ -52,23 +72,36 @@ function Header() {
                     <li className="nav__li">
                         <p style={{ textDecoration: "line-through" }}>幫助</p>
                     </li>
-                    <li className={`nav__li ${display}`}>
-                        <button className="nav__button" type="button">登入</button>
+                    <li className={`nav__li ${displaySignIn}`}>
+                        <button 
+                            className="nav__button" 
+                            type="button"
+                            onClick={() => { 
+                                
+                            }}
+                        >登入</button>
                     </li>
-                    <li className={`nav__li ${display}`}>
+                    <li className={`nav__li ${displaySignIn}`}>
                         <button className="nav__button" type="button">註冊</button>
                     </li>
                 </ul>
-                <div className="nav__user-options">
-                    <p>{user ? user.attributes.name : ""}</p>
-                    <ul className="nav__user-ul">
-                        <li className="nav__li">
-                            <p style={{ textDecoration: "line-through" }}>帳號設定</p>
-                        </li>
-                        <li className="nav__li">
-                            <p>登出</p>
-                        </li>
-                    </ul>
+                <div className={`nav__user-options ${displayUser}`}>
+                    <p onMouseEnter={() => { setOptionState("nav__user-wrapper--show") }}>
+                        {user ? user.attributes.name : ""}
+                    </p>
+                    <div 
+                        className={`nav__user-wrapper ${optionState}`} 
+                        onMouseLeave={() => { setOptionState("") }}
+                    >
+                        <ul className="nav__user-ul">
+                            <li className="nav__user-li">
+                                <p style={{ textDecoration: "line-through" }}>帳號設定</p>
+                            </li>
+                            <li className="nav__user-li" onClick={signOut}>
+                                <p>登出</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
             <FontAwesomeIcon 

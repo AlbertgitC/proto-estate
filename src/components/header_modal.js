@@ -19,7 +19,7 @@ function HeaderModal(props) {
             setComponent(null);
         }, 600);
     };
-    
+
     return (
         <div className="modal" onClick={closeModal}>
             <div className={`modal__wrapper ${modalState.animation}`} onClick={e => e.stopPropagation()}>
@@ -33,7 +33,7 @@ function HeaderModal(props) {
                         onClick={closeModal}
                     />
                 </div>
-                {component ? component : <NavLinks setComponent={setComponent} closeModal={closeModal}/>}
+                {component ? component : <NavLinks setComponent={setComponent} closeModal={closeModal} />}
             </div>
         </div>
     );
