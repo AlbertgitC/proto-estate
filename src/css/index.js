@@ -24,3 +24,5 @@ exports.header_d = require("./desktop/header.css");
 exports.nav_d = require("./desktop/nav.css");
 exports.modal_d = require("./desktop/modal.css");
 exports.footer_d = require("./desktop/footer.css");
+exports.rental_listings_d = require("./desktop/rental-listings.css");
+exports.listing_item_d = require("./desktop/listing-item.css");

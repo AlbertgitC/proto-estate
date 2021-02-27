@@ -1,5 +1,7 @@
 import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -20,6 +22,10 @@ function ListingItem(props) {
             <div className="listing-item__image" style={{ 
                 backgroundImage: `url(${imgUrl})` }}>
                 <div className="listing-item__tag">New</div>
+                <div>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <FontAwesomeIcon icon={faChevronRight} />
+                </div>
             </div>
             <div className="listing-item__info">
                 <p>
