@@ -9,6 +9,8 @@ import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 import { useHistory } from 'react-router-dom';
 import NavLinks from './nav_links';
+import SignIn from './sign_in';
+import { SignUpForm } from './sign_up';
 
 function Header() {
     const user = useSelector(state => state.user);
@@ -57,6 +59,10 @@ function Header() {
         };
     };
 
+    function closeModal() {
+        setModal({ ...modalState, show: false });
+    };
+
     return (
         <header className="header">
             <Link to="/" className="header__logo">PState</Link>
@@ -88,12 +94,20 @@ function Header() {
                             className="nav__button" 
                             type="button"
                             onClick={() => { 
-                                
+                                setModal({ show: true, animation: "", desktop: true });
+                                setModalComponent({ component: SignIn, props: { desktop: true } });
                             }}
                         >登入</button>
                     </li>
                     <li className={`nav__li ${displaySignIn}`}>
-                        <button className="nav__button" type="button">註冊</button>
+                        <button 
+                            className="nav__button" 
+                            type="button"
+                            onClick={() => {
+                                setModal({ show: true, animation: "", desktop: true });
+                                setModalComponent({ component: SignUpForm, props: {} });
+                            }}
+                        >註冊</button>
                     </li>
                 </ul>
                 <div className={`nav__user-options ${displayUser}`}>
@@ -121,10 +135,11 @@ function Header() {
                 className="header__nav"
                 onClick={toggleModal}
             />
-            <Modal modalState={modalState} toggleModal={toggleModal}>
+            <Modal modalState={modalState} toggleModal={toggleModal} closeModal={closeModal}>
                 <Component 
                     setModalComponent={setModalComponent} 
                     toggleModal={toggleModal}
+                    closeModal={closeModal}
                     { ...componentProps }
                 />
             </Modal>

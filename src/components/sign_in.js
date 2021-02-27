@@ -9,22 +9,22 @@ import { useHistory } from "react-router-dom";
 
 function SignIn(props) {
     const initialState = {
-        email: "",
+        email: props.email ? props.email : "",
         password: "",
         err: ""
     };
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
-    const { setModalComponent, setAuthPage, location } = props;
+    const { setModalComponent, setAuthPage, location, desktop, closeModal } = props;
     const animation = props.animation ? props.animation : "";
     const history = useHistory();
 
-    useEffect(() => {
-        if (props.email) {
-            updateState(s => ({ ...s, email: props.email }));
-        };
-    }, [props]);
+    // useEffect(() => {
+    //     if (props.email) {
+    //         updateState(s => ({ ...s, email: props.email }));
+    //     };
+    // }, [props]);
 
     function signIn(e) {
         e.preventDefault();
@@ -35,6 +35,7 @@ function SignIn(props) {
             .then(res => {
                 dispatch(AuthActions.signIn(res));
                 if (setModalComponent) setModalComponent({ component: NavLinks, props: {} });
+                if (desktop) closeModal();
                 if (location) {
                     if (!location.state) {
                         history.push("/");
