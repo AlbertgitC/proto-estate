@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Auth } from 'aws-amplify';
 import SignIn from './sign_in';
-import { useHistory } from "react-router-dom";
 
 export function SignUpForm(props) {
     const initialState = {
@@ -13,7 +12,7 @@ export function SignUpForm(props) {
     };
     const [state, updateState] = useState(initialState);
     const { email, password, name, phone_number, err } = state;
-    const { setComponent, setAuthPage, location } = props;
+    const { setModalComponent, setAuthPage, location } = props;
     const animation = props.animation ? props.animation : "";
 
     function handleSubmit(e) {
@@ -60,7 +59,7 @@ export function SignUpForm(props) {
             }
         })
         .then(() => { 
-            if (setComponent) setComponent(<ConfirmSignUp setComponent={setComponent} email={email}/>);
+            if (setModalComponent) setModalComponent({ component: ConfirmSignUp, props: { email: email } });
             if (setAuthPage) setAuthPage(<ConfirmSignUp setAuthPage={setAuthPage} email={email} location={location}/>); 
         })
         .catch( error => {
@@ -142,8 +141,7 @@ export function ConfirmSignUp(props) {
     };
     const [state, setState] = useState(initialState);
     const { email, code, err } = state;
-    const { setComponent, setAuthPage, location } = props;
-    const history = useHistory();
+    const { setModalComponent, setAuthPage, location } = props;
 
     useEffect(() => {
         if (props.email) setState(s => ({ 
@@ -163,7 +161,7 @@ export function ConfirmSignUp(props) {
 
         Auth.confirmSignUp(email, code)
             .then(() => {
-                if (setComponent) setComponent(<SignIn setComponent={setComponent} email={email}/>);
+                if (setModalComponent) setModalComponent({ component: SignIn, props: { email: email } });
                 if (setAuthPage) setAuthPage(<SignIn setAuthPage={setAuthPage} email={email} location={location}/>);
             })
             .catch(err => {

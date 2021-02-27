@@ -1,27 +1,17 @@
-import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import NavLinks from './nav_links';
 import { useSelector } from 'react-redux';
 
 function HeaderModal(props) {
-    const { toggleNavLinks, modalState } = props;
-    const [component, setComponent] = useState(null);
+    const { toggleModal, modalState } = props;
     const user = useSelector(state => state.user);
 
     if (!modalState.show) {
         return null;
     };
 
-    function closeModal() {
-        toggleNavLinks();
-        setTimeout(() => {
-            setComponent(null);
-        }, 600);
-    };
-
     return (
-        <div className="modal" onClick={closeModal}>
+        <div className="modal" onClick={toggleModal}>
             <div className={`modal__wrapper ${modalState.animation}`} onClick={e => e.stopPropagation()}>
                 <div className="modal__head">
                     <div className="modal__title">
@@ -30,10 +20,10 @@ function HeaderModal(props) {
                     <FontAwesomeIcon
                         icon={faTimes}
                         transform="down-3"
-                        onClick={closeModal}
+                        onClick={toggleModal}
                     />
                 </div>
-                {component ? component : <NavLinks setComponent={setComponent} closeModal={closeModal} />}
+                { props.children }
             </div>
         </div>
     );

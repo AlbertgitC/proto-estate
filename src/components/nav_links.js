@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 function NavLinks(props) {
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
-    const { setComponent, closeModal } = props;
+    const { setModalComponent, toggleModal } = props;
     const initialState = { navAuth: "", navLi: "nav--hide" };
     const [state, setState] = useState(initialState);
     const history = useHistory();
@@ -21,15 +21,15 @@ function NavLinks(props) {
     }, [user]);
 
     function clickSignIn() {
-        setComponent(<SignIn setComponent={setComponent} animation="sign-in--show" closeModal={closeModal}/>);
+        setModalComponent({ component: SignIn, props: { animation: "sign-in--show" } });
     };
 
     function clickSignUp() {
-        setComponent(<SignUpForm setComponent={setComponent} animation="sign-up--show"/>);
+        setModalComponent({ component: SignUpForm, props: { animation: "sign-up--show" } });
     };
 
     async function signOut() {
-        closeModal();
+        toggleModal();
         setState(initialState);
         history.push("/");
         try {
@@ -48,13 +48,13 @@ function NavLinks(props) {
             </div>
             <ul className="nav__ul">
                 <li className="nav__li">
-                    <Link to="/rental-listings" onClick={closeModal}>租房</Link>
+                    <Link to="/rental-listings" onClick={toggleModal}>租房</Link>
                 </li>
                 <li className="nav__li">
                     <p style={{ textDecoration: "line-through" }}>買房</p>
                 </li>
                 <li className="nav__li">
-                    <Link to="/list-rental-promo" onClick={closeModal}>出租</Link>
+                    <Link to="/list-rental-promo" onClick={toggleModal}>出租</Link>
                 </li>
                 <li className="nav__li">
                     <p style={{ textDecoration: "line-through" }}>賣房</p>

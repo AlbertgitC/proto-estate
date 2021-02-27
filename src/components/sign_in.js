@@ -16,7 +16,7 @@ function SignIn(props) {
     const [state, updateState] = useState(initialState);
     const { email, password, err } = state;
     const dispatch = useDispatch();
-    const { setComponent, setAuthPage, location, closeModal } = props;
+    const { setModalComponent, setAuthPage, location } = props;
     const animation = props.animation ? props.animation : "";
     const history = useHistory();
 
@@ -34,7 +34,7 @@ function SignIn(props) {
         Auth.signIn(email, password)
             .then(res => {
                 dispatch(AuthActions.signIn(res));
-                if (setComponent) setComponent(<NavLinks setComponent={setComponent} closeModal={closeModal}/>);
+                if (setModalComponent) setModalComponent({ component: NavLinks, props: {} });
                 if (location) {
                     if (!location.state) {
                         history.push("/");
@@ -58,7 +58,7 @@ function SignIn(props) {
     };
 
     function resendConfirm() {
-        if (setComponent) setComponent(<ConfirmSignUp setComponent={setComponent}/>);
+        if (setModalComponent) setModalComponent({ component: ConfirmSignUp, props: {} });
         if (setAuthPage) setAuthPage(<ConfirmSignUp setAuthPage={setAuthPage} location={location}/>);
     };
 

@@ -8,13 +8,23 @@ import { Auth } from 'aws-amplify';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 import { useHistory } from 'react-router-dom';
+import NavLinks from './nav_links';
 
 function Header() {
     const user = useSelector(state => state.user);
-    const [modalState, setModal] = useState({ show: false, animation: "modal__wrapper--hide" });
+    const [modalState, setModal] = useState({ 
+        show: false, 
+        animation: "modal__wrapper--hide"
+    });
+    const [modalComponet, setModalComponent] = useState({
+        component: NavLinks,
+        props: {}
+    });
     const [optionState, setOptionState] = useState("");
     const dispatch = useDispatch();
     const history = useHistory();
+    const Component = modalComponet.component;
+    const componentProps = modalComponet.props;
     let displaySignIn;
     let displayUser;
     if (user) {
@@ -35,9 +45,10 @@ function Header() {
         };
     };
 
-    function toggleNavLinks() {
+    function toggleModal() {
         if (!modalState.show) {
             setModal({ show: true, animation: "modal__wrapper--show" });
+            setModalComponent({ component: NavLinks, props: {} });
         } else {
             setModal({ ...modalState, animation: "modal__wrapper--hide" });
             setTimeout(() => {
@@ -108,9 +119,15 @@ function Header() {
                 icon={faBars} 
                 transform="down-3" 
                 className="header__nav"
-                onClick={toggleNavLinks}
+                onClick={toggleModal}
             />
-            <Modal modalState={modalState} toggleNavLinks={toggleNavLinks}/>
+            <Modal modalState={modalState} toggleModal={toggleModal}>
+                <Component 
+                    setModalComponent={setModalComponent} 
+                    toggleModal={toggleModal}
+                    { ...componentProps }
+                />
+            </Modal>
         </header>
     );
 }
