@@ -20,6 +20,7 @@
 .sign-in__resend {
     font-size: 14px;
     width: fit-content;
+    cursor: pointer;
 }
 
 .sign-in--show {

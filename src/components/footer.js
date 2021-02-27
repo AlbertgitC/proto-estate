@@ -10,7 +10,7 @@ function Footer() {
                     <li key={i} className="footer__li">{item}</li>
                 ))}
             </ul>
-            <p className="footer_content">來裡算自學，的書對快？現動的供基賽微司結西顯少活舞媽很香書小食於火電只生廣見
+            <p className="footer__content">來裡算自學，的書對快？現動的供基賽微司結西顯少活舞媽很香書小食於火電只生廣見
                 光保明們，去克就防呢無用：代年界一他活。為接西戰事，請各者史態黑美在族景象
                 子、加這情為才運愛。</p>
         </div>

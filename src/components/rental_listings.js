@@ -22,7 +22,9 @@ function RentalListings() {
             }
         })
             .then(res => {
-                dispatch(ListingAction.fetchPublicRentalListings(res.data.rentalListingsSortByCreatedAt.items));
+                let result = res.data.rentalListingsSortByCreatedAt.items;
+                let payload = { searchTerm: "台北市", data: result };
+                dispatch(ListingAction.fetchPublicRentalListings(payload));
             })
             .catch(err => {
                 console.log("fetch rental listing error:", err);
@@ -34,9 +36,12 @@ function RentalListings() {
             <SearchBar />
             <h2 className="rental-listings__header">Rental Listings</h2>
             <ul className="rental-listings__ul">
-                {publicRentalListings.listings.map((listing, i) => {
-                    return (<ListingItem key={i} listing={listing} />);
-                })}
+                {
+                    publicRentalListings.currentSearch.result[0] ?
+                        publicRentalListings.currentSearch.result.map((listing, i) => {
+                            return (<ListingItem key={i} listing={listing} />);
+                        }) : <p>No Result Found</p>
+                }
             </ul>
         </div>
     );

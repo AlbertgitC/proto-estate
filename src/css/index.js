@@ -23,3 +23,4 @@ exports.promo_d = require("./desktop/promo.css");
 exports.header_d = require("./desktop/header.css");
 exports.nav_d = require("./desktop/nav.css");
 exports.modal_d = require("./desktop/modal.css");
+exports.footer_d = require("./desktop/footer.css");
