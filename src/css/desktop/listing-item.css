@@ -4,10 +4,36 @@
         margin: 0;
         padding: 4px;
         background-color: transparent;
+        position: relative;
+    }
+
+    .listing-item__image-wrapper {
+        overflow-x: hidden;
     }
 
     .listing-item__image {
         height: 300px;
+    }
+
+    .listing-item__arrow-wrapper {
+        display: block;
+        position: absolute;
+        top: 34%;
+        display: flex;
+        justify-content: space-between;
+        width: 96%;
+        left: 2%;
+    }
+
+    .listing-item__arrow {
+        background-color: transparent;
+        border: none;
+        color: var(--brand-green-color);
+        font-size: 27px;
+    }
+
+    .listing-item__arrow:focus {
+        outline: none; 
     }
 
     .listing-item__info {

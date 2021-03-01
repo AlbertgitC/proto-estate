@@ -5,7 +5,7 @@
     border-radius: 3px;
 }
 
-.listing-item__image-container {
+.listing-item__image-wrapper {
     width: 100%;
     display: flex;
     overflow-x: auto;
@@ -19,6 +19,10 @@
     border-radius: 3px 3px 0 0;
     width: 100%;
     min-width: 100%;
+}
+
+.listing-item__arrow-wrapper {
+    display: none;
 }
 
 .listing-item__tag {
