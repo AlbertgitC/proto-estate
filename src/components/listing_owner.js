@@ -22,7 +22,9 @@ export default function OwnerListing(props) {
             }}>
                 <p>{listing.address}</p>
             </div>
-            <button className="rental-panel__button" onClick={callBack}>Edit</button>
+            <div className="rental-panel__options">
+                <button className="rental-panel__button" onClick={callBack}>Edit</button>
+            </div>
         </li>
     );
 };

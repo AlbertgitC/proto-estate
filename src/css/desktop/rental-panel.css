@@ -1,0 +1,39 @@
+@media only screen and (min-width: 768px) {
+    .rental-panel {
+        max-width: 1250px;
+        margin: 0 auto;
+    }
+
+    .rental-panel__header {
+        margin-bottom: 10px;
+    }
+
+    .rental-panel__add {
+        font-size: 19px;
+        cursor: pointer;
+        padding-top: 5px;
+    }
+
+    .rental-panel__item-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .rental-panel__item {
+        width: 50%;
+        padding: 4px;
+        background-color: transparent;
+        margin: unset;
+    }
+
+    .rental-panel__img {
+        height: 300px;
+        margin: unset;
+        border-radius: 0;
+    }
+
+    .rental-panel__options {
+        background-color: var(--bg-color-whitesmoke);
+        padding: 10px;
+    }
+}

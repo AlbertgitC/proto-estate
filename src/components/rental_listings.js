@@ -23,7 +23,7 @@ function RentalListings() {
         })
             .then(res => {
                 let result = res.data.rentalListingsSortByCreatedAt.items;
-                let payload = { searchTerm: "台北市", data: result };
+                let payload = { searchTerm: "", data: result };
                 dispatch(ListingAction.fetchPublicRentalListings(payload));
             })
             .catch(err => {

@@ -27,6 +27,7 @@ function RentalModal(props) {
                         {`${action} Rental Property`}
                     </h3>
                     <FontAwesomeIcon
+                        className="rental-modal__close"
                         icon={faTimes}
                         transform="down-3"
                         onClick={closeModal}

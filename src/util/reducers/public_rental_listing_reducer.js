@@ -9,7 +9,7 @@ const publicRentalListingReducer = (state = initialState, action) => {
             nextState.currentSearch = { term: action.payload.searchTerm, result: action.payload.data };
             return nextState;
         case "SIGN_OUT":
-            return { initialFetch: false, listings: {} };
+            return { initialFetch: false, listings: {}, currentSearch: { term: "", result: [] } };
         default:
             return state;
     }

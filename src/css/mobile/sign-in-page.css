@@ -6,6 +6,10 @@
     margin-bottom: 10px;
 }
 
+.sign-in-page__tab > span {
+    cursor: pointer;
+}
+
 .sign-in-page--selected {
     color: var(--brand-green-color);
 }

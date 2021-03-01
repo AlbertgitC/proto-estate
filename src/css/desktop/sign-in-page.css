@@ -1,0 +1,6 @@
+@media only screen and (min-width: 768px) {
+    .sign-in-page {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
