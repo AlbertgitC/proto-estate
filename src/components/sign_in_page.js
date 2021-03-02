@@ -12,7 +12,7 @@ function SignInPage(props) {
 
     useEffect(() => {
         setAuthPage(<SignIn setAuthPage={setAuthPage} location={props.location}/>);
-    }, []);
+    }, [props]);
 
     function clickSignIn() {
         setState({

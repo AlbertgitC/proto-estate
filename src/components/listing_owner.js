@@ -13,7 +13,7 @@ export default function OwnerListing(props) {
 
     // mock storage url
     // const url = `http://localhost:20005/${bucket}/public/${listing.photos[0]}`;
-    let imgUrl = listing.photos[0] ? `http://localhost:20005/${bucket}/public/${listing.photos[0]}` : defaultImg;
+    let imgUrl = listing.photos[0] ? `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.photos[0]}` : defaultImg;
 
     return (
         <li className="rental-panel__item">

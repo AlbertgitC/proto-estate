@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { ConfirmSignUp } from './sign_up';
 import { useDispatch } from 'react-redux';
@@ -19,12 +19,6 @@ function SignIn(props) {
     const { setModalComponent, setAuthPage, location, desktop, closeModal } = props;
     const animation = props.animation ? props.animation : "";
     const history = useHistory();
-
-    // useEffect(() => {
-    //     if (props.email) {
-    //         updateState(s => ({ ...s, email: props.email }));
-    //     };
-    // }, [props]);
 
     function signIn(e) {
         e.preventDefault();
