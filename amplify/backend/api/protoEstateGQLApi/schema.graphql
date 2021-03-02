@@ -24,5 +24,4 @@ type RentalListing @model @auth (
   areaPin: Float
   description: String
   photos: [String]
-  postPhoto: String
 }

@@ -14,10 +14,10 @@ function ListingItem(props) {
     const { listing } = props;
     const imgWrapper = useRef(null);
     // live site url
-    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.postPhoto}`;
+    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.photos[0]}`;
 
     // mock storage url
-    // const url = `http://localhost:20005/${bucket}/public/${listing.postPhoto}`;
+    // const url = `http://localhost:20005/${bucket}/public/${listing.photos[0]}`;
 
     let touchX;
     let touchEnd = true;

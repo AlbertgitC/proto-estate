@@ -15,7 +15,6 @@ export const onCreateRentalListing = /* GraphQL */ `
       areaPin
       description
       photos
-      postPhoto
       updatedAt
     }
   }
@@ -34,7 +33,6 @@ export const onUpdateRentalListing = /* GraphQL */ `
       areaPin
       description
       photos
-      postPhoto
       updatedAt
     }
   }
@@ -53,7 +51,6 @@ export const onDeleteRentalListing = /* GraphQL */ `
       areaPin
       description
       photos
-      postPhoto
       updatedAt
     }
   }

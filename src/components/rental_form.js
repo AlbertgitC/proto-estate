@@ -103,8 +103,7 @@ function RentalForm({ closeModal }) {
                                 variables: {
                                     input: {
                                         id: listing.id,
-                                        photos: imageKeys,
-                                        postPhoto: imageKeys[0]
+                                        photos: imageKeys
                                     }
                                 }
                             });

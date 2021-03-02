@@ -23,18 +23,18 @@ function RentalUpdateForm({ closeModal, listing }) {
         numberRooms: listing.numberRooms,
         areaPin: listing.areaPin,
         description: listing.description,
-        photos: listing.photos.slice(),
-        postPhoto: listing.postPhoto
+        photos: listing.photos.slice()
     };
     const [state, setState] = useState(initialState);
-    const { id, address, propertyType, monthlyRent, numberRooms, areaPin, description, photos, postPhoto } = state;
+    const { id, address, propertyType, monthlyRent, numberRooms, areaPin, description, photos } = state;
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ 
         images: [],
-        deleteQueue: []
+        deleteQueue: [],
+        postPhoto: listing.photos[0] ? listing.photos[0] : ""
     });
-    const { images, deleteQueue } = imageState;
+    const { images, deleteQueue, postPhoto } = imageState;
 
     function renderPlus() {
         let display = photos.length - deleteQueue.length +
@@ -80,8 +80,10 @@ function RentalUpdateForm({ closeModal, listing }) {
         if (!file) return;
         let nextState = { ...imageState };
         nextState.images.push(file);
+        if (postPhoto === "") {
+            nextState.postPhoto = file.name;
+        };
         setImage(nextState);
-        if (postPhoto === "") setState({ ...state, postPhoto: file.name });
     };
 
     function removeImage(e, idx) {
@@ -89,7 +91,6 @@ function RentalUpdateForm({ closeModal, listing }) {
         let nextState = { ...imageState };
         let imgName = images[idx].name;
         nextState.images.splice(idx, 1);
-        setImage(nextState);
 
         if (postPhoto === imgName) {
             let nextPostPhoto;
@@ -101,17 +102,20 @@ function RentalUpdateForm({ closeModal, listing }) {
             } else {
                 nextPostPhoto = "";
             };
-            setState({ ...state, postPhoto: nextPostPhoto });
+            nextState.postPhoto = nextPostPhoto;
         };
+
+        setImage(nextState);
     };
 
     function setPostPhoto(imageKey) {
-        if (postPhoto !== imageKey && !(deleteQueue.includes(imageKey))) 
-            setState({ ...state, postPhoto: imageKey });
+        if (postPhoto !== imageKey && !(deleteQueue.includes(imageKey)))
+            setImage({ ...imageState, postPhoto: imageKey });
     };
 
     function deleteQueueAction(e, imageKey) {
         e.stopPropagation();
+        const nextState = { ...imageState };
         if (!deleteQueue.includes(imageKey)) {
             deleteQueue.push(imageKey);
             if (postPhoto === imageKey) {
@@ -124,7 +128,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 } else {
                     nextPostPhoto = "";
                 };
-                setState({ ...state, postPhoto: nextPostPhoto });
+                nextState.postPhoto = nextPostPhoto;
             };
         } else {
             let idx = deleteQueue.indexOf(imageKey);
@@ -132,11 +136,15 @@ function RentalUpdateForm({ closeModal, listing }) {
             let total = photos.length - deleteQueue.length + images.length;
             if (total > 3) {
                 let i = images.length - 1;
-                removeImage(e, i);
+                if (postPhoto === images[i].name) {
+                    let diff = photos.filter(key => !deleteQueue.includes(key));
+                    nextState.postPhoto = diff[0];
+                };
+                nextState.images.splice(i, 1);
             };
-            if (postPhoto === "") setState({ ...state, postPhoto: imageKey });
-        }
-        setImage({ ...imageState });
+            if (postPhoto === "") nextState.postPhoto = imageKey;
+        };
+        setImage(nextState);
     };
 
     function handleSubmit(e) {
@@ -150,22 +158,33 @@ function RentalUpdateForm({ closeModal, listing }) {
         };
 
         const actionItems = [];
-        if (images[0]) {
-            for (let file of images) {
-                const extension = file.name.split(".")[1];
-                const { type: mimeType } = file;
-                const key = `images/${uuid()}_${id}.${extension}`;
-                data.photos.push(key);
-                if (file.name === postPhoto) data.postPhoto = key;
-                actionItems.push(Storage.put(key, file, { contentType: mimeType }));
-            };
-        };
-
         if (deleteQueue[0]) {
             for (let key of deleteQueue) {
                 let idx = data.photos.indexOf(key);
                 data.photos.splice(idx, 1);
                 actionItems.push(Storage.remove(key));
+            };
+        };
+
+        if (images[0]) {
+            for (let file of images) {
+                const extension = file.name.split(".")[1];
+                const { type: mimeType } = file;
+                const key = `images/${uuid()}_${id}.${extension}`;
+                if (file.name === postPhoto) {
+                    data.photos.unshift(key);
+                } else {
+                    data.photos.push(key);
+                };
+                actionItems.push(Storage.put(key, file, { contentType: mimeType }));
+            };
+        };
+
+        if (postPhoto.includes("/") && postPhoto !== data.photos[0]) {
+            let idx = data.photos.indexOf(postPhoto);
+            if (idx > -1) {
+                data.photos.splice(idx, 1);
+                data.photos.unshift(postPhoto);
             };
         };
 

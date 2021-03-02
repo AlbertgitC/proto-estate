@@ -9,11 +9,11 @@ const {
 export default function OwnerListing(props) {
     const { listing, callBack } = props;
     // live site url
-    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.postPhoto}`;
+    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.photos[0]}`;
 
     // mock storage url
-    // const url = `http://localhost:20005/${bucket}/public/${listing.postPhoto}`;
-    let imgUrl = listing.postPhoto ? `http://localhost:20005/${bucket}/public/${listing.postPhoto}` : defaultImg;
+    // const url = `http://localhost:20005/${bucket}/public/${listing.photos[0]}`;
+    let imgUrl = listing.photos[0] ? `http://localhost:20005/${bucket}/public/${listing.photos[0]}` : defaultImg;
 
     return (
         <li className="rental-panel__item">
