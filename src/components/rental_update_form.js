@@ -209,149 +209,168 @@ function RentalUpdateForm({ closeModal, listing }) {
     return (
         <form className="rental-form" onSubmit={handleSubmit}>
             <button disabled style={{ display: "none" }} />
-            <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
-            <input
-                className="rental-form__input"
-                id="address"
-                name="address"
-                required
-                maxLength="250"
-                onChange={handleInput}
-                value={address}
-                placeholder="地址"
-                autoComplete="off"
-            />
-            <label htmlFor="propertyType" className="rental-form__label">類型<span style={{ color: "crimson" }}>*</span></label>
-            <select
-                id="propertyType"
-                name="propertyType"
-                onChange={handleInput}
-                required
-                value={propertyType}
-            >
-                <option value="" disabled hidden>選擇類型</option>
-                <option value="整層住家">整層住家</option>
-                <option value="獨立套房">獨立套房</option>
-                <option value="分租套房">分租套房</option>
-                <option value="雅房">雅房</option>
-            </select>
-            <label htmlFor="monthlyRent" className="rental-form__label">租金(月租)<span style={{ color: "crimson" }}>*</span></label>
-            <input
-                className="rental-form__input"
-                id="monthlyRent"
-                type="number"
-                name="monthlyRent"
-                required
-                onChange={handleNumInput}
-                value={monthlyRent}
-                placeholder="租金"
-                autoComplete="off"
-            />
-            <label htmlFor="numberRooms" className="rental-form__label">格局<span style={{ color: "crimson" }}>*</span></label>
-            <select
-                id="numberRooms"
-                name="numberRooms"
-                onChange={handleNumInput}
-                required
-                value={numberRooms}
-            >
-                <option value="" disabled hidden>選擇格局</option>
-                <option value="1">1房</option>
-                <option value="2">2房</option>
-                <option value="3">3房</option>
-                <option value="4">4房</option>
-                <option value="5">5房</option>
-                <option value="6">6房</option>
-                <option value="7">7房</option>
-                <option value="8">8房</option>
-            </select>
-            <label htmlFor="areaPin" className="rental-form__label">坪數</label>
-            <input
-                className="rental-form__input"
-                id="areaPin"
-                type="number"
-                name="areaPin"
-                onChange={handleNumInput}
-                value={areaPin}
-                placeholder="坪數"
-                autoComplete="off"
-            />
-            <label htmlFor="description" className="rental-form__label">Detailed description</label>
-            <textarea
-                className="rental-form__textarea"
-                id="description"
-                maxLength="500"
-                name="description"
-                onChange={handleInput}
-                value={description}
-                autoComplete="off"
-            />
-            <small>{`${description.length}/500`}</small>
-            <label className="rental-form__label">上傳照片(最多3張，點擊照片選擇封面照片)</label>
-            <div className="rental-form__image-wrapper">
-                {
-                    photos.map((imageKey, i) => {
-                        let tag = null;
-                        if (postPhoto === imageKey) tag = <div className="rental-form__image-tag">封面照片</div>;
-                        let whiteOut = "";
-                        let red = "";
-                        if (deleteQueue.includes(imageKey)) {
-                            whiteOut = "rental-form__image-overlay--white-out";
-                            red = "rental-form__remove-image--selected";
-                        };
-                        return (
-                            <div 
-                                key={i} 
-                                className="rental-form__image"
-                                // live site url
-                                // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${imageKey}`;
-
-                                // mock storage url
-                                // const url = `http://localhost:20005/${bucket}/public/${imageKey}`;
-                                style={{ backgroundImage: `url(http://localhost:20005/${bucket}/public/${imageKey})` }}
-                                onClick={() => { setPostPhoto(imageKey) }}
-                            >
-                                <div className={`rental-form__image-overlay ${whiteOut}`}>
-                                    {tag}
-                                    <FontAwesomeIcon
-                                        className={`rental-form__remove-image ${red}`}
-                                        icon={faTimes}
-                                        size="2x"
-                                        transform="up-0.2"
-                                        onClick={e => { deleteQueueAction(e, imageKey) }}
-                                    />
-                                </div>
-                            </div>
-                        );
-                    })
-                }
-                {
-                    images.map((image, i) => {
-                        let tag = null;
-                        if (postPhoto === image.name) tag = <div className="rental-form__image-tag">封面照片</div>;
-                        return (
-                            <div 
-                                key={i} 
-                                className="rental-form__image rental-form__image-overlay"
-                                style={{ backgroundImage: `url(${URL.createObjectURL(image)})` }}
-                                onClick={() => { setPostPhoto(image.name) }}>
-                                {tag}
-                                <FontAwesomeIcon
-                                    className="rental-form__remove-image"
-                                    icon={faTimes}
-                                    size="2x"
-                                    transform="up-0.2"
-                                    onClick={e => { removeImage(e, i) }}
-                                />
-                            </div>
-                        );
-                    })
-                }
-                {renderPlus()}
+            <div className="rental-form__input">
+                <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
+                <input
+                    id="address"
+                    name="address"
+                    required
+                    maxLength="250"
+                    onChange={handleInput}
+                    value={address}
+                    placeholder="地址"
+                    autoComplete="off"
+                />
             </div>
-            <p>{error}</p>
-            <button className="rental-form__button">確定</button>
-            <button className="rental-form__cancel-button" type="button" onClick={closeModal}>取消</button>
+            <div className="rental-form__input">
+                <label htmlFor="propertyType" className="rental-form__label">類型<span style={{ color: "crimson" }}>*</span></label>
+                <select
+                    id="propertyType"
+                    name="propertyType"
+                    onChange={handleInput}
+                    required
+                    value={propertyType}
+                >
+                    <option value="" disabled hidden>選擇類型</option>
+                    <option value="整層住家">整層住家</option>
+                    <option value="獨立套房">獨立套房</option>
+                    <option value="分租套房">分租套房</option>
+                    <option value="雅房">雅房</option>
+                </select>
+            </div>
+            <div className="rental-form__input">
+                <label htmlFor="monthlyRent" className="rental-form__label">租金(月租)<span style={{ color: "crimson" }}>*</span></label>
+                <input
+                    id="monthlyRent"
+                    type="number"
+                    name="monthlyRent"
+                    required
+                    onChange={handleNumInput}
+                    value={monthlyRent}
+                    placeholder="租金"
+                    autoComplete="off"
+                />
+            </div>
+            <div className="rental-form__input">
+                <label htmlFor="numberRooms" className="rental-form__label">格局<span style={{ color: "crimson" }}>*</span></label>
+                <select
+                    id="numberRooms"
+                    name="numberRooms"
+                    onChange={handleNumInput}
+                    required
+                    value={numberRooms}
+                >
+                    <option value="" disabled hidden>選擇格局</option>
+                    <option value="1">1房</option>
+                    <option value="2">2房</option>
+                    <option value="3">3房</option>
+                    <option value="4">4房</option>
+                    <option value="5">5房</option>
+                    <option value="6">6房</option>
+                    <option value="7">7房</option>
+                    <option value="8">8房</option>
+                </select>
+            </div>
+            <div className="rental-form__input">
+                <label htmlFor="areaPin" className="rental-form__label">坪數</label>
+                <input
+                    id="areaPin"
+                    type="number"
+                    name="areaPin"
+                    onChange={handleNumInput}
+                    value={areaPin}
+                    placeholder="坪數"
+                    autoComplete="off"
+                />
+            </div>
+            <div className="rental-form__input rental-form__input--full-width">
+                <label htmlFor="description" className="rental-form__label">Detailed description</label>
+                <textarea
+                    className="rental-form__textarea"
+                    id="description"
+                    maxLength="500"
+                    name="description"
+                    onChange={handleInput}
+                    value={description}
+                    autoComplete="off"
+                />
+                <small>{`${description.length}/500`}</small>
+            </div>
+            <div className="rental-form__input rental-form__input--full-width">
+                <label className="rental-form__label">上傳照片(最多3張，點擊照片選擇封面照片)</label>
+                <div className="rental-form__image-wrapper">
+                    {
+                        photos.map((imageKey, i) => {
+                            let tag = null;
+                            if (postPhoto === imageKey) tag = <div className="rental-form__image-tag">封面照片</div>;
+                            let whiteOut = "";
+                            let red = "";
+                            if (deleteQueue.includes(imageKey)) {
+                                whiteOut = "rental-form__image-overlay--white-out";
+                                red = "rental-form__remove-image--selected";
+                            };
+                            return (
+                                <div key={i} className="rental-form__image-padding">
+                                    <div
+                                        className="rental-form__image rental-form__image--no-padding"
+                                        // live site url
+                                        // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${imageKey}`;
+
+                                        // mock storage url
+                                        // const url = `http://localhost:20005/${bucket}/public/${imageKey}`;
+                                        style={{ backgroundImage: `url(http://localhost:20005/${bucket}/public/${imageKey})` }}
+                                        onClick={() => { setPostPhoto(imageKey) }}
+                                    >
+                                        <div className={`rental-form__image-overlay ${whiteOut}`}>
+                                            {tag}
+                                            <FontAwesomeIcon
+                                                className={`rental-form__remove-image ${red}`}
+                                                icon={faTimes}
+                                                size="2x"
+                                                transform="up-0.2"
+                                                onClick={e => { deleteQueueAction(e, imageKey) }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    }
+                    {
+                        images.map((image, i) => {
+                            let tag = null;
+                            if (postPhoto === image.name) tag = <div className="rental-form__image-tag">封面照片</div>;
+                            return (
+                                <div key={i} className="rental-form__image-padding">
+                                    <div
+                                        className="rental-form__image rental-form__image-overlay"
+                                        style={{ backgroundImage: `url(${URL.createObjectURL(image)})` }}
+                                        onClick={() => { setPostPhoto(image.name) }}>
+                                        {tag}
+                                        <FontAwesomeIcon
+                                            className="rental-form__remove-image"
+                                            icon={faTimes}
+                                            size="2x"
+                                            transform="up-0.2"
+                                            onClick={e => { removeImage(e, i) }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })
+                    }
+                    {renderPlus()}
+                </div>
+            </div>
+            <div className="rental-form__error rental-form__input--full-width">
+                <p>{error}</p>
+            </div>
+            <div className="rental-form__input rental-form__input--full-width">
+                <button className="rental-form__button rental-form__button--submit">確定</button>
+            </div>
+            <div className="rental-form__input rental-form__input--full-width">
+                <button className="rental-form__button" type="button" onClick={closeModal}>取消</button>
+            </div>
         </form>
     );
 };

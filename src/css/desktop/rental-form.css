@@ -1,0 +1,54 @@
+@media only screen and (min-width: 768px) {
+    .rental-form {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .rental-form__input {
+        width: 50%;
+        padding: 15px 15px 0 15px;
+    }
+
+    .rental-form__input select {
+        cursor: pointer;
+    }
+    
+    .rental-form__image-wrapper {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 2px 0;
+    }
+
+    .rental-form__image-padding {
+        width: 33%;
+        padding: 2px;
+    }
+
+    .rental-form__image {
+        margin: unset;
+    }
+
+    .rental-form__remove-image {
+        cursor: pointer;
+    }
+
+    .rental-form__add-image label {
+        cursor: pointer;
+    }
+
+    .rental-form__error {
+        text-align: center;
+    }
+
+    .rental-form__button {
+        width: 100%;
+        max-width: 530px;
+        margin: 8px auto 0 auto;
+    }
+
+    .rental-form__input--full-width {
+        width: 100%;
+    }
+}

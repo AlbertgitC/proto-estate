@@ -3,7 +3,9 @@
     flex-direction: column;
 }
 
-.rental-form__label {
+.rental-form__input {
+    display: flex;
+    flex-direction: column;
     padding-top: 24px;
 }
 
@@ -19,21 +21,28 @@
     padding: 5px;
 }
 
+.rental-form__image-padding {
+    width: 100%;
+}
+
 .rental-form__image {
     height: 200px;
     background-size: cover;
     background-position: center;
     margin-bottom: 5px;
-    /* display: flex;
-    justify-content: space-between;
-    padding: 5px; */
+    padding: 8px;
+}
+
+.rental-form__image--no-padding {
+    padding: 0;
 }
 
 .rental-form__image-overlay {
     height: 200px;
     display: flex;
     justify-content: space-between;
-    padding: 5px;
+    padding: 8px;
+    cursor: pointer;
 }
 
 .rental-form__image-overlay--white-out {
@@ -64,42 +73,9 @@
 }
 
 .rental-form__button {
-    margin-top: 24px;
+    margin-top: 7px;
+}
+
+.rental-form__button--submit {
     background-color: var(--brand-green-color);
-}
-
-.rental-form__cancel-button {
-    margin-top: 15px;
-}
-
-.rental-form__modal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10;
-    overflow: auto;
-    overscroll-behavior: contain;
-}
-
-.rental-form__delete-confirm {
-    background-color: #ffffff;
-    width: 260px;
-    margin: 50% auto 0 auto;
-    border-radius: 3px;
-	padding: 15px;
-	color: var(--font-color-dark);
-    text-align: center;
-}
-
-.rental-form__confirm-wrapper {
-    display: flex;
-    justify-content: space-evenly;
-    padding-top: 7px;
-}
-
-.rental-form__confirm-button {
-    padding: 2px 25px;
 }

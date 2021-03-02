@@ -164,7 +164,6 @@ function ListingItem(props) {
                         </div>
                 }
             </div>
-            
             <div className="listing-item__info">
                 <p>
                     <span className="listing-item__price">{listing.monthlyRent}</span> 元/月<br />

@@ -28,3 +28,5 @@ exports.rental_listings_d = require("./desktop/rental-listings.css");
 exports.listing_item_d = require("./desktop/listing-item.css");
 exports.rental_panel_d = require("./desktop/rental-panel.css");
 exports.sign_in_page_d = require("./desktop/sign-in-page.css");
+exports.rental_modal_d = require("./desktop/rental-modal.css");
+exports.rental_form_d = require("./desktop/rental-form.css");
