@@ -8,8 +8,8 @@ const {
     aws_user_files_s3_bucket_region: region,
     aws_user_files_s3_bucket: bucket
 } = config
-// const urlPrefix = `http://localhost:20005/${bucket}/public/`;
-const urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
+const urlPrefix = `http://localhost:20005/${bucket}/public/`;
+// const urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
 
 function ListingItem(props) {
     const { listing } = props;

@@ -318,7 +318,7 @@ function RentalUpdateForm({ closeModal, listing }) {
 
                                         // mock storage url
                                         // const url = `http://localhost:20005/${bucket}/public/${imageKey}`;
-                                        style={{ backgroundImage: `url(https://${bucket}.s3.${region}.amazonaws.com/public/${imageKey})` }}
+                                        style={{ backgroundImage: `url(http://localhost:20005/${bucket}/public/${imageKey})` }}
                                         onClick={() => { setPostPhoto(imageKey) }}
                                     >
                                         <div className={`rental-form__image-overlay ${whiteOut}`}>
