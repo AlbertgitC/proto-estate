@@ -3,12 +3,21 @@
     background-color: var(--bg-color-whitesmoke);
     color: var(--font-color-dark);
     border-radius: 3px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.listing-item__img-idx {
+    position: absolute;
+    z-index: 1;
+    top: 63%;
+    left: 3%;
 }
 
 .listing-item__image-wrapper {
     width: 100%;
     display: flex;
-    overflow-x: auto;
+    transition: transform .5s ease-out;
 }
 
 .listing-item__image {
@@ -18,7 +27,6 @@
     padding: 5px;
     border-radius: 3px 3px 0 0;
     width: 100%;
-    min-width: 100%;
 }
 
 .listing-item__arrow-wrapper {

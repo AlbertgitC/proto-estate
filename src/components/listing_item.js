@@ -2,7 +2,7 @@ import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -13,109 +13,64 @@ const urlPrefix = `http://localhost:20005/${bucket}/public/`;
 
 function ListingItem(props) {
     const { listing } = props;
-    const imgWrapper = useRef(null);
+    const imgWrapper = useRef({ scrollWidth: null });
     // live site url
     // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.photos[0]}`;
 
     // mock storage url
     // const url = `http://localhost:20005/${bucket}/public/${listing.photos[0]}`;
-
-    let touchX;
-    let touchEnd = true;
-    let scrollEnd = true;
+    const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
+    useEffect(() => {
+        if (imgWrapper.current) setSwipeState(s => ({ 
+            ...s, 
+            imgWidth: imgWrapper.current.scrollWidth / listing.photos.length 
+        }));
+    }, [imgWrapper.current.scrollWidth, listing]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;
-        touchX = e.changedTouches[0].clientX;
-        touchEnd = false;
+        setSwipeState({ ...swipeState, touchX: e.changedTouches[0].clientX });
     };
 
-    function setIdx(e) {
+    function setImg(e) {
         if (listing.photos.length < 2) return;
-        let imgWidth = imgWrapper.current.scrollWidth / listing.photos.length;
-        touchEnd = true;
-        let distance = touchX - e.changedTouches[0].clientX;
 
-        if (scrollEnd) {
-            let curPos = imgWrapper.current.scrollLeft;
-            let carry;
-            if (distance < 0) {
-                carry = (curPos % imgWidth / imgWidth) > 0.85 ? imgWidth : 0;
+        let dx = e.changedTouches[0].clientX - swipeState.touchX, 
+            s = Math.sign(dx),
+            f = +(s * dx / swipeState.imgWidth).toFixed(2);
+
+        if ((swipeState.idx > 0 || s < 0) && (swipeState.idx < listing.photos.length - 1 || s > 0) && f > .15) {
+            setSwipeState({ ...swipeState, idx: swipeState.idx - s, tx: 0, touchX: null });
+        } else if (f <= .15) {
+            setSwipeState({ ...swipeState, tx: 0, touchX: null });
+        } else {
+            if (swipeState.idx - s < 0) {
+                setSwipeState({ ...swipeState, idx: 0, tx: 0, touchX: null });
             } else {
-                carry = (curPos % imgWidth / imgWidth) > 0.15 ? imgWidth : 0;
-            }
-            let nextPos = Math.floor(curPos / imgWidth) * imgWidth + carry;
-            
-            imgWrapper.current.scrollTo({
-                top: 0,
-                left: nextPos,
-                behavior: 'smooth'
-            });
+                setSwipeState({ ...swipeState, idx: listing.photos.length - 1, tx: 0, touchX: null });
+            };
         };
     };
 
-    let timer = null;
-    function drag() {
+    function drag(e) {
         if (listing.photos.length < 2) return;
-        scrollEnd = false;
-        let imgWidth = imgWrapper.current.scrollWidth / listing.photos.length;
-        if (timer !== null) {
-            clearTimeout(timer);
-        }
-        timer = setTimeout(function () {
-            scrollEnd = true;
-            if (touchEnd) {
-                let curPos = imgWrapper.current.scrollLeft;
-                let carry = (curPos % imgWidth / imgWidth) > 0.5 ? imgWidth : 0;
-                let nextPos = Math.floor(curPos / imgWidth) * imgWidth + carry;
-                imgWrapper.current.scrollTo({
-                    top: 0,
-                    left: nextPos,
-                    behavior: 'smooth'
-                });
-            };
-        }, 150);
+        
+        setSwipeState({ ...swipeState, tx: Math.round(e.changedTouches[0].clientX - swipeState.touchX)});
     };
 
     function clickForward() {
-        let imgWidth = imgWrapper.current.scrollWidth / listing.photos.length;
-        let curPos = imgWrapper.current.scrollLeft;
-        let lastPos = imgWrapper.current.scrollWidth - imgWidth;
-        let carry = (curPos % imgWidth / imgWidth) > 0.5 ? imgWidth : 0;
-        let nextPos = Math.floor(curPos / imgWidth) * imgWidth + carry;
-        if (lastPos - curPos < imgWidth*0.01) {
-            imgWrapper.current.scrollTo({
-                top: 0,
-                left: 0,
-                behavior: 'smooth'
-            });
+        if (swipeState.idx === listing.photos.length - 1) {
+            setSwipeState({ ...swipeState, idx: 0 });
         } else {
-            imgWrapper.current.scrollTo({
-                top: 0,
-                left: nextPos + imgWidth,
-                behavior: 'smooth'
-            });
+            setSwipeState({ ...swipeState, idx: swipeState.idx + 1 });
         };
     };
 
     function clickBackward() {
-        let imgWidth = imgWrapper.current.scrollWidth / listing.photos.length;
-        let curPos = imgWrapper.current.scrollLeft;
-        let lastPos = imgWrapper.current.scrollWidth - imgWidth;
-        let carry = (curPos % imgWidth / imgWidth) > 0.5 ? imgWidth : 0;
-        let nextPos = Math.floor(curPos / imgWidth) * imgWidth + carry;
-        if (curPos < imgWidth * 0.01) {
-            imgWrapper.current.scrollTo({
-                top: 0,
-                left: lastPos,
-                behavior: 'smooth'
-            });
+        if (swipeState.idx === 0) {
+            setSwipeState({ ...swipeState, idx: listing.photos.length - 1 });
         } else {
-            imgWrapper.current.scrollTo({
-                top: 0,
-                left: nextPos - imgWidth,
-                behavior: 'smooth'
-            });
+            setSwipeState({ ...swipeState, idx: swipeState.idx - 1 });
         };
     };
 
@@ -140,12 +95,23 @@ function ListingItem(props) {
                         </button>
                     </div>
             }
+            {
+                listing.photos.length < 2 ? null :
+                    <small className="listing-item__img-idx">
+                        {`${swipeState.idx + 1}/${listing.photos.length}`}
+                    </small>
+            }
             <div 
                 className="listing-item__image-wrapper"
                 ref={imgWrapper}
                 onTouchStart={handleTouch}
-                onTouchEnd={setIdx}
-                onScroll={drag}
+                onTouchMove={drag}
+                onTouchEnd={setImg}
+                style={{ 
+                    width: `${listing.photos.length > 0 ?
+                        listing.photos.length * 100 : 100}%`,
+                    transform: `translate(${swipeState.idx * -swipeState.imgWidth + swipeState.tx}px)`
+                }}
             >   
                 {
                     listing.photos.length > 1 ? listing.photos.map((img, i) => {
@@ -153,14 +119,20 @@ function ListingItem(props) {
                             <div
                                 key={i}
                                 className="listing-item__image" 
-                                style={{ backgroundImage: `url(${urlPrefix}${img})` }}
+                                style={{ 
+                                    backgroundImage: `url(${urlPrefix}${img})`,
+                                    width: `${100 / listing.photos.length}%`
+                                }}
                             >
                                 <div className="listing-item__tag">New</div>
                             </div>
                         );
-                    }) : <div className="listing-item__image" style={{ backgroundImage: `url(${
-                            listing.photos[0] ? urlPrefix + listing.photos[0] : defaultImg
-                        })` }}>
+                    }) : <div 
+                            className="listing-item__image" 
+                            style={{ 
+                                backgroundImage: `url(${listing.photos[0] ? urlPrefix + listing.photos[0] : defaultImg})`
+                            }}
+                        >
                             <div className="listing-item__tag">New</div>
                         </div>
                 }

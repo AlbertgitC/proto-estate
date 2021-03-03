@@ -2,9 +2,8 @@
     .listing-item {
         width: 50%;
         margin: 0;
-        padding: 4px;
+        border: 4px solid transparent;
         background-color: transparent;
-        position: relative;
     }
 
     .listing-item__image-wrapper {
@@ -18,6 +17,7 @@
     .listing-item__arrow-wrapper {
         display: block;
         position: absolute;
+        z-index: 1;
         top: 34%;
         display: flex;
         justify-content: space-between;
@@ -34,6 +34,13 @@
 
     .listing-item__arrow:focus {
         outline: none; 
+    }
+
+    .listing-item__img-idx {
+        position: absolute;
+        z-index: 1;
+        top: 70%;
+        left: 3%;
     }
 
     .listing-item__info {
