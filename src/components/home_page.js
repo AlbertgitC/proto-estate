@@ -18,7 +18,7 @@ function HomePage() {
                     <Promo key={i} imgFile={promo.imgFile} title={promo.title} content={promo.content} />
                 ))
             }
-            {`config: ${config}`}
+            <p>{`config: ${Object.entries(config)}`}</p>
         </div>
     );
 };
