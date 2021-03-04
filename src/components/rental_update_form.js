@@ -16,7 +16,7 @@ const {
 } = config
 
 let urlPrefix;
-if (apiKey.includes("fakeApi")) {
+if (false) {
     urlPrefix = `http://localhost:20005/${bucket}/public/`;
 } else {
     urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
