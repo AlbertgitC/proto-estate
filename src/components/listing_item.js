@@ -6,19 +6,20 @@ import { useRef, useState, useEffect } from 'react';
 
 const {
     aws_user_files_s3_bucket_region: region,
-    aws_user_files_s3_bucket: bucket
+    aws_user_files_s3_bucket: bucket,
+    aws_appsync_apiKey: apiKey
 } = config
-const urlPrefix = `http://localhost:20005/${bucket}/public/`;
-// const urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
+
+let urlPrefix;
+if (apiKey.includes("fakeApi")) {
+    urlPrefix = `http://localhost:20005/${bucket}/public/`;
+} else {
+    urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
+};
 
 function ListingItem(props) {
     const { listing } = props;
     const imgWrapper = useRef({ scrollWidth: null });
-    // live site url
-    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.photos[0]}`;
-
-    // mock storage url
-    // const url = `http://localhost:20005/${bucket}/public/${listing.photos[0]}`;
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
     useEffect(() => {
         if (imgWrapper.current) setSwipeState(s => ({ 

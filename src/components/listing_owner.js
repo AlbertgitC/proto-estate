@@ -3,17 +3,20 @@ import config from '../aws-exports';
 
 const {
     aws_user_files_s3_bucket_region: region,
-    aws_user_files_s3_bucket: bucket
+    aws_user_files_s3_bucket: bucket,
+    aws_appsync_apiKey: apiKey
 } = config
+
+let urlPrefix;
+if (apiKey.includes("fakeApi")) {
+    urlPrefix = `http://localhost:20005/${bucket}/public/`;
+} else {
+    urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
+};
 
 export default function OwnerListing(props) {
     const { listing, callBack } = props;
-    // live site url
-    // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${listing.photos[0]}`;
-
-    // mock storage url
-    // const url = `http://localhost:20005/${bucket}/public/${listing.photos[0]}`;
-    let imgUrl = listing.photos[0] ? `http://localhost:20005/${bucket}/public/${listing.photos[0]}` : defaultImg;
+    let imgUrl = listing.photos[0] ? `${urlPrefix}${listing.photos[0]}` : defaultImg;
 
     return (
         <li className="rental-panel__item">

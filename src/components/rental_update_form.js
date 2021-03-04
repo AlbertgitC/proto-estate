@@ -11,8 +11,16 @@ import config from '../aws-exports';
 
 const {
     aws_user_files_s3_bucket_region: region,
-    aws_user_files_s3_bucket: bucket
+    aws_user_files_s3_bucket: bucket,
+    aws_appsync_apiKey: apiKey
 } = config
+
+let urlPrefix;
+if (apiKey.includes("fakeApi")) {
+    urlPrefix = `http://localhost:20005/${bucket}/public/`;
+} else {
+    urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
+};
 
 function RentalUpdateForm({ closeModal, listing }) {
     const initialState = { 
@@ -313,12 +321,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                                 <div key={i} className="rental-form__image-padding">
                                     <div
                                         className="rental-form__image rental-form__image--no-padding"
-                                        // live site url
-                                        // const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${imageKey}`;
-
-                                        // mock storage url
-                                        // const url = `http://localhost:20005/${bucket}/public/${imageKey}`;
-                                        style={{ backgroundImage: `url(http://localhost:20005/${bucket}/public/${imageKey})` }}
+                                        style={{ backgroundImage: `url(${urlPrefix}${imageKey})` }}
                                         onClick={() => { setPostPhoto(imageKey) }}
                                     >
                                         <div className={`rental-form__image-overlay ${whiteOut}`}>
