@@ -7,11 +7,11 @@ import { useRef, useState, useEffect } from 'react';
 const {
     aws_user_files_s3_bucket_region: region,
     aws_user_files_s3_bucket: bucket,
-    aws_appsync_apiKey: apiKey
+    aws_appsync_graphqlEndpoint: endpoint
 } = config
 
 let urlPrefix;
-if (false) {
+if (endpoint.includes("20002/graphql")) {
     urlPrefix = `http://localhost:20005/${bucket}/public/`;
 } else {
     urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
