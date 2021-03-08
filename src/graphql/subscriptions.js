@@ -9,6 +9,11 @@ export const onCreateRentalListing = /* GraphQL */ `
       createdAt
       type
       address
+      subAddress
+      geometry
+      postalCode
+      city
+      district
       propertyType
       monthlyRent
       numberRooms
@@ -27,6 +32,11 @@ export const onUpdateRentalListing = /* GraphQL */ `
       createdAt
       type
       address
+      subAddress
+      geometry
+      postalCode
+      city
+      district
       propertyType
       monthlyRent
       numberRooms
@@ -45,6 +55,11 @@ export const onDeleteRentalListing = /* GraphQL */ `
       createdAt
       type
       address
+      subAddress
+      geometry
+      postalCode
+      city
+      district
       propertyType
       monthlyRent
       numberRooms

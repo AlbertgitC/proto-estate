@@ -18,6 +18,11 @@ type RentalListing @model @auth (
   createdAt: String
   type: String
   address: String
+  subAddress: String
+  geometry: String
+  postalCode: String
+  city: String
+  district: String
   propertyType: String
   monthlyRent: Float
   numberRooms: Float

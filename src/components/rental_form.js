@@ -7,11 +7,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuid } from 'uuid';
+import AddressAutocomplete from './address_autocomplete';
 
 function RentalForm({ closeModal }) {
     const initialState = {
         type: "RentalListing",
         address: "",
+        subAddress: "",
+        geometry: "",
+        postalCode: "",
+        city: "",
+        district: "",
         propertyType: "",
         monthlyRent: "",
         numberRooms: "",
@@ -20,10 +26,33 @@ function RentalForm({ closeModal }) {
         photos: []
     };
     const [state, setState] = useState(initialState);
-    const { address, propertyType, monthlyRent, numberRooms, areaPin, description } = state;
+    const { address, subAddress, propertyType, monthlyRent, numberRooms, areaPin, description } = state;
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ images: [], display: "block" });
+    const [adrState, setAdrState] = useState({ display: "block", msg: "" });
+
+    function handleAddress(place) {
+        let postalCode = "", city = "", district = "";
+        for (let component of place.address_components) {
+            if (component.types[0] === "postal_code") {
+                postalCode = component.long_name;
+            } else if (component.types[0] === "administrative_area_level_1"
+                || component.types[0] === "administrative_area_level_2") {
+                city = component.long_name;
+            } else if (component.types[0] === "administrative_area_level_3") {
+                district = component.long_name;
+            };
+        };
+        setState({
+            ...state,
+            address: place.formatted_address.replace(/^[0-9]*/, ""),
+            geometry: JSON.stringify(place.geometry.location.toJSON()),
+            postalCode: postalCode,
+            city: city,
+            district: district
+        });
+    };
 
     function handleInput(e) {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -62,6 +91,11 @@ function RentalForm({ closeModal }) {
     function handleSubmit(e) {
         e.preventDefault();
         
+        if (!address) {
+            setError("請填寫地址,並在選單中選擇地址");
+            return;
+        };
+
         setError("讀取中...");
 
         let data = { ...state };
@@ -127,16 +161,38 @@ function RentalForm({ closeModal }) {
     return (
         <form className="rental-form" onSubmit={handleSubmit}>
             <button disabled style={{ display: "none" }} />
+            
             <div className="rental-form__input">
-                <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
+                <label 
+                    htmlFor="address" 
+                    className="rental-form__label"
+                    style={{ display: `${adrState.display}` }}
+                >
+                    地址<span style={{ color: "crimson" }}>*</span>
+                </label>
+                <AddressAutocomplete 
+                    handleAddress={handleAddress} 
+                    adrState={adrState} 
+                    setAdrState={setAdrState} 
+                />
+                <p>{adrState.msg}</p>
+                <button
+                    className="rental-form__edit-button"
+                    type="button"
+                    style={{ display: `${address ? "block" : "none"}` }}
+                    onClick={() => { setAdrState({ ...adrState, display: "block" }) }}
+                >
+                    修改
+                </button>
+            </div>
+            <div className="rental-form__input">
+                <label htmlFor="subAddress" className="rental-form__label">樓層/房號</label>
                 <input
-                    id="address"
-                    name="address"
-                    required
-                    maxLength="250"
+                    id="subAddress"
+                    name="subAddress"
                     onChange={handleInput}
-                    value={address}
-                    placeholder="地址"
+                    value={subAddress}
+                    placeholder="樓層/房號"
                     autoComplete="off"
                 />
             </div>

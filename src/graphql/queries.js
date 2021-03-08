@@ -9,6 +9,11 @@ export const getRentalListing = /* GraphQL */ `
       createdAt
       type
       address
+      subAddress
+      geometry
+      postalCode
+      city
+      district
       propertyType
       monthlyRent
       numberRooms
@@ -32,6 +37,11 @@ export const listRentalListings = /* GraphQL */ `
         createdAt
         type
         address
+        subAddress
+        geometry
+        postalCode
+        city
+        district
         propertyType
         monthlyRent
         numberRooms
@@ -67,6 +77,11 @@ export const rentalListingsByAuthor = /* GraphQL */ `
         createdAt
         type
         address
+        subAddress
+        geometry
+        postalCode
+        city
+        district
         propertyType
         monthlyRent
         numberRooms
@@ -102,6 +117,11 @@ export const rentalListingsSortByCreatedAt = /* GraphQL */ `
         createdAt
         type
         address
+        subAddress
+        geometry
+        postalCode
+        city
+        district
         propertyType
         monthlyRent
         numberRooms

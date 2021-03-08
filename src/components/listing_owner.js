@@ -3,12 +3,11 @@ import config from '../aws-exports';
 
 const {
     aws_user_files_s3_bucket_region: region,
-    aws_user_files_s3_bucket: bucket,
-    aws_appsync_graphqlEndpoint: endpoint
+    aws_user_files_s3_bucket: bucket
 } = config
 
 let urlPrefix;
-if (endpoint.includes("20002/graphql")) {
+if (process.env.NODE_ENV === "development") {
     urlPrefix = `http://localhost:20005/${bucket}/public/`;
 } else {
     urlPrefix = `https://${bucket}.s3.${region}.amazonaws.com/public/`;
