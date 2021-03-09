@@ -1,9 +1,7 @@
 @media only screen and (min-width: 768px) {
     .listing-item {
-        width: 50%;
-        margin: 0;
-        border: 4px solid transparent;
-        background-color: transparent;
+        width: 49%;
+        margin: 0.5%;
     }
 
     .listing-item__image-wrapper {

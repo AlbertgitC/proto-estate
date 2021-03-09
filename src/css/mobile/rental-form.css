@@ -9,6 +9,10 @@
     padding-top: 24px;
 }
 
+.rental-form__edit-button {
+    width: 50px;
+}
+
 .rental-form__textarea {
     height: 120px;
 }
