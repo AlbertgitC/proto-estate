@@ -25,6 +25,7 @@ function RentalUpdateForm({ closeModal, listing }) {
     const initialState = { 
         id: listing.id,
         address: listing.address,
+        subAddress: listing.subAddress,
         propertyType: listing.propertyType,
         monthlyRent: listing.monthlyRent,
         numberRooms: listing.numberRooms,
@@ -33,7 +34,7 @@ function RentalUpdateForm({ closeModal, listing }) {
         photos: listing.photos.slice()
     };
     const [state, setState] = useState(initialState);
-    const { id, address, propertyType, monthlyRent, numberRooms, areaPin, description, photos } = state;
+    const { id, address, subAddress, propertyType, monthlyRent, numberRooms, areaPin, description, photos } = state;
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const [imageState, setImage] = useState({ 
@@ -217,15 +218,17 @@ function RentalUpdateForm({ closeModal, listing }) {
         <form className="rental-form" onSubmit={handleSubmit}>
             <button disabled style={{ display: "none" }} />
             <div className="rental-form__input">
-                <label htmlFor="address" className="rental-form__label">地址<span style={{ color: "crimson" }}>*</span></label>
+                <p>地址: {address}</p>
+            </div>
+            <div className="rental-form__input">
+                <label htmlFor="subAddress" className="rental-form__label">樓層/房號</label>
                 <input
-                    id="address"
-                    name="address"
-                    required
+                    id="subAddress"
+                    name="subAddress"
                     maxLength="250"
                     onChange={handleInput}
-                    value={address}
-                    placeholder="地址"
+                    value={subAddress}
+                    placeholder="樓層/房號"
                     autoComplete="off"
                 />
             </div>
