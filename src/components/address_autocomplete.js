@@ -17,7 +17,7 @@ function AddressAutocomplete(props) {
 
         function onPlaceChanged(place) {
             if (!place.geometry) {
-                // user hit enter without picking from the results
+                /* user hit enter without picking from the results */
                 setAdrState({ ...adrState, msg: "請在選單中選擇地址" });
             } else {
                 handleAddress(place);

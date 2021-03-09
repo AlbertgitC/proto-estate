@@ -15,6 +15,7 @@ exports.rental_modal = require("./mobile/rental-modal.css");
 exports.rental_form = require("./mobile/rental-form.css");
 exports.rental_listings = require("./mobile/rental-listings.css");
 exports.listing_item = require("./mobile/listing-item.css");
+exports.google_map = require("./mobile/google-map.css");
 
 // for desktop
 exports.landing_d = require("./desktop/landing.css");
