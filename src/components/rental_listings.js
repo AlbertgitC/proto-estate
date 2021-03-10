@@ -6,6 +6,7 @@ import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { useSelector, useDispatch } from 'react-redux';
 import { API } from 'aws-amplify';
 import GoogleMap from './google_map';
+import ErrBoundary from '../util/error_boundary';
 
 function RentalListings() {
     const dispatch = useDispatch();
@@ -36,7 +37,9 @@ function RentalListings() {
         <div className="rental-listings">
             <SearchBar />
             <h2 className="rental-listings__header">Rental Listings</h2>
-            <GoogleMap />
+            <ErrBoundary>
+                <GoogleMap listings={publicRentalListings.currentSearch.result} />
+            </ErrBoundary>
             <ul className="rental-listings__ul">
                 {
                     publicRentalListings.currentSearch.result[0] ?

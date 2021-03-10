@@ -1,19 +1,51 @@
 import { useRef, useEffect } from 'react';
 
-function GoogleMap() {
+function GoogleMap(props) {
+    const { listings } = props;
     const gMap = useRef(null);
 
     useEffect(() => {
+        function createMap(options) {
+            return new window.google.maps.Map(gMap.current, options);
+        };
+
+        /* centering Taipei City by default */
+        const defaultPos = { lat: 25.0330, lng: 121.5654 };
         const options = {
-            zoom: 16,
-            center: {
-                lat: 43.642567,
-                lng: -79.387054,
-            },
+            zoom: 13,
+            center: defaultPos,
             disableDefaultUI: true
         };
-        new window.google.maps.Map(gMap.current, options);
-    }, []);
+
+        function createMarker(map, pos) {
+            return new window.google.maps.Marker({
+                position: pos,
+                map: map,
+            });
+        };
+
+        function drawMap(options) {
+            const googleMap = createMap(options);
+            if (listings[0]) {
+                const bounds = new window.google.maps.LatLngBounds();
+                for (let listing of listings) {
+                    let pos = JSON.parse(listing.geometry);
+                    createMarker(googleMap, pos);
+                    bounds.extend(pos);
+                };
+                googleMap.fitBounds(bounds);
+            };
+        };
+
+        if (window.google) {
+            drawMap(options);
+        } else {
+            const googleScript = document.getElementById("google-api");
+            googleScript.addEventListener('load', () => {
+                drawMap(options);
+            });
+        };
+    }, [listings]);
 
     return (
         <div ref={gMap} className="google-map">
