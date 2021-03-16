@@ -17,10 +17,16 @@ function GoogleMap(props) {
             disableDefaultUI: true
         };
 
-        function createMarker(map, pos) {
+        function createMarker(map, pos, listing) {
+            let rent = listing.monthlyRent;
             return new window.google.maps.Marker({
+                // icon: icon,
                 position: pos,
-                map: map,
+                label: {
+                    text: `$${rent}`,
+                    // color: "white"
+                },
+                map: map
             });
         };
 
@@ -30,7 +36,7 @@ function GoogleMap(props) {
                 const bounds = new window.google.maps.LatLngBounds();
                 for (let listing of listings) {
                     let pos = JSON.parse(listing.geometry);
-                    createMarker(googleMap, pos);
+                    createMarker(googleMap, pos, listing);
                     bounds.extend(pos);
                 };
                 googleMap.fitBounds(bounds);
