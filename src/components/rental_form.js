@@ -35,12 +35,12 @@ function RentalForm({ closeModal }) {
     function handleAddress(place) {
         let postalCode = "", city = "", district = "";
         for (let component of place.address_components) {
-            if (component.types[0] === "postal_code") {
+            if (component.types.includes("postal_code")) {
                 postalCode = component.long_name;
-            } else if (component.types[0] === "administrative_area_level_1"
-                || component.types[0] === "administrative_area_level_2") {
+            } else if (component.types.includes("administrative_area_level_1")
+                || component.types.includes("administrative_area_level_2")) {
                 city = component.long_name;
-            } else if (component.types[0] === "administrative_area_level_3") {
+            } else if (component.types.includes("administrative_area_level_3")) {
                 district = component.long_name;
             };
         };
