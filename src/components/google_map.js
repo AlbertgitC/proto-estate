@@ -19,6 +19,15 @@ function GoogleMap(props) {
 
         function createMarker(map, pos, listing) {
             let rent = listing.monthlyRent;
+            if (rent > 9999) {
+                let num = (rent / 10000).toFixed(1).toString();
+                if (num[num.length - 1] === "0") num = num.slice(0, num.length - 2);
+                rent = `${num}萬`;
+            } else {
+                let num = (rent / 1000).toFixed(1).toString();
+                if (num[num.length - 1] === "0") num = num.slice(0, num.length - 2);
+                rent = `${num}千`;
+            };
             return new window.google.maps.Marker({
                 // icon: icon,
                 position: pos,
