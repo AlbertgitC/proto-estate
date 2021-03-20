@@ -1,7 +1,5 @@
 import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useRef, useState, useEffect } from 'react';
 
 const {
@@ -65,43 +63,8 @@ function ListingItemMini(props) {
         setSwipeState({ ...swipeState, tx: Math.round(e.changedTouches[0].clientX - swipeState.touchX) });
     };
 
-    // function clickForward() {
-    //     if (swipeState.idx === listing.photos.length - 1) {
-    //         setSwipeState({ ...swipeState, idx: 0 });
-    //     } else {
-    //         setSwipeState({ ...swipeState, idx: swipeState.idx + 1 });
-    //     };
-    // };
-
-    // function clickBackward() {
-    //     if (swipeState.idx === 0) {
-    //         setSwipeState({ ...swipeState, idx: listing.photos.length - 1 });
-    //     } else {
-    //         setSwipeState({ ...swipeState, idx: swipeState.idx - 1 });
-    //     };
-    // };
-
     return (
         <div className={`listing-mini ${animation}`}>
-            {/* {
-            listing.photos.length < 2 ? null :
-                <div className="listing-mini__arrow-wrapper">
-                    <button
-                        className="listing-mini__arrow"
-                        type="button"
-                        onClick={clickBackward}
-                    >
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button
-                        className="listing-mini__arrow"
-                        type="button"
-                        onClick={clickForward}
-                    >
-                        <FontAwesomeIcon icon={faChevronRight} />
-                    </button>
-                </div>
-        } */}
             <div className="listing-mini__tag">New</div>
             <div className="listing-mini__info">
                 {

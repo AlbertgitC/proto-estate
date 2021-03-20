@@ -2,11 +2,13 @@ import { useRef, useEffect, useState } from 'react';
 import ListingItemMini from './listing_item_mini';
 
 function GoogleMap(props) {
-    const { listings } = props;
+    const { listings, display } = props;
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
 
     useEffect(() => {
+        if (display === "none") return;
+
         function createMap(options) {
             return new window.google.maps.Map(gMap.current, options);
         };
@@ -70,7 +72,9 @@ function GoogleMap(props) {
                 drawMap(options);
             });
         };
-    }, [listings]);
+    }, [listings, display]);
+
+    if (display === "none") return null;
 
     function removeListing() {
         if (selectedListing.listing === null) return;

@@ -1,6 +1,6 @@
 import SearchBar from './search_bar';
 import ListingItem from './listing_item';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import ErrBoundary from '../util/error_boundary';
 function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
+    const [mapState, setMap] = useState({ list: "block", map: "none", button: "MAP" });
 
     useEffect(() => {
         if (publicRentalListings.initialFetch) return;
@@ -33,14 +34,27 @@ function RentalListings() {
             });
     }, [publicRentalListings, dispatch]);
 
+    function switchMap() {
+        if (mapState.button === "MAP") {
+            setMap({ list: "none", map: "block", button: "LIST" });
+        } else {
+            setMap({ list: "block", map: "none", button: "MAP" });
+        };
+    };
+
     return (
         <div className="rental-listings">
             <SearchBar />
             <h2 className="rental-listings__header">Rental Listings</h2>
-            <ErrBoundary>
-                <GoogleMap listings={publicRentalListings.currentSearch.result} />
-            </ErrBoundary>
-            <ul className="rental-listings__ul">
+            <div style={{ display: `${mapState.map}` }}>
+                <ErrBoundary>
+                    <GoogleMap 
+                        listings={publicRentalListings.currentSearch.result} 
+                        display={mapState.map}
+                    />
+                </ErrBoundary>
+            </div>
+            <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
                 {
                     publicRentalListings.currentSearch.result[0] ?
                         publicRentalListings.currentSearch.result.map((listing, i) => {
@@ -48,6 +62,13 @@ function RentalListings() {
                         }) : <p>No Result Found</p>
                 }
             </ul>
+            <button 
+                className="rental-listings__map-button" 
+                type="button"
+                onClick={switchMap}
+            >
+                {mapState.button}
+            </button>
         </div>
     );
 };

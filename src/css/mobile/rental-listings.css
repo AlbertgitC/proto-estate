@@ -5,3 +5,12 @@
 .rental-listings__header {
     padding-top: 10px;
 }
+
+.rental-listings__map-button {
+    position: fixed;
+    top: 93%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    background-color: var(--brand-green-color);
+}
