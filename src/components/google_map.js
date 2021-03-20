@@ -1,7 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import ListingItemMini from './listing_item_mini';
 
 function GoogleMap(props) {
     const { listings } = props;
+    const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
 
     useEffect(() => {
@@ -19,6 +21,7 @@ function GoogleMap(props) {
 
         function createMarker(map, pos, listing) {
             let rent = listing.monthlyRent;
+
             if (rent > 9999) {
                 let num = (rent / 10000).toFixed(1).toString();
                 if (num[num.length - 1] === "0") num = num.slice(0, num.length - 2);
@@ -28,7 +31,8 @@ function GoogleMap(props) {
                 if (num[num.length - 1] === "0") num = num.slice(0, num.length - 2);
                 rent = `${num}千`;
             };
-            return new window.google.maps.Marker({
+
+            let marker = new window.google.maps.Marker({
                 // icon: icon,
                 position: pos,
                 label: {
@@ -37,6 +41,12 @@ function GoogleMap(props) {
                 },
                 map: map
             });
+
+            marker.addListener("click", () => {
+                setListing({ listing: listing, animation: "listing-mini--show" });
+            });
+
+            return marker;
         };
 
         function drawMap(options) {
@@ -62,9 +72,18 @@ function GoogleMap(props) {
         };
     }, [listings]);
 
-    return (
-        <div ref={gMap} className="google-map">
+    function removeListing() {
+        if (selectedListing.listing === null) return;
+        setListing({ ...selectedListing, animation: "listing-mini--hide" });
+        setTimeout(() => {
+            setListing({ listing: null, animation: "" });
+        }, 400);
+    };
 
+    return (
+        <div className="google-map">
+            <ListingItemMini listing={selectedListing.listing} animation={selectedListing.animation} />
+            <div ref={gMap} className="google-map__map" onClick={removeListing} />
         </div>
     );
 };
