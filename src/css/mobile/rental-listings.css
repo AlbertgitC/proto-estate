@@ -6,6 +6,10 @@
     padding-top: 10px;
 }
 
+.rental-listings__dt-map {
+    display: none;
+}
+
 .rental-listings__map-button {
     position: fixed;
     top: 93%;

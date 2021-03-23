@@ -11,7 +11,7 @@ import ErrBoundary from '../util/error_boundary';
 function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
-    const [mapState, setMap] = useState({ list: "block", map: "none", button: "MAP" });
+    const [mapState, setMap] = useState({ list: "block", map: false, button: "MAP" });
 
     useEffect(() => {
         if (publicRentalListings.initialFetch) return;
@@ -36,39 +36,47 @@ function RentalListings() {
 
     function switchMap() {
         if (mapState.button === "MAP") {
-            setMap({ list: "none", map: "block", button: "LIST" });
+            setMap({ list: "none", map: true, button: "LIST" });
         } else {
-            setMap({ list: "block", map: "none", button: "MAP" });
+            setMap({ list: "block", map: false, button: "MAP" });
         };
     };
 
     return (
         <div className="rental-listings">
-            <SearchBar />
-            <h2 className="rental-listings__header">Rental Listings</h2>
-            <div style={{ display: `${mapState.map}` }}>
+            <div className="rental-listings__dt-map">
+                <ErrBoundary>
+                    <GoogleMap
+                        listings={publicRentalListings.currentSearch.result}
+                        display={true}
+                    />
+                </ErrBoundary>
+            </div>
+            <div>
+                <SearchBar />
+                <h2 className="rental-listings__header">Rental Listings</h2>
                 <ErrBoundary>
                     <GoogleMap 
                         listings={publicRentalListings.currentSearch.result} 
                         display={mapState.map}
                     />
                 </ErrBoundary>
+                <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
+                    {
+                        publicRentalListings.currentSearch.result[0] ?
+                            publicRentalListings.currentSearch.result.map((listing, i) => {
+                                return (<ListingItem key={i} listing={listing} />);
+                            }) : <p>No Result Found</p>
+                    }
+                </ul>
+                <button 
+                    className="rental-listings__map-button" 
+                    type="button"
+                    onClick={switchMap}
+                >
+                    {mapState.button}
+                </button>
             </div>
-            <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
-                {
-                    publicRentalListings.currentSearch.result[0] ?
-                        publicRentalListings.currentSearch.result.map((listing, i) => {
-                            return (<ListingItem key={i} listing={listing} />);
-                        }) : <p>No Result Found</p>
-                }
-            </ul>
-            <button 
-                className="rental-listings__map-button" 
-                type="button"
-                onClick={switchMap}
-            >
-                {mapState.button}
-            </button>
         </div>
     );
 };

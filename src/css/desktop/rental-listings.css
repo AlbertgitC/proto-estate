@@ -8,4 +8,12 @@
         display: flex;
         flex-wrap: wrap;
     }
+
+    .rental-listings__map-button {
+        display: none;
+    }
+
+    .rental-listings__dt-map {
+        display: block;
+    }
 }

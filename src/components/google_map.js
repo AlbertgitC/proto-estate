@@ -7,7 +7,7 @@ function GoogleMap(props) {
     const gMap = useRef(null);
 
     useEffect(() => {
-        if (display === "none") return;
+        if (!display) return;
 
         function createMap(options) {
             return new window.google.maps.Map(gMap.current, options);
@@ -44,7 +44,8 @@ function GoogleMap(props) {
                 map: map
             });
 
-            marker.addListener("click", () => {
+            marker.addListener("click", (event) => {
+                event.domEvent.stopPropagation();
                 setListing({ listing: listing, animation: "listing-mini--show" });
             });
 
@@ -74,7 +75,7 @@ function GoogleMap(props) {
         };
     }, [listings, display]);
 
-    if (display === "none") return null;
+    if (!display) return null;
 
     function removeListing() {
         if (selectedListing.listing === null) return;
