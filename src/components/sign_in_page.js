@@ -1,6 +1,7 @@
 import { SignUpForm } from './sign_up';
 import SignIn from './sign_in';
 import { useState, useEffect } from 'react';
+import Footer from './footer';
 
 function SignInPage(props) {
     const initialState = {
@@ -31,13 +32,17 @@ function SignInPage(props) {
     };
 
     return (
-        <div className="sign-in-page">
-            <h2 className="sign-in-page__tab">
-                <span className={state.signIn} onClick={clickSignIn}>登入</span> | 
-                <span className={state.signUp} onClick={clickSignUp}> 用戶註冊</span>
-            </h2>
-            {component}
+        <div>
+            <div className="sign-in-page">
+                <h2 className="sign-in-page__tab">
+                    <span className={state.signIn} onClick={clickSignIn}>登入</span> | 
+                    <span className={state.signUp} onClick={clickSignUp}> 用戶註冊</span>
+                </h2>
+                {component}
+            </div>
+            <Footer />
         </div>
+        
     );
 };
 

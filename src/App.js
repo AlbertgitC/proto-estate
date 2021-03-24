@@ -18,6 +18,7 @@ function App() {
 					<PublicRoute path="/sign-in" component={SignInPage} />
 					<Route path="/list-rental-promo">
 						<ListingRentalLanding />
+						<Footer />
 					</Route>
 					<Route path="/rental-listings">
 						<RentalListings />
@@ -25,12 +26,11 @@ function App() {
 					<ProtectedRoute path="/rental-panel" component={RentalPanel} />
 					<Route path="/">
 						<HomePage />
+						<Footer />
 					</Route>
 				</Switch>
 			</div>
-			<Footer />
 		</div>
-		
 	);
 }
 

@@ -5,6 +5,7 @@ import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { useSelector, useDispatch } from 'react-redux';
 import { API } from 'aws-amplify';
+import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
 
@@ -53,31 +54,34 @@ function RentalListings() {
                     />
                 </ErrBoundary>
             </div>
-            <div className="rental-listings__list">
-                <SearchBar />
-                <h2 className="rental-listings__header">Rental Listings</h2>
-                <ErrBoundary>
-                    <GoogleMap 
-                        listings={publicRentalListings.currentSearch.result} 
-                        display={mapState.map}
-                        mode="mobile"
-                    />
-                </ErrBoundary>
-                <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
-                    {
-                        publicRentalListings.currentSearch.result[0] ?
-                            publicRentalListings.currentSearch.result.map((listing, i) => {
-                                return (<ListingItem key={i} listing={listing} />);
-                            }) : <p>No Result Found</p>
-                    }
-                </ul>
-                <button 
-                    className="rental-listings__map-button" 
-                    type="button"
-                    onClick={switchMap}
-                >
-                    {mapState.button}
-                </button>
+            <div>
+                <div className="rental-listings__list">
+                    <SearchBar />
+                    <h2 className="rental-listings__header">Rental Listings</h2>
+                    <ErrBoundary>
+                        <GoogleMap 
+                            listings={publicRentalListings.currentSearch.result} 
+                            display={mapState.map}
+                            mode="mobile"
+                        />
+                    </ErrBoundary>
+                    <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
+                        {
+                            publicRentalListings.currentSearch.result[0] ?
+                                publicRentalListings.currentSearch.result.map((listing, i) => {
+                                    return (<ListingItem key={i} listing={listing} />);
+                                }) : <p>No Result Found</p>
+                        }
+                    </ul>
+                    <button 
+                        className="rental-listings__map-button" 
+                        type="button"
+                        onClick={switchMap}
+                    >
+                        {mapState.button}
+                    </button>
+                </div>
+                <Footer />
             </div>
         </div>
     );

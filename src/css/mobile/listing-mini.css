@@ -42,15 +42,15 @@
 
 .listing-mini--show {
     animation-duration: 0.5s;
-    animation-name: slideDown;
+    animation-name: listingSlideDown;
 }
 
 .listing-mini--hide {
     animation-duration: 0.5s;
-    animation-name: slideUp;
+    animation-name: listingSlideUp;
 }
 
-@keyframes slideDown {
+@keyframes listingSlideDown {
     from {
         height: 0;
     }
@@ -60,7 +60,7 @@
     }
 }
 
-@keyframes slideUp {
+@keyframes listingSlideUp {
     from {
         height: 170px;
     }
