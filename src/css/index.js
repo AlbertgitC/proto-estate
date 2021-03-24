@@ -32,3 +32,4 @@ exports.rental_panel_d = require("./desktop/rental-panel.css");
 exports.sign_in_page_d = require("./desktop/sign-in-page.css");
 exports.rental_modal_d = require("./desktop/rental-modal.css");
 exports.rental_form_d = require("./desktop/rental-form.css");
+exports.google_map_d = require("./desktop/google-map.css");

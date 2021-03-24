@@ -1,5 +1,6 @@
 @media only screen and (min-width: 768px) {
     .rental-listings {
+        padding: 90px 0 0 0;
         display: flex;
     }
 
@@ -9,9 +10,15 @@
         margin-right: 7px;
     }
 
-    .rental-listings__list {
+    .rental-listings__list-wrapper {
         width: 50%;
         max-width: 700px;
+        height: calc(100vh - 90px);
+        overflow-y: scroll;
+    }
+
+    .rental-listings__list {
+        padding: 0;
     }
 
     .rental-listings__ul {

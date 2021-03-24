@@ -54,7 +54,7 @@ function RentalListings() {
                     />
                 </ErrBoundary>
             </div>
-            <div>
+            <div className="rental-listings__list-wrapper">
                 <div className="rental-listings__list">
                     <SearchBar />
                     <h2 className="rental-listings__header">Rental Listings</h2>
