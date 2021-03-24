@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import ListingItemMini from './listing_item_mini';
 
 function GoogleMap(props) {
-    const { listings, display } = props;
+    const { listings, display, mode } = props;
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
 
@@ -44,10 +44,14 @@ function GoogleMap(props) {
                 map: map
             });
 
-            marker.addListener("click", (event) => {
-                event.domEvent.stopPropagation();
-                setListing({ listing: listing, animation: "listing-mini--show" });
-            });
+            if (mode === "mobile") {
+                marker.addListener("click", (event) => {
+                    event.domEvent.stopPropagation();
+                    setListing({ listing: listing, animation: "listing-mini--show" });
+                });
+            } else if (mode === "desktop") {
+                // scroll to listing
+            };
 
             return marker;
         };

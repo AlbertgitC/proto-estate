@@ -11,7 +11,7 @@ import ErrBoundary from '../util/error_boundary';
 function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
-    const [mapState, setMap] = useState({ list: "block", map: false, button: "MAP" });
+    const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
 
     useEffect(() => {
         if (publicRentalListings.initialFetch) return;
@@ -38,7 +38,7 @@ function RentalListings() {
         if (mapState.button === "MAP") {
             setMap({ list: "none", map: true, button: "LIST" });
         } else {
-            setMap({ list: "block", map: false, button: "MAP" });
+            setMap({ list: "flex", map: false, button: "MAP" });
         };
     };
 
@@ -49,16 +49,18 @@ function RentalListings() {
                     <GoogleMap
                         listings={publicRentalListings.currentSearch.result}
                         display={true}
+                        mode="desktop"
                     />
                 </ErrBoundary>
             </div>
-            <div>
+            <div className="rental-listings__list">
                 <SearchBar />
                 <h2 className="rental-listings__header">Rental Listings</h2>
                 <ErrBoundary>
                     <GoogleMap 
                         listings={publicRentalListings.currentSearch.result} 
                         display={mapState.map}
+                        mode="mobile"
                     />
                 </ErrBoundary>
                 <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>

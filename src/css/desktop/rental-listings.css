@@ -1,19 +1,26 @@
 @media only screen and (min-width: 768px) {
     .rental-listings {
-        max-width: 1250px;
-        margin: 0 auto;
+        display: flex;
+    }
+
+    .rental-listings__dt-map {
+        display: block;
+        flex-grow: 1;
+        margin-right: 7px;
+    }
+
+    .rental-listings__list {
+        width: 50%;
+        max-width: 700px;
     }
 
     .rental-listings__ul {
         display: flex;
+        flex-direction: row;
         flex-wrap: wrap;
     }
 
     .rental-listings__map-button {
         display: none;
-    }
-
-    .rental-listings__dt-map {
-        display: block;
     }
 }
