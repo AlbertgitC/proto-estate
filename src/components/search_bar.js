@@ -37,7 +37,7 @@ function SearchBar() {
                     console.log("fetch rental listing error:", err);
                 });
         };
-    }, [location.search]);
+    }, [location.search, dispatch]);
 
     function handleInput(e) {
         setInput(e.target.value);

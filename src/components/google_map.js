@@ -77,7 +77,7 @@ function GoogleMap(props) {
                 drawMap(options);
             });
         };
-    }, [listings, display]);
+    }, [listings, display, mode]);
 
     if (!display) return null;
 

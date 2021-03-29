@@ -8,38 +8,37 @@ import { API } from 'aws-amplify';
 import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
-    const history = useHistory();
+    const [initSearch, setSearch] = useState(true);
     const location = useLocation();
 
     useEffect(() => {
-        // if (publicRentalListings.initialFetch) return;
-        // API.graphql({
-        //     query: queries.rentalListingsSortByCreatedAt,
-        //     authMode: "AWS_IAM",
-        //     variables: {
-        //         type: "RentalListing",
-        //         sortDirection: "DESC",
-        //         filter: { address: { contains: "台北市" } }
-        //     }
-        // })
-        //     .then(res => {
-        //         let data = res.data.rentalListingsSortByCreatedAt.items;
-        //         dispatch(ListingAction.fetchPublicRentalListings(data));
-        //     })
-        //     .catch(err => {
-        //         console.log("fetch rental listing error:", err);
-        //     });
         if (!location.search) {
-            /* should change to user's current location */
-            history.push("/rental-listings?q=台北市");
+            setSearch(false);
+            API.graphql({
+                query: queries.rentalListingsSortByCreatedAt,
+                authMode: "AWS_IAM",
+                variables: {
+                    type: "RentalListing",
+                    sortDirection: "DESC",
+                /* should change to user's current location */
+                    filter: { address: { contains: "台北市" } }
+                }
+            })
+                .then(res => {
+                    let data = res.data.rentalListingsSortByCreatedAt.items;
+                    dispatch(ListingAction.fetchPublicRentalListings(data));
+                })
+                .catch(err => {
+                    console.log("fetch rental listing error:", err);
+                });
         }
-    }, [publicRentalListings, dispatch]);
+    }, [location.search, dispatch]);
 
     function switchMap() {
         if (mapState.button === "MAP") {
@@ -71,6 +70,9 @@ function RentalListings() {
                             mode="mobile"
                         />
                     </ErrBoundary>
+                    {
+                        initSearch ? null : <p>推薦地點:</p>
+                    }
                     <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
                         {
                             publicRentalListings.listings[0] ?
