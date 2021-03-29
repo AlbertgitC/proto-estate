@@ -20,6 +20,9 @@ function App() {
 						<ListingRentalLanding />
 						<Footer />
 					</Route>
+					<Route path="/rental-listings/:listingId">
+						<Footer />
+					</Route>
 					<Route path="/rental-listings">
 						<RentalListings />
 					</Route>

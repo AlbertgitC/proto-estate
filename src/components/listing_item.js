@@ -3,6 +3,7 @@ import config from '../aws-exports';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useRef, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -20,6 +21,7 @@ function ListingItem(props) {
     const { listing } = props;
     const imgWrapper = useRef({ scrollWidth: null });
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
+    let history = useHistory();
     useEffect(() => {
         if (imgWrapper.current) setSwipeState(s => ({ 
             ...s, 
@@ -58,7 +60,8 @@ function ListingItem(props) {
         setSwipeState({ ...swipeState, tx: Math.round(e.changedTouches[0].clientX - swipeState.touchX)});
     };
 
-    function clickForward() {
+    function clickForward(e) {
+        e.stopPropagation();
         if (swipeState.idx === listing.photos.length - 1) {
             setSwipeState({ ...swipeState, idx: 0 });
         } else {
@@ -66,7 +69,8 @@ function ListingItem(props) {
         };
     };
 
-    function clickBackward() {
+    function clickBackward(e) {
+        e.stopPropagation();
         if (swipeState.idx === 0) {
             setSwipeState({ ...swipeState, idx: listing.photos.length - 1 });
         } else {
@@ -74,8 +78,12 @@ function ListingItem(props) {
         };
     };
 
+    function toListing() {
+        history.push(`/rental-listings/${listing.id}`);
+    };
+
     return (
-        <li className="listing-item">
+        <li className="listing-item" onClick={toListing}>
             {
                 listing.photos.length < 2 ? null :
                     <div className="listing-item__arrow-wrapper">
