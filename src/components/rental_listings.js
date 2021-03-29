@@ -8,31 +8,37 @@ import { API } from 'aws-amplify';
 import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
+import { useLocation, useHistory } from 'react-router-dom';
 
 function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
+    const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
-        if (publicRentalListings.initialFetch) return;
-        API.graphql({
-            query: queries.rentalListingsSortByCreatedAt,
-            authMode: "AWS_IAM",
-            variables: {
-                type: "RentalListing",
-                sortDirection: "DESC",
-                filter: { address: { contains: "台北市" } }
-            }
-        })
-            .then(res => {
-                let result = res.data.rentalListingsSortByCreatedAt.items;
-                let payload = { searchTerm: "", data: result };
-                dispatch(ListingAction.fetchPublicRentalListings(payload));
-            })
-            .catch(err => {
-                console.log("fetch rental listing error:", err);
-            });
+        // if (publicRentalListings.initialFetch) return;
+        // API.graphql({
+        //     query: queries.rentalListingsSortByCreatedAt,
+        //     authMode: "AWS_IAM",
+        //     variables: {
+        //         type: "RentalListing",
+        //         sortDirection: "DESC",
+        //         filter: { address: { contains: "台北市" } }
+        //     }
+        // })
+        //     .then(res => {
+        //         let data = res.data.rentalListingsSortByCreatedAt.items;
+        //         dispatch(ListingAction.fetchPublicRentalListings(data));
+        //     })
+        //     .catch(err => {
+        //         console.log("fetch rental listing error:", err);
+        //     });
+        if (!location.search) {
+            /* should change to user's current location */
+            history.push("/rental-listings?q=台北市");
+        }
     }, [publicRentalListings, dispatch]);
 
     function switchMap() {
@@ -48,7 +54,7 @@ function RentalListings() {
             <div className="rental-listings__dt-map">
                 <ErrBoundary>
                     <GoogleMap
-                        listings={publicRentalListings.currentSearch.result}
+                        listings={publicRentalListings.listings}
                         display={true}
                         mode="desktop"
                     />
@@ -60,15 +66,15 @@ function RentalListings() {
                     <h2 className="rental-listings__header">Rental Listings</h2>
                     <ErrBoundary>
                         <GoogleMap 
-                            listings={publicRentalListings.currentSearch.result} 
+                            listings={publicRentalListings.listings} 
                             display={mapState.map}
                             mode="mobile"
                         />
                     </ErrBoundary>
                     <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
                         {
-                            publicRentalListings.currentSearch.result[0] ?
-                                publicRentalListings.currentSearch.result.map((listing, i) => {
+                            publicRentalListings.listings[0] ?
+                                publicRentalListings.listings.map((listing, i) => {
                                     return (<ListingItem key={i} listing={listing} />);
                                 }) : <p>No Result Found</p>
                         }

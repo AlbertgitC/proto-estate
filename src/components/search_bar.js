@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { API } from 'aws-amplify';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 
 
@@ -12,12 +12,32 @@ function SearchBar() {
     const dispatch = useDispatch();
     const history = useHistory();
     const location = useLocation();
-    const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [searchInput, setInput] = useState("");
     
     useEffect(() => {
-        setInput(publicRentalListings.currentSearch.term);
-    }, [publicRentalListings.currentSearch.term]);
+        if (location.search) {
+            const searchParams = new URLSearchParams(location.search);
+            const query = searchParams.get("q");
+            setInput(query);
+
+            API.graphql({
+                query: queries.rentalListingsSortByCreatedAt,
+                authMode: "AWS_IAM",
+                variables: {
+                    type: "RentalListing",
+                    sortDirection: "DESC",
+                    filter: { address: { contains: query } }
+                }
+            })
+                .then(res => {
+                    let data = res.data.rentalListingsSortByCreatedAt.items;
+                    dispatch(ListingAction.fetchPublicRentalListings(data));
+                })
+                .catch(err => {
+                    console.log("fetch rental listing error:", err);
+                });
+        };
+    }, [location.search]);
 
     function handleInput(e) {
         setInput(e.target.value);
@@ -28,32 +48,7 @@ function SearchBar() {
 
         if (!searchInput) return;
 
-        if (location.pathname !== "/rental-listings") {
-            history.push("/rental-listings");
-        };
-
-        if (searchInput in publicRentalListings.listings) {
-            let payload = { searchTerm: searchInput, data: publicRentalListings.listings[searchInput] };
-            dispatch(ListingAction.fetchPublicRentalListings(payload));
-        } else {
-            API.graphql({
-                query: queries.rentalListingsSortByCreatedAt,
-                authMode: "AWS_IAM",
-                variables: {
-                    type: "RentalListing",
-                    sortDirection: "DESC",
-                    filter: { address: { contains: searchInput } }
-                }
-            })
-                .then(res => {
-                    let result = res.data.rentalListingsSortByCreatedAt.items;
-                    let payload = { searchTerm: searchInput, data: result };
-                    dispatch(ListingAction.fetchPublicRentalListings(payload));
-                })
-                .catch(err => {
-                    console.log("fetch rental listing error:", err);
-                });
-        };
+        history.push(`/rental-listings?q=${searchInput}`);
     };
 
     return (
