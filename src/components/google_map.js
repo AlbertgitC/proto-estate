@@ -17,6 +17,7 @@ function GoogleMap(props) {
         const defaultPos = { lat: 25.0330, lng: 121.5654 };
         const options = {
             zoom: 13,
+            maxZoom: 18,
             center: defaultPos,
             disableDefaultUI: true
         };

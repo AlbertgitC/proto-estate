@@ -7,6 +7,7 @@ import RentalPanel from './components/rental_panel';
 import { Route, Switch } from 'react-router-dom';
 import { ProtectedRoute, PublicRoute } from './util/routes';
 import RentalListings from './components/rental_listings';
+import Listing from './components/rental_listing';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
 						<Footer />
 					</Route>
 					<Route path="/rental-listings/:listingId">
+						<Listing />
 						<Footer />
 					</Route>
 					<Route path="/rental-listings">

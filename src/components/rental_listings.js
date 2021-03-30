@@ -14,12 +14,10 @@ function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
-    const [initSearch, setSearch] = useState(true);
     const location = useLocation();
 
     useEffect(() => {
         if (!location.search) {
-            setSearch(false);
             API.graphql({
                 query: queries.rentalListingsSortByCreatedAt,
                 authMode: "AWS_IAM",
@@ -63,6 +61,9 @@ function RentalListings() {
                 <div className="rental-listings__list">
                     <SearchBar />
                     <h2 className="rental-listings__header">Rental Listings</h2>
+                    {
+                        publicRentalListings.listings[0] ? null : <p>No Result Found</p>
+                    }
                     <ErrBoundary>
                         <GoogleMap 
                             listings={publicRentalListings.listings} 
@@ -70,15 +71,12 @@ function RentalListings() {
                             mode="mobile"
                         />
                     </ErrBoundary>
-                    {
-                        initSearch ? null : <p>推薦地點:</p>
-                    }
                     <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
                         {
                             publicRentalListings.listings[0] ?
                                 publicRentalListings.listings.map((listing, i) => {
                                     return (<ListingItem key={i} listing={listing} />);
-                                }) : <p>No Result Found</p>
+                                }) : null
                         }
                     </ul>
                     <button 

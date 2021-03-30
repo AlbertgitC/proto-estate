@@ -1,0 +1,4 @@
+.rental-listing {
+    min-height: calc(100vh - 290px);
+    padding: 66px 15px 15px 15px;
+}
