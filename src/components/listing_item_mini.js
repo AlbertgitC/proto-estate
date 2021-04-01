@@ -1,6 +1,7 @@
 import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
 import { useRef, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -18,6 +19,8 @@ function ListingItemMini(props) {
     const { listing, animation } = props;
     const imgWrapper = useRef({ scrollWidth: null });
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
+    const history = useHistory();
+
     useEffect(() => {
         if (listing === null) return;
         if (imgWrapper.current && listing.photos[0]) setSwipeState(s => ({
@@ -63,22 +66,13 @@ function ListingItemMini(props) {
         setSwipeState({ ...swipeState, tx: Math.round(e.changedTouches[0].clientX - swipeState.touchX) });
     };
 
+    function toListing(e) {
+        e.stopPropagation();
+        history.push(`/rental-listings/${listing.id}`);
+    };
+
     return (
-        <div className={`listing-mini ${animation}`}>
-            <div className="listing-mini__tag">New</div>
-            <div className="listing-mini__info">
-                {
-                    listing.photos.length < 2 ? null :
-                        <small className="listing-mini__img-idx">
-                            {`${swipeState.idx + 1}/${listing.photos.length}`}
-                        </small>
-                }
-                <p>
-                    <span className="listing-mini__price">{listing.monthlyRent}</span>元/月，
-                {listing.numberRooms}房 {listing.areaPin ? `${listing.areaPin}坪` : ""}<br />
-                    {listing.address}
-                </p>
-            </div>
+        <div className={`listing-mini ${animation}`} onClick={toListing}>
             <div
                 className="listing-mini__image-wrapper"
                 ref={imgWrapper}
@@ -112,6 +106,20 @@ function ListingItemMini(props) {
                         />
                 }
             </div>
+            <div className="listing-mini__info">
+                {
+                    listing.photos.length < 2 ? null :
+                        <small className="listing-mini__img-idx">
+                            {`${swipeState.idx + 1}/${listing.photos.length}`}
+                        </small>
+                }
+                <p>
+                    <span className="listing-mini__price">{listing.monthlyRent}</span>元/月，
+                {listing.numberRooms}房 {listing.areaPin ? `${listing.areaPin}坪` : ""}<br />
+                    {listing.address}
+                </p>
+            </div>
+            <div className="listing-mini__tag">New</div>
         </div>
     );
 };

@@ -62,7 +62,7 @@ function RentalListing() {
                 imgWidth: imgWrapper.current.scrollWidth / listing.photos.length
             }));
         };
-    }, [imgWrapper.current, listing]);
+    }, [listing]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;

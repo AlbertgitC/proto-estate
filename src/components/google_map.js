@@ -1,16 +1,22 @@
 import { useRef, useEffect, useState } from 'react';
 import ListingItemMini from './listing_item_mini';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 const GoogleMap = React.memo(function CreateGoogleMap(props) {
     const { listings, display, mode, oneListing } = props;
+    const [markers, setMarkers] = useState([]);
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
     let defaultMode = mode === "mobileSingle" ? "google-map__map--mobile-single" : "";
     const [modeState, setModeState] = useState(defaultMode);
+    const history = useHistory();
 
     useEffect(() => {
-        if (!display) return;
+        if (!gMap.current || !display) return;
+
+        setListing({ listing: null, animation: "" });
+
         function createMap(options) {
             return new window.google.maps.Map(gMap.current, options);
         };
@@ -25,7 +31,8 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
             clickableIcons: false
         };
 
-        function createMarker(map, pos, listing) {
+        function createMarker(map, listing) {
+            let pos = JSON.parse(listing.geometry);
             let rent = listing.monthlyRent;
 
             if (rent > 9999) {
@@ -38,7 +45,7 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                 rent = `${num}千`;
             };
 
-            let marker = new window.google.maps.Marker({
+            return new window.google.maps.Marker({
                 // icon: icon,
                 position: pos,
                 label: {
@@ -47,47 +54,57 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                 },
                 map: map
             });
-
-            if (mode === "mobile") {
-                marker.addListener("click", (event) => {
-                    setListing({ listing: listing, animation: "listing-mini--show" });
-                });
-            } else if (mode === "desktop") {
-                // scroll to listing
-            };
-
-            return marker;
         };
 
-        function drawMap(options) {
-            const googleMap = createMap(options);
+        function drawMap() {
+            let map = createMap(options);
             if (listings && listings[0]) {
                 const bounds = new window.google.maps.LatLngBounds();
+                let newMarkers = [];
                 for (let listing of listings) {
                     let pos = JSON.parse(listing.geometry);
-                    createMarker(googleMap, pos, listing);
+                    newMarkers.push(createMarker(map, listing));
                     bounds.extend(pos);
                 };
-                googleMap.fitBounds(bounds);
+                map.fitBounds(bounds);
+                setMarkers(newMarkers);
             } else if (oneListing) {
                 let pos = JSON.parse(oneListing.geometry);
-                createMarker(googleMap, pos, oneListing);
-                googleMap.setCenter(pos);
-                googleMap.setZoom(16);
+                createMarker(map, oneListing);
+                map.setCenter(pos);
+                map.setZoom(16);
             };
         };
 
         if (window.google) {
-            drawMap(options);
+            drawMap();
         } else {
             const googleScript = document.getElementById("google-api");
             googleScript.addEventListener('load', () => {
-                drawMap(options);
+                drawMap();
             });
         };
-    }, [listings, display, mode]);
+    }, [display, listings, oneListing]);
 
-    if (!display) return null;
+    useEffect(() => {
+        if (markers[0]) {
+            for (let i = 0; i < markers.length; i++) {
+                window.google.maps.event.clearInstanceListeners(markers[i]);
+                if (mode === "mobile") {
+                    markers[i].addListener("click", (event) => {
+                        if (selectedListing.listing && selectedListing.listing.id === listings[i].id) {
+                            // console.log("here:", listing.id)
+                            history.push(`/rental-listings/${listings[i].id}`);
+                        } else {
+                            setListing({ listing: listings[i], animation: "listing-mini--show" });
+                        };
+                    });
+                } else if (mode === "desktop") {
+                    // scroll to listing
+                };
+            };
+        };
+    }, [markers, selectedListing.listing, history, mode, listings]);
 
     function removeListing() {
         if (selectedListing.listing === null) return;
@@ -110,9 +127,9 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
     };
 
     return (
-        <div className="google-map" onClick={handleClick}>
-            <ListingItemMini listing={selectedListing.listing} animation={selectedListing.animation} />
+        <div className="google-map" onClick={handleClick} style={{ display: display ? "block" : "none" }}>
             <div ref={gMap} className={`google-map__map ${modeState}`} />
+            <ListingItemMini listing={selectedListing.listing} animation={selectedListing.animation} />
         </div>
     );
 });
