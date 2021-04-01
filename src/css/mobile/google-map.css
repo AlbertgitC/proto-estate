@@ -6,3 +6,38 @@
     width: 100%;
     height: calc(100vh - 186px);
 }
+
+.google-map__map--mobile-single {
+    height: 180px;
+}
+
+.google-map__map--slideUp {
+    animation-duration: 0.5s;
+    animation-name: mapSlideUp;
+}
+
+.google-map__map--mobile-expand {
+    height: 70vh;
+    animation-duration: 0.5s;
+    animation-name: mapSlideDown;
+}
+
+@keyframes mapSlideDown {
+    from {
+        height: 180px;
+    }
+
+    to {
+        height: 70vh;
+    }
+}
+
+@keyframes mapSlideUp {
+    from {
+        height: 70vh;
+    }
+
+    to {
+        height: 180px;
+    }
+}

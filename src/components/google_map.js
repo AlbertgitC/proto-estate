@@ -1,14 +1,16 @@
 import { useRef, useEffect, useState } from 'react';
 import ListingItemMini from './listing_item_mini';
+import React from 'react';
 
-function GoogleMap(props) {
-    const { listings, display, mode } = props;
+const GoogleMap = React.memo(function CreateGoogleMap(props) {
+    const { listings, display, mode, oneListing } = props;
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
+    let defaultMode = mode === "mobileSingle" ? "google-map__map--mobile-single" : "";
+    const [modeState, setModeState] = useState(defaultMode);
 
     useEffect(() => {
         if (!display) return;
-
         function createMap(options) {
             return new window.google.maps.Map(gMap.current, options);
         };
@@ -19,7 +21,8 @@ function GoogleMap(props) {
             zoom: 13,
             maxZoom: 18,
             center: defaultPos,
-            disableDefaultUI: true
+            disableDefaultUI: true,
+            clickableIcons: false
         };
 
         function createMarker(map, pos, listing) {
@@ -47,7 +50,6 @@ function GoogleMap(props) {
 
             if (mode === "mobile") {
                 marker.addListener("click", (event) => {
-                    event.domEvent.stopPropagation();
                     setListing({ listing: listing, animation: "listing-mini--show" });
                 });
             } else if (mode === "desktop") {
@@ -59,7 +61,7 @@ function GoogleMap(props) {
 
         function drawMap(options) {
             const googleMap = createMap(options);
-            if (listings[0]) {
+            if (listings && listings[0]) {
                 const bounds = new window.google.maps.LatLngBounds();
                 for (let listing of listings) {
                     let pos = JSON.parse(listing.geometry);
@@ -67,6 +69,11 @@ function GoogleMap(props) {
                     bounds.extend(pos);
                 };
                 googleMap.fitBounds(bounds);
+            } else if (oneListing) {
+                let pos = JSON.parse(oneListing.geometry);
+                createMarker(googleMap, pos, oneListing);
+                googleMap.setCenter(pos);
+                googleMap.setZoom(16);
             };
         };
 
@@ -90,12 +97,24 @@ function GoogleMap(props) {
         }, 400);
     };
 
+    function handleClick() {
+        if (mode === "mobile") {
+            removeListing();
+        } else if (mode === "mobileSingle") {
+            if (modeState === "google-map__map--mobile-expand") {
+                setModeState("google-map__map--mobile-single google-map__map--slideUp");
+            } else {
+                setModeState("google-map__map--mobile-expand");
+            };
+        };
+    };
+
     return (
-        <div className="google-map">
+        <div className="google-map" onClick={handleClick}>
             <ListingItemMini listing={selectedListing.listing} animation={selectedListing.animation} />
-            <div ref={gMap} className="google-map__map" onClick={removeListing} />
+            <div ref={gMap} className={`google-map__map ${modeState}`} />
         </div>
     );
-};
+});
 
 export default GoogleMap;

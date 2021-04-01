@@ -43,6 +43,7 @@
 
 .rental-listing__details {
     display: flex;
+    margin-bottom: 15px;
 }
 
 .rental-listing__detail {
@@ -56,4 +57,13 @@ div:first-of-type.rental-listing__detail {
 
 .rental-listing__details--important {
     font-weight: 600;
+}
+
+.rental-listing__description {
+    margin-top: 15px;
+}
+
+.rental-listing__map {
+    width: 100%;
+    height: 180px;
 }

@@ -5,6 +5,8 @@ import { API } from 'aws-amplify';
 import * as queries from '../graphql/queries';
 import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
+import ErrBoundary from '../util/error_boundary';
+import GoogleMap from './google_map';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -23,7 +25,7 @@ function RentalListing() {
     const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
-    const imgWrapper = useRef({ scrollWidth: null });
+    const imgWrapper = useRef(null);
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
 
     useEffect(() => {
@@ -51,15 +53,16 @@ function RentalListing() {
             setListing(curListing);
             setLoading(false);
         };
-        console.log(curListing)
     }, [listingId, publicRentalListings.listings]);
 
     useEffect(() => {
-        if (imgWrapper.current && listing) setSwipeState(s => ({
-            ...s,
-            imgWidth: imgWrapper.current.scrollWidth / listing.photos.length
-        }));
-    }, [imgWrapper.current.scrollWidth, listing]);
+        if (imgWrapper.current && listing) {
+            setSwipeState(s => ({
+                ...s,
+                imgWidth: imgWrapper.current.scrollWidth / listing.photos.length
+            }));
+        };
+    }, [imgWrapper.current, listing]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;
@@ -187,6 +190,14 @@ function RentalListing() {
                         <p className="rental-listing__details--important">{listing.propertyType}</p>
                     </div>
                 </div>
+                <ErrBoundary>
+                    <GoogleMap
+                        oneListing={listing}
+                        display={true}
+                        mode="mobileSingle"
+                    />
+                </ErrBoundary>
+                <p className="rental-listing__description">{listing.description}</p>
             </div>
         );
     };
