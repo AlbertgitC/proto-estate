@@ -36,6 +36,8 @@ function SearchBar() {
                 .catch(err => {
                     console.log("fetch rental listing error:", err);
                 });
+        } else {
+            setInput("");
         };
     }, [location.search, dispatch]);
 

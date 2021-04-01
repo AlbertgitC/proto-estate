@@ -6,7 +6,7 @@ import { Auth } from 'aws-amplify';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 import { Link } from "react-router-dom";
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 function NavLinks(props) {
     const user = useSelector(state => state.user);
@@ -15,6 +15,7 @@ function NavLinks(props) {
     const initialState = { navAuth: "", navLi: "nav--hide" };
     const [state, setState] = useState(initialState);
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         if (user) setState({ navAuth: "nav--hide", navLi: "" });
