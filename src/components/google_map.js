@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import ListingItemMini from './listing_item_mini';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -21,11 +21,11 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
             return new window.google.maps.Map(gMap.current, options);
         };
 
-        /* centering Taipei City by default */
+        /* centering Taipei City by default, should change to user's location later */
         const defaultPos = { lat: 25.0330, lng: 121.5654 };
         const options = {
             zoom: 13,
-            maxZoom: 18,
+            maxZoom: 16,
             center: defaultPos,
             disableDefaultUI: true,
             clickableIcons: false
@@ -70,7 +70,8 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                 setMarkers(newMarkers);
             } else if (oneListing) {
                 let pos = JSON.parse(oneListing.geometry);
-                createMarker(map, oneListing);
+                let marker = createMarker(map, oneListing);
+                setMarkers([marker]);
                 map.setCenter(pos);
                 map.setZoom(16);
             };
@@ -86,35 +87,15 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
         };
     }, [display, listings, oneListing]);
 
-    useEffect(() => {
-        if (markers[0]) {
-            for (let i = 0; i < markers.length; i++) {
-                window.google.maps.event.clearInstanceListeners(markers[i]);
-                if (mode === "mobile") {
-                    markers[i].addListener("click", (event) => {
-                        if (selectedListing.listing && selectedListing.listing.id === listings[i].id) {
-                            // console.log("here:", listing.id)
-                            history.push(`/rental-listings/${listings[i].id}`);
-                        } else {
-                            setListing({ listing: listings[i], animation: "listing-mini--show" });
-                        };
-                    });
-                } else if (mode === "desktop") {
-                    // scroll to listing
-                };
-            };
-        };
-    }, [markers, selectedListing.listing, history, mode, listings]);
-
-    function removeListing() {
+    const removeListing = useCallback(() => {
         if (selectedListing.listing === null) return;
         setListing({ ...selectedListing, animation: "listing-mini--hide" });
         setTimeout(() => {
             setListing({ listing: null, animation: "" });
         }, 400);
-    };
+    }, [selectedListing]);
 
-    function handleClick() {
+    const handleClick = useCallback(() => {
         if (mode === "mobile") {
             removeListing();
         } else if (mode === "mobileSingle") {
@@ -124,7 +105,31 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                 setModeState("google-map__map--mobile-expand");
             };
         };
-    };
+    }, [mode, modeState, removeListing]);
+
+    /* add event listener to markers */
+    useEffect(() => {
+        if (markers[0]) {
+            for (let i = 0; i < markers.length; i++) {
+                window.google.maps.event.clearInstanceListeners(markers[i]);
+                if (mode === "mobile") {
+                    markers[i].addListener("click", () => {
+                        if (selectedListing.listing && selectedListing.listing.id === listings[i].id) {
+                            history.push(`/rental-listings/${listings[i].id}`);
+                        } else {
+                            setListing({ listing: listings[i], animation: "listing-mini--show" });
+                        };
+                    });
+                } else if (mode === "desktop") {
+                    // scroll to listing
+                } else if (mode === "mobileSingle") {
+                    markers[i].addListener("click", () => {
+                        handleClick();
+                    });
+                };
+            };
+        };
+    }, [markers, selectedListing.listing, history, mode, listings, handleClick]);
 
     return (
         <div className="google-map" onClick={handleClick} style={{ display: display ? "block" : "none" }}>

@@ -15,6 +15,7 @@ function RentalListings() {
     const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
     const location = useLocation();
+    const [loading, setLoadingState] = useState(true);
 
     useEffect(() => {
         if (!location.search) {
@@ -31,9 +32,11 @@ function RentalListings() {
                 .then(res => {
                     let data = res.data.rentalListingsSortByCreatedAt.items;
                     dispatch(ListingAction.fetchPublicRentalListings(data));
+                    setLoadingState(false);
                 })
                 .catch(err => {
                     console.log("fetch rental listing error:", err);
+                    setLoadingState(false);
                 });
         }
     }, [location.search, dispatch]);
@@ -59,10 +62,10 @@ function RentalListings() {
             </div>
             <div className="rental-listings__list-wrapper">
                 <div className="rental-listings__list">
-                    <SearchBar />
+                    <SearchBar setLoadingState={setLoadingState} />
                     <h2 className="rental-listings__header">Rental Listings</h2>
                     {
-                        publicRentalListings.listings[0] ? null : <p>No Result Found</p>
+                        !publicRentalListings.listings[0] && !loading ? <p>No Result Found</p> : null
                     }
                     <ErrBoundary>
                         <GoogleMap 
@@ -71,14 +74,17 @@ function RentalListings() {
                             mode="mobile"
                         />
                     </ErrBoundary>
-                    <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
-                        {
-                            publicRentalListings.listings[0] ?
-                                publicRentalListings.listings.map((listing, i) => {
-                                    return (<ListingItem key={i} listing={listing} />);
-                                }) : null
-                        }
-                    </ul>
+                    {
+                        loading ? <p>讀取中...</p> :
+                            <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>
+                                {
+                                    publicRentalListings.listings[0] ?
+                                        publicRentalListings.listings.map((listing, i) => {
+                                            return (<ListingItem key={i} listing={listing} />);
+                                        }) : null
+                                }
+                            </ul>
+                    }
                     <button 
                         className="rental-listings__map-button" 
                         type="button"

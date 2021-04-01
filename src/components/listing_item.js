@@ -131,20 +131,17 @@ function ListingItem(props) {
                                     backgroundImage: `url(${urlPrefix}${img})`,
                                     width: `${100 / listing.photos.length}%`
                                 }}
-                            >
-                                <div className="listing-item__tag">New</div>
-                            </div>
+                            />
                         );
                     }) : <div 
                             className="listing-item__image" 
                             style={{ 
                                 backgroundImage: `url(${listing.photos[0] ? urlPrefix + listing.photos[0] : defaultImg})`
                             }}
-                        >
-                            <div className="listing-item__tag">New</div>
-                        </div>
+                        />
                 }
             </div>
+            <div className="listing-item__tag">New</div>
             <div className="listing-item__info">
                 <p>
                     <span className="listing-item__price">{listing.monthlyRent}</span> 元/月<br />

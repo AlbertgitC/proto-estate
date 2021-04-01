@@ -34,10 +34,13 @@
 }
 
 .listing-item__tag {
+    position: absolute;
+    top: 0;
     background-color: var(--brand-green-color);
     width: fit-content;
     font-size: 15px;
     padding: 1px 3px;
+    margin: 5px;
     border-radius: 10px;
 }
 

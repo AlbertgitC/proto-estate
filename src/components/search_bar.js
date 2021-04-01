@@ -8,11 +8,12 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 
 
-function SearchBar() {
+function SearchBar(props) {
     const dispatch = useDispatch();
     const history = useHistory();
     const location = useLocation();
     const [searchInput, setInput] = useState("");
+    const { setLoadingState } = props;
     
     useEffect(() => {
         if (location.search) {
@@ -32,9 +33,11 @@ function SearchBar() {
                 .then(res => {
                     let data = res.data.rentalListingsSortByCreatedAt.items;
                     dispatch(ListingAction.fetchPublicRentalListings(data));
+                    setLoadingState(false);
                 })
                 .catch(err => {
                     console.log("fetch rental listing error:", err);
+                    setLoadingState(false);
                 });
         } else {
             setInput("");

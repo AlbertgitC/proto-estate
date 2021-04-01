@@ -19,6 +19,7 @@
 
     .rental-listings__list {
         padding: 0;
+        margin-right: 7px;
     }
 
     .rental-listings__ul {

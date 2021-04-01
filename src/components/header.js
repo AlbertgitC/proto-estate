@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import NavLinks from './nav_links';
 import SignIn from './sign_in';
 import { SignUpForm } from './sign_up';
@@ -25,6 +25,7 @@ function Header() {
     const [optionState, setOptionState] = useState("");
     const dispatch = useDispatch();
     const history = useHistory();
+    const pathname = useLocation().pathname;
     const Component = modalComponet.component;
     const componentProps = modalComponet.props;
     let displaySignIn;
@@ -69,25 +70,31 @@ function Header() {
             <nav className="nav__desktop">
                 <ul className="nav__ul">
                     <li className="nav__li">
-                        <Link to="/rental-listings">租房</Link>
+                        {
+                            pathname === "/rental-listings" ? <span className="nav__link nav__link--active">租房</span> :
+                                <Link to="/rental-listings" className="nav__link">租房</Link>
+                        }
                     </li>
                     <li className="nav__li">
-                        <p style={{ textDecoration: "line-through" }}>買房</p>
+                        <p style={{ textDecoration: "line-through" }} className="nav__link">買房</p>
                     </li>
                     <li className="nav__li">
-                        <Link to="/list-rental-promo">出租</Link>
+                        {
+                            pathname === "/rental-panel" ? <span className="nav__link nav__link--active">出租</span> :
+                                <Link to="/list-rental-promo" className="nav__link">出租</Link>
+                        }
                     </li>
                     <li className="nav__li">
-                        <p style={{ textDecoration: "line-through" }}>賣房</p>
+                        <p style={{ textDecoration: "line-through" }} className="nav__link">賣房</p>
                     </li>
                     <li className="nav__li">
-                        <p style={{ textDecoration: "line-through" }}>找仲介</p>
+                        <p style={{ textDecoration: "line-through" }} className="nav__link">找仲介</p>
                     </li>
                     <li className="nav__li">
-                        <p style={{ textDecoration: "line-through" }}>廣告</p>
+                        <p style={{ textDecoration: "line-through" }} className="nav__link">廣告</p>
                     </li>
                     <li className="nav__li">
-                        <p style={{ textDecoration: "line-through" }}>幫助</p>
+                        <p style={{ textDecoration: "line-through" }} className="nav__link">幫助</p>
                     </li>
                     <li className={`nav__li ${displaySignIn}`}>
                         <button 

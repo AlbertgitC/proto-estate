@@ -6,7 +6,7 @@ import { Auth } from 'aws-amplify';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 import { Link } from "react-router-dom";
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 function NavLinks(props) {
     const user = useSelector(state => state.user);
@@ -15,7 +15,8 @@ function NavLinks(props) {
     const initialState = { navAuth: "", navLi: "nav--hide" };
     const [state, setState] = useState(initialState);
     const history = useHistory();
-
+    const pathname = useLocation().pathname;
+    
     useEffect(() => {
         if (user) setState({ navAuth: "nav--hide", navLi: "" });
     }, [user]);
@@ -48,7 +49,10 @@ function NavLinks(props) {
             </div>
             <ul className="nav__ul">
                 <li className="nav__li">
-                    <Link to="/rental-listings" onClick={toggleModal}>租房</Link>
+                    {
+                        pathname === "/rental-listings" ? <span onClick={toggleModal}>租房</span> :
+                            <Link to="/rental-listings" onClick={toggleModal}>租房</Link>
+                    }
                 </li>
                 <li className="nav__li">
                     <p style={{ textDecoration: "line-through" }}>買房</p>
