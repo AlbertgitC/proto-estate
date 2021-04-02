@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === "development") {
 };
 
 function ListingItem(props) {
-    const { listing } = props;
+    const { listing, selected, selectedListingRef } = props;
     const imgWrapper = useRef({ scrollWidth: null });
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
     let history = useHistory();
@@ -83,7 +83,11 @@ function ListingItem(props) {
     };
 
     return (
-        <li className="listing-item" onClick={toListing}>
+        <li 
+            className={`listing-item ${selected ? "listing-item--selected" : ""}`} 
+            onClick={toListing}
+            ref={selectedListingRef}
+        >
             {
                 listing.photos.length < 2 ? null :
                     <div className="listing-item__arrow-wrapper">

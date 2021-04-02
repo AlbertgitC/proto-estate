@@ -4,7 +4,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 const GoogleMap = React.memo(function CreateGoogleMap(props) {
-    const { listings, display, mode, oneListing } = props;
+    const { listings, display, mode, oneListing, setSelectedId } = props;
     const [markers, setMarkers] = useState([]);
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
@@ -121,7 +121,9 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                         };
                     });
                 } else if (mode === "desktop") {
-                    // scroll to listing
+                    markers[i].addListener("click", () => {
+                        setSelectedId(listings[i].id);
+                    });
                 } else if (mode === "mobileSingle") {
                     markers[i].addListener("click", () => {
                         handleClick();
@@ -129,7 +131,7 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                 };
             };
         };
-    }, [markers, selectedListing.listing, history, mode, listings, handleClick]);
+    }, [markers, selectedListing.listing, history, mode, listings, handleClick, setSelectedId]);
 
     return (
         <div className="google-map" onClick={handleClick} style={{ display: display ? "block" : "none" }}>

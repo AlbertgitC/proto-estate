@@ -1,6 +1,6 @@
 import SearchBar from './search_bar';
 import ListingItem from './listing_item';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +16,8 @@ function RentalListings() {
     const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
     const location = useLocation();
     const [loading, setLoadingState] = useState(true);
+    const [selectedId, setSelectedId] = useState(null);
+    const selectedListingRef = useRef(null);
 
     useEffect(() => {
         if (!location.search) {
@@ -41,6 +43,12 @@ function RentalListings() {
         }
     }, [location.search, dispatch]);
 
+    useEffect(() => {
+        if (selectedListingRef.current) {
+            selectedListingRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [selectedId]);
+
     function switchMap() {
         if (mapState.button === "MAP") {
             setMap({ list: "none", map: true, button: "LIST" });
@@ -57,6 +65,7 @@ function RentalListings() {
                         listings={publicRentalListings.listings}
                         display={true}
                         mode="desktop"
+                        setSelectedId={setSelectedId}
                     />
                 </ErrBoundary>
             </div>
@@ -80,7 +89,14 @@ function RentalListings() {
                                 {
                                     publicRentalListings.listings[0] ?
                                         publicRentalListings.listings.map((listing, i) => {
-                                            return (<ListingItem key={i} listing={listing} />);
+                                            return (
+                                                <ListingItem 
+                                                    key={i} 
+                                                    listing={listing} 
+                                                    selected={selectedId === listing.id ? true : false}
+                                                    selectedListingRef={selectedId === listing.id ? selectedListingRef : null}
+                                                />
+                                            );
                                         }) : null
                                 }
                             </ul>

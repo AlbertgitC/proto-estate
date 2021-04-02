@@ -4,6 +4,10 @@
         margin: 0.5%;
     }
 
+    .listing-item--selected {
+        border: 8px solid var(--brand-green-color);
+    }
+
     .listing-item__image-wrapper {
         overflow-x: hidden;
     }

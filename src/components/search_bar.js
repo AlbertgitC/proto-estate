@@ -42,7 +42,7 @@ function SearchBar(props) {
         } else {
             setInput("");
         };
-    }, [location.search, dispatch]);
+    }, [location.search, dispatch, setLoadingState]);
 
     function handleInput(e) {
         setInput(e.target.value);
