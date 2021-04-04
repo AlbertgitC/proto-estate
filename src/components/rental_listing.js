@@ -184,37 +184,43 @@ function RentalListing() {
                     }
                 </div>
                 <PhotoGallery photos={photos} />
-                <p className="rental-listing__details--important">{listing.address}</p>
-                {listing.subAddress ? <p>{listing.subAddress}</p> : null}
-                <div className="rental-listing__details">
-                    <div className="rental-listing__detail">
-                        <p>
-                            <span className="rental-listing__details--important">
-                                {parseNum(listing.monthlyRent)}
-                            </span> 元/月
-                        </p>
-                    </div>
-                    <div className="rental-listing__detail">
-                        <p className="rental-listing__details--important">{listing.numberRooms}房</p>
-                    </div>
-                    {
-                        listing.areaPin ? 
+                <div className="rental-listing__info-wrapper">
+                    <div className="rental-listing__info">
+                        <p className="rental-listing__details--important">{listing.address}</p>
+                        {listing.subAddress ? <p>{listing.subAddress}</p> : null}
+                        <div className="rental-listing__details">
                             <div className="rental-listing__detail">
-                                <p className="rental-listing__details--important">{parseNum(listing.areaPin)}坪</p>
+                                <p>
+                                    <span className="rental-listing__details--important">
+                                        {parseNum(listing.monthlyRent)}
+                                    </span> 元/月
+                                </p>
                             </div>
-                            : null
-                    }
-                    <div className="rental-listing__detail">
-                        <p className="rental-listing__details--important">{listing.propertyType}</p>
+                            <div className="rental-listing__detail">
+                                <p className="rental-listing__details--important">{listing.numberRooms}房</p>
+                            </div>
+                            {
+                                listing.areaPin ?
+                                    <div className="rental-listing__detail">
+                                        <p className="rental-listing__details--important">{parseNum(listing.areaPin)}坪</p>
+                                    </div>
+                                    : null
+                            }
+                            <div className="rental-listing__detail">
+                                <p className="rental-listing__details--important">{listing.propertyType}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rental-listing__map-wrapper">
+                        <ErrBoundary>
+                            <GoogleMap
+                                oneListing={listing}
+                                display={true}
+                                mode="mobileSingle"
+                            />
+                        </ErrBoundary>
                     </div>
                 </div>
-                <ErrBoundary>
-                    <GoogleMap
-                        oneListing={listing}
-                        display={true}
-                        mode="mobileSingle"
-                    />
-                </ErrBoundary>
                 <p className="rental-listing__description">{listing.description}</p>
             </div>
         );

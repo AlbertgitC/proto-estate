@@ -8,4 +8,34 @@
     .rental-listing__image-slide {
         display: none;
     }
+
+    .rental-listing__info-wrapper {
+        display: flex;
+        margin-top: 15px;
+        height: 130px;
+    }
+
+    .rental-listing__info {
+        width: 100%;
+        max-width: 520px;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+
+    .rental-listing__map-wrapper {
+        width: 100%;
+        height: 130px;
+    }
+
+    .rental-listing__details {
+        justify-content: space-between;
+    }
+
+    .rental-listing__detail {
+        margin: 0;
+    }
+
+    div:first-of-type.rental-listing__detail {
+        margin: 0;
+    }
 }
