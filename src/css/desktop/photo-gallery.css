@@ -12,6 +12,8 @@
 
     .photo-gallery__main-img {
         margin-bottom: 14px;
+        border-radius: 7px 0 0 0;
+        object-fit: cover;
     }
 
     .photo-gallery__arrow {
@@ -21,15 +23,34 @@
     }
 
     .photo-gallery__imgs-wrapper {
-        background-color: white;
-        color: black;
+        background-color: var(--bg-color-whitesmoke);
+        border-radius: 0 0 0 7px;
+        display: flex;
+        padding: 8px;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
 
-    .photo-gallery__side {
-        
+    .photo-gallery__imgs-wrapper::-webkit-scrollbar {
+        width: 0;
+        height: 0;
     }
 
-    .photo-gallery__side :first-child {
+    .photo-gallery__img-small {
+        height: 100%;
+        margin-right: 8px;
+        object-fit: cover;
+    }
+
+    .photo-gallery__2nd-img {
         margin-bottom: 14px;
+        border-radius: 0 7px 0 0;
+        object-fit: cover;
+    }
+
+    .photo-gallery__3rd-img {
+        border-radius: 0 0 7px 0;
+        object-fit: cover;
     }
 }

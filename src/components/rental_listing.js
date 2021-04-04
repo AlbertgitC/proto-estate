@@ -25,6 +25,7 @@ function RentalListing() {
     const { listingId } = useParams();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
     const [listing, setListing] = useState(null);
+    const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(true);
     const imgWrapper = useRef(null);
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
@@ -43,8 +44,16 @@ function RentalListing() {
                 }
             })
                 .then(res => {
-                    setListing(res.data.getRentalListing);
+                    let listing = res.data.getRentalListing;
+                    setListing(listing);
                     setLoading(false);
+                    if (listing && listing.photos[0]) {
+                        let photos = [];
+                        for (let photo of listing.photos) {
+                            photos.push(urlPrefix + photo);
+                        };
+                        setPhotos(photos);
+                    };
                 })
                 .catch(err => {
                     console.log("fetch rental listing error:", err);
@@ -53,6 +62,13 @@ function RentalListing() {
         } else {
             setListing(curListing);
             setLoading(false);
+            if (curListing.photos[0]) {
+                let photos = [];
+                for (let photo of curListing.photos) {
+                    photos.push(urlPrefix + photo);
+                };
+                setPhotos(photos);
+            };
         };
     }, [listingId, publicRentalListings.listings]);
 
@@ -167,7 +183,7 @@ function RentalListing() {
                             </small>
                     }
                 </div>
-                <PhotoGallery />
+                <PhotoGallery photos={photos} />
                 <p className="rental-listing__details--important">{listing.address}</p>
                 {listing.subAddress ? <p>{listing.subAddress}</p> : null}
                 <div className="rental-listing__details">

@@ -2,8 +2,10 @@ import defaultImg from '../images/home-1294564_640.jpg';
 import { useState, useRef, useEffect } from 'react';
 
 function PhotoGallery(props) {
+    const { photos } = props;
     const gallery = useRef(null);
     const [galleryWidth, setWidth] = useState(0);
+    const imgsWrapper = useRef(null);
 
     useEffect(() => {
         console.log(galleryWidth)
@@ -15,28 +17,101 @@ function PhotoGallery(props) {
         return () => window.removeEventListener('resize', updateWidth);
     }, [galleryWidth]);
 
+    useEffect(() => {
+        let scrollTarget = imgsWrapper.current;
+
+        function horizontalScroll(event) {
+            event.preventDefault();
+            const toLeft = event.deltaY < 0 && scrollTarget.scrollLeft > 0;
+            const toRight = event.deltaY > 0 && scrollTarget.scrollLeft < scrollTarget.scrollWidth - scrollTarget.clientWidth;
+
+            if (toLeft || toRight) {
+                scrollTarget.scrollLeft += event.deltaY;
+            };
+        };
+
+        let imgs = document.getElementsByClassName("photo-gallery__img-small");
+
+        for (let img of imgs) {
+            img.addEventListener("mousewheel", horizontalScroll, { passive: false });
+        };
+
+        scrollTarget.addEventListener("mousewheel", horizontalScroll, { passive: false });
+
+        return () => {
+            scrollTarget.removeEventListener("mousewheel", horizontalScroll);
+
+            for (let img of imgs) {
+                img.removeEventListener("mousewheel", horizontalScroll);
+            };
+        };
+    }, []);
+
     return (
         <div className="photo-gallery" ref={gallery}>
             <div className="photo-gallery__main">
                 <img 
                     className="photo-gallery__main-img" 
-                    src={defaultImg} alt="listing" 
+                    src={photos[0] ? photos[0] : defaultImg} alt="listing" 
                     style={{ width: `${galleryWidth * 0.60975609}px`, height: `${galleryWidth * 0.36585365}px` }}
                 />
                 <div className="photo-gallery__arrow">arrow overlay</div>
                 <div 
                     className="photo-gallery__imgs-wrapper"
-                    style={{ height: `${galleryWidth * 0.14631465}px` }}
-                >over view</div>
+                    style={{ width: `${galleryWidth * 0.60975609}px`, height: `${galleryWidth * 0.14631465}px` }}
+                    ref={imgsWrapper}
+                >
+                    {
+                        photos[0] ? photos.map((photo, i) => 
+                            <img
+                                key={i}
+                                className="photo-gallery__img-small"
+                                src={photo} alt="listing"
+                                style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                            />) :
+                            <img
+                                className="photo-gallery__img-small"
+                                src={defaultImg} alt="listing"
+                                style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                            />
+                    }
+                    <img
+                        className="photo-gallery__img-small"
+                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
+                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                    />
+                    <img
+                        className="photo-gallery__img-small"
+                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
+                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                    />
+                    <img
+                        className="photo-gallery__img-small"
+                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
+                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                    />
+                    <img
+                        className="photo-gallery__img-small"
+                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
+                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                    />
+                    <img
+                        className="photo-gallery__img-small"
+                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
+                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                    />
+                </div>
             </div>
             <div className="photo-gallery__side">
-                <img 
-                    src={defaultImg}
+                <img
+                    className="photo-gallery__2nd-img"
+                    src={photos[0] ? photos[0] : defaultImg}
                     alt="listing"
                     style={{ width: `${galleryWidth * 0.3902439}px`, height: `${galleryWidth * 0.25609756}px` }}
                 />
                 <img
-                    src={defaultImg}
+                    className="photo-gallery__3rd-img"
+                    src={photos[0] ? photos[0] : defaultImg}
                     alt="listing"
                     style={{ width: `${galleryWidth * 0.3902439}px`, height: `${galleryWidth * 0.25609756}px` }}
                 />
