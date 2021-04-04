@@ -1,5 +1,7 @@
 import defaultImg from '../images/home-1294564_640.jpg';
 import { useState, useRef, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 function PhotoGallery(props) {
     const { photos } = props;
@@ -55,7 +57,23 @@ function PhotoGallery(props) {
                     src={photos[0] ? photos[0] : defaultImg} alt="listing" 
                     style={{ width: `${galleryWidth * 0.60975609}px`, height: `${galleryWidth * 0.36585365}px` }}
                 />
-                <div className="photo-gallery__arrow">arrow overlay</div>
+                <div className="photo-gallery__arrow-wrapper">
+                    <button
+                        className="photo-gallery__arrow"
+                        type="button"
+                        style={{ fontSize: `${Math.trunc(galleryWidth * 0.03968253)}px` }}
+                    >
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    <button
+                        className="photo-gallery__arrow"
+                        type="button"
+                        style={{ fontSize: `${Math.trunc(galleryWidth * 0.03968253)}px` }}
+                    >
+                        <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                </div>
+                <p className="photo-galler__index">{photos[0] ? `1/${photos.length}` : ""}</p>
                 <div 
                     className="photo-gallery__imgs-wrapper"
                     style={{ width: `${galleryWidth * 0.60975609}px`, height: `${galleryWidth * 0.14631465}px` }}

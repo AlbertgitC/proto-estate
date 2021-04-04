@@ -216,10 +216,19 @@ function RentalListing() {
                             <GoogleMap
                                 oneListing={listing}
                                 display={true}
-                                mode="mobileSingle"
+                                mode="desktopSingle"
                             />
                         </ErrBoundary>
                     </div>
+                </div>
+                <div className="rental-listing__mobile-map-wrapper">
+                    <ErrBoundary>
+                        <GoogleMap
+                            oneListing={listing}
+                            display={true}
+                            mode="mobileSingle"
+                        />
+                    </ErrBoundary>
                 </div>
                 <p className="rental-listing__description">{listing.description}</p>
             </div>

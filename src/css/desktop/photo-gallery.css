@@ -16,10 +16,25 @@
         object-fit: cover;
     }
 
-    .photo-gallery__arrow {
+    .photo-gallery__arrow-wrapper {
         position: absolute;
-        top: 0;
-        color: black;
+        top: 29%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .photo-gallery__arrow {
+        background-color: transparent;
+        border: none;
+        color: var(--brand-green-color);
+        margin: 0 20px;
+    }
+
+    .photo-galler__index {
+        position: absolute;
+        bottom: 32%;
+        color: var(--font-color-dark);
+        margin: 0 14px;
     }
 
     .photo-gallery__imgs-wrapper {

@@ -8,9 +8,16 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
     const [markers, setMarkers] = useState([]);
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
-    let defaultMode = mode === "mobileSingle" ? "google-map__map--mobile-single" : "";
-    const [modeState, setModeState] = useState(defaultMode);
+    const [modeState, setModeState] = useState("");
     const history = useHistory();
+
+    useEffect(() => {
+        if (mode === "mobileSingle") {
+            setModeState("google-map__map--mobile-single");
+        } else if (mode === "desktopSingle") {
+            setModeState("google-map__map--desktop-single");
+        };
+    }, [mode]);
 
     useEffect(() => {
         if (!gMap.current || !display) return;

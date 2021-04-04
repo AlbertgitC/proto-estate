@@ -62,3 +62,11 @@ div:first-of-type.rental-listing__detail {
 .rental-listing__description {
     margin-top: 15px;
 }
+
+.rental-listing__map-wrapper {
+    display: none;
+}
+
+.rental-listing__mobile-map-wrapper {
+    display: block;
+}
