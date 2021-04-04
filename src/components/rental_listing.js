@@ -7,6 +7,7 @@ import defaultImg from '../images/home-1294564_640.jpg';
 import config from '../aws-exports';
 import ErrBoundary from '../util/error_boundary';
 import GoogleMap from './google_map';
+import PhotoGallery from './photo_gallery';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -166,6 +167,7 @@ function RentalListing() {
                             </small>
                     }
                 </div>
+                <PhotoGallery />
                 <p className="rental-listing__details--important">{listing.address}</p>
                 {listing.subAddress ? <p>{listing.subAddress}</p> : null}
                 <div className="rental-listing__details">

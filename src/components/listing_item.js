@@ -18,16 +18,24 @@ if (process.env.NODE_ENV === "development") {
 };
 
 function ListingItem(props) {
-    const { listing, selected, selectedListingRef } = props;
+    const { listing, selected } = props;
     const imgWrapper = useRef({ scrollWidth: null });
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
     let history = useHistory();
+    const selectedListingRef = useRef(null);
+
     useEffect(() => {
         if (imgWrapper.current) setSwipeState(s => ({ 
             ...s, 
             imgWidth: imgWrapper.current.scrollWidth / listing.photos.length 
         }));
     }, [imgWrapper.current.scrollWidth, listing]);
+
+    useEffect(() => {
+        if (selectedListingRef.current && selected) {
+            selectedListingRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }, [selected]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;

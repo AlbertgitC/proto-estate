@@ -1,0 +1,11 @@
+@media only screen and (min-width: 768px) {
+    .rental-listing {
+        max-width: 1250px;
+        margin: 0 auto;
+        padding-top: 90px;
+    }
+
+    .rental-listing__image-slide {
+        display: none;
+    }
+}

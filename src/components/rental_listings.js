@@ -1,6 +1,6 @@
 import SearchBar from './search_bar';
 import ListingItem from './listing_item';
-import { useEffect, useState,useRef } from 'react';
+import { useEffect, useState } from 'react';
 import * as queries from '../graphql/queries';
 import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,7 +17,6 @@ function RentalListings() {
     const location = useLocation();
     const [loading, setLoadingState] = useState(true);
     const [selectedId, setSelectedId] = useState(null);
-    const selectedListingRef = useRef(null);
 
     useEffect(() => {
         if (!location.search) {
@@ -42,12 +41,6 @@ function RentalListings() {
                 });
         }
     }, [location.search, dispatch]);
-
-    useEffect(() => {
-        if (selectedListingRef.current) {
-            selectedListingRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [selectedId]);
 
     function switchMap() {
         if (mapState.button === "MAP") {
@@ -94,7 +87,6 @@ function RentalListings() {
                                                     key={i} 
                                                     listing={listing} 
                                                     selected={selectedId === listing.id ? true : false}
-                                                    selectedListingRef={selectedId === listing.id ? selectedListingRef : null}
                                                 />
                                             );
                                         }) : null

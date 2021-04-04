@@ -2,6 +2,7 @@
     .listing-item {
         width: 49%;
         margin: 0.5%;
+        cursor: pointer;
     }
 
     .listing-item--selected {
