@@ -1,9 +1,9 @@
 .google-map {
     position: relative;
+    width: 100%;
 }
 
 .google-map__map {
-    width: 100%;
     height: calc(100vh - 186px);
 }
 

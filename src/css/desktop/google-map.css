@@ -6,4 +6,8 @@
     .google-map__map--desktop-single {
         height: 200px;
     }
+
+    .google-map__map--desktop-modal {
+        height: -webkit-fill-available;
+    }
 }

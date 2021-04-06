@@ -29,6 +29,7 @@ function RentalListing() {
     const [loading, setLoading] = useState(true);
     const imgWrapper = useRef(null);
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
+    const [mapModal, setMapModal] = useState("");
 
     useEffect(() => {
         let curListing = null;
@@ -127,6 +128,10 @@ function RentalListing() {
         return parsed;
     };
 
+    // function mapModal() {
+    //     console.log("map clicked")
+    // };
+
     if (loading) {
         return (
             <div className="rental-listing">
@@ -211,7 +216,7 @@ function RentalListing() {
                             </div>
                         </div>
                     </div>
-                    <div className="rental-listing__map-wrapper">
+                    <div className="rental-listing__map-wrapper" onClick={() => { setMapModal("rental-listing__modal--show"); }}>
                         <ErrBoundary>
                             <GoogleMap
                                 oneListing={listing}
@@ -230,7 +235,26 @@ function RentalListing() {
                         />
                     </ErrBoundary>
                 </div>
-                <p className="rental-listing__description">{listing.description}</p>
+                <div className="rental-listing__description">
+                    <h2 className="rental-listing__description-header">屋況介紹</h2>
+                    <p>{listing.description}</p>
+                </div>
+                <div className={`rental-listing__modal ${mapModal}`} onClick={() => { setMapModal(""); }}>
+                    <div className="rental-listing__modal-map-wrapper" onClick={e => e.stopPropagation()}>
+                        <ErrBoundary>
+                            <GoogleMap
+                                oneListing={listing}
+                                display={true}
+                                mode="desktopModal"
+                            />
+                        </ErrBoundary>
+                        <button 
+                            type="button" 
+                            className="rental-listing__modal-close"
+                            onClick={() => { setMapModal(""); }}
+                        >X</button>
+                    </div>
+                </div>
             </div>
         );
     };

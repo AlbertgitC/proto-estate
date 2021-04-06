@@ -16,6 +16,8 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
             setModeState("google-map__map--mobile-single");
         } else if (mode === "desktopSingle") {
             setModeState("google-map__map--desktop-single");
+        } else if (mode === "desktopModal") {
+            setModeState("google-map__map--desktop-modal");
         };
     }, [mode]);
 

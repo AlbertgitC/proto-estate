@@ -70,3 +70,11 @@ div:first-of-type.rental-listing__detail {
 .rental-listing__mobile-map-wrapper {
     display: block;
 }
+
+.rental-listing__description-header {
+    font-size: 20px;
+}
+
+.rental-listing__modal {
+    display: none;
+}
