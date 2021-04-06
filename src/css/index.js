@@ -15,6 +15,10 @@ exports.rental_modal = require("./mobile/rental-modal.css");
 exports.rental_form = require("./mobile/rental-form.css");
 exports.rental_listings = require("./mobile/rental-listings.css");
 exports.listing_item = require("./mobile/listing-item.css");
+exports.google_map = require("./mobile/google-map.css");
+exports.listing_mini = require("./mobile/listing-mini.css");
+exports.rental_listing = require("./mobile/rental-listing.css");
+exports.photo_gallery = require("./mobile/photo-gallery.css");
 
 // for desktop
 exports.landing_d = require("./desktop/landing.css");
@@ -30,3 +34,6 @@ exports.rental_panel_d = require("./desktop/rental-panel.css");
 exports.sign_in_page_d = require("./desktop/sign-in-page.css");
 exports.rental_modal_d = require("./desktop/rental-modal.css");
 exports.rental_form_d = require("./desktop/rental-form.css");
+exports.google_map_d = require("./desktop/google-map.css");
+exports.rental_listing_d = require("./desktop/rental-listing.css");
+exports.photo_gallery_d = require("./desktop/photo-gallery.css");

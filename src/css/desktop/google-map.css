@@ -1,0 +1,13 @@
+@media only screen and (min-width: 768px) {
+    .google-map__map {
+        height: calc(100vh - 90px);
+    }
+
+    .google-map__map--desktop-single {
+        height: 200px;
+    }
+
+    .google-map__map--desktop-modal {
+        height: -webkit-fill-available;
+    }
+}

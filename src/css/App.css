@@ -109,9 +109,12 @@ button {
   color: var(--font-color-dark);
 }
 
+p {
+  overflow-wrap: break-word;
+}
+
 .App {
   position: relative;
-  min-height: calc(100vh - 290px);
 }
 
 .App__wrapper {

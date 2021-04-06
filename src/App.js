@@ -7,16 +7,9 @@ import RentalPanel from './components/rental_panel';
 import { Route, Switch } from 'react-router-dom';
 import { ProtectedRoute, PublicRoute } from './util/routes';
 import RentalListings from './components/rental_listings';
-import { useEffect } from 'react';
-const gMapApiKey = require('./util/keys/keys').gMapApiKey;
+import Listing from './components/rental_listing';
 
 function App() {
-	useEffect(() => {
-		const script = document.createElement('script');
-		script.async = true;
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${gMapApiKey}&region=TW&language=zh-TW&libraries=places`;
-		window.document.body.appendChild(script);
-	},[]);
 
 	return (
 		<div className="App__wrapper">
@@ -26,6 +19,11 @@ function App() {
 					<PublicRoute path="/sign-in" component={SignInPage} />
 					<Route path="/list-rental-promo">
 						<ListingRentalLanding />
+						<Footer />
+					</Route>
+					<Route path="/rental-listings/:listingId">
+						<Listing />
+						<Footer />
 					</Route>
 					<Route path="/rental-listings">
 						<RentalListings />
@@ -33,12 +31,11 @@ function App() {
 					<ProtectedRoute path="/rental-panel" component={RentalPanel} />
 					<Route path="/">
 						<HomePage />
+						<Footer />
 					</Route>
 				</Switch>
 			</div>
-			<Footer />
 		</div>
-		
 	);
 }
 

@@ -3,6 +3,7 @@ import config from '../aws-exports';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useRef, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const {
     aws_user_files_s3_bucket_region: region,
@@ -17,15 +18,24 @@ if (process.env.NODE_ENV === "development") {
 };
 
 function ListingItem(props) {
-    const { listing } = props;
+    const { listing, selected } = props;
     const imgWrapper = useRef({ scrollWidth: null });
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
+    let history = useHistory();
+    const selectedListingRef = useRef(null);
+
     useEffect(() => {
         if (imgWrapper.current) setSwipeState(s => ({ 
             ...s, 
             imgWidth: imgWrapper.current.scrollWidth / listing.photos.length 
         }));
     }, [imgWrapper.current.scrollWidth, listing]);
+
+    useEffect(() => {
+        if (selectedListingRef.current && selected) {
+            selectedListingRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }, [selected]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;
@@ -58,7 +68,8 @@ function ListingItem(props) {
         setSwipeState({ ...swipeState, tx: Math.round(e.changedTouches[0].clientX - swipeState.touchX)});
     };
 
-    function clickForward() {
+    function clickForward(e) {
+        e.stopPropagation();
         if (swipeState.idx === listing.photos.length - 1) {
             setSwipeState({ ...swipeState, idx: 0 });
         } else {
@@ -66,7 +77,8 @@ function ListingItem(props) {
         };
     };
 
-    function clickBackward() {
+    function clickBackward(e) {
+        e.stopPropagation();
         if (swipeState.idx === 0) {
             setSwipeState({ ...swipeState, idx: listing.photos.length - 1 });
         } else {
@@ -74,8 +86,16 @@ function ListingItem(props) {
         };
     };
 
+    function toListing() {
+        history.push(`/rental-listings/${listing.id}`);
+    };
+
     return (
-        <li className="listing-item">
+        <li 
+            className={`listing-item ${selected ? "listing-item--selected" : ""}`} 
+            onClick={toListing}
+            ref={selectedListingRef}
+        >
             {
                 listing.photos.length < 2 ? null :
                     <div className="listing-item__arrow-wrapper">
@@ -123,20 +143,17 @@ function ListingItem(props) {
                                     backgroundImage: `url(${urlPrefix}${img})`,
                                     width: `${100 / listing.photos.length}%`
                                 }}
-                            >
-                                <div className="listing-item__tag">New</div>
-                            </div>
+                            />
                         );
                     }) : <div 
                             className="listing-item__image" 
                             style={{ 
                                 backgroundImage: `url(${listing.photos[0] ? urlPrefix + listing.photos[0] : defaultImg})`
                             }}
-                        >
-                            <div className="listing-item__tag">New</div>
-                        </div>
+                        />
                 }
             </div>
+            <div className="listing-item__tag">New</div>
             <div className="listing-item__info">
                 <p>
                     <span className="listing-item__price">{listing.monthlyRent}</span> 元/月<br />

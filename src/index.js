@@ -9,8 +9,15 @@ import rootReducer from './util/reducers';
 import { Provider } from 'react-redux';
 import { HashRouter } from "react-router-dom";
 import { Auth } from 'aws-amplify';
+const gMapApiKey = require('./util/keys/keys').gMapApiKey;
 Amplify.configure(config);
 require("./css");
+
+const script = document.createElement('script');
+script.id = "google-api";
+script.async = true;
+script.src = `https://maps.googleapis.com/maps/api/js?key=${gMapApiKey}&region=TW&language=zh-TW&libraries=places`;
+window.document.body.appendChild(script);
 
 /* when localStorage is utilized
 

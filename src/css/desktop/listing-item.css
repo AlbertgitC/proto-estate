@@ -2,6 +2,11 @@
     .listing-item {
         width: 49%;
         margin: 0.5%;
+        cursor: pointer;
+    }
+
+    .listing-item--selected {
+        border: 8px solid var(--brand-green-color);
     }
 
     .listing-item__image-wrapper {
@@ -44,5 +49,12 @@
     .listing-item__info {
         background-color: var(--bg-color-whitesmoke);
         border-radius: 0 0 3px 3px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .listing-item {
+        width: 100%;
+        margin: 15px 0 0 0;
     }
 }

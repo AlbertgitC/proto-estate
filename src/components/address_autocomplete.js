@@ -17,19 +17,30 @@ function AddressAutocomplete(props) {
 
         function onPlaceChanged(place) {
             if (!place.geometry) {
-                // user hit enter without picking from the results
+                /* user hit enter without picking from the results */
                 setAdrState({ ...adrState, msg: "請在選單中選擇地址" });
             } else {
                 handleAddress(place);
                 setAdrState({ display: "none", msg: `地址: ${place.formatted_address.replace(/^[0-9]*/, "")}` });
             };
         };
+        
+        function createAutocomplete(options) {
+            const autocomplete = new window.google.maps.places.Autocomplete(addressAutoComplete.current, options);
+            autocomplete.addListener("place_changed", () => {
+                let place = autocomplete.getPlace();
+                onPlaceChanged(place);
+            });
+        };
 
-        const autocomplete = new window.google.maps.places.Autocomplete(addressAutoComplete.current, options);
-        autocomplete.addListener("place_changed", () => {
-            let place = autocomplete.getPlace();
-            onPlaceChanged(place);
-        });
+        if (window.google) {
+            createAutocomplete(options);
+        } else {
+            const googleScript = document.getElementById("google-api");
+            googleScript.addEventListener('load', () => {
+                createAutocomplete(options);
+            });
+        };
     }, [handleAddress, adrState, setAdrState]);
 
     return (

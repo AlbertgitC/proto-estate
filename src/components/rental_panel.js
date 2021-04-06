@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import RentalModal from './rental_panel_modal';
+import Footer from './footer';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { API } from 'aws-amplify';
@@ -32,29 +33,32 @@ function RentalPanel() {
     
 
     return (
-        <div className="rental-panel">
-            <RentalModal modalState={modalState} setModal={setModal}/>
-            <div className="rental-panel__header">
-                <h2>Rental Properties</h2>
-                <div className="rental-panel__add" onClick={() => { setModal({ show: true, action: "Create" })}}>
-                    <FontAwesomeIcon
-                        icon={faPlusSquare}
-                        transform="left-5"
-                    />Add a property
+        <div>
+            <div className="rental-panel">
+                <RentalModal modalState={modalState} setModal={setModal}/>
+                <div className="rental-panel__header">
+                    <h2>Rental Properties</h2>
+                    <div className="rental-panel__add" onClick={() => { setModal({ show: true, action: "Create" })}}>
+                        <FontAwesomeIcon
+                            icon={faPlusSquare}
+                            transform="left-5"
+                        />Add a property
+                    </div>
                 </div>
+                <ul className="rental-panel__item-list">
+                    {
+                        rentalListings.listings.map((listing, i) => (
+                            <OwnerListing 
+                                key={i} 
+                                listing={listing} 
+                                callBack={() => { 
+                                    setModal({ show: true, action: "Update", listing: listing }); }}
+                            />
+                        ))
+                    }
+                </ul>
             </div>
-            <ul className="rental-panel__item-list">
-                {
-                    rentalListings.listings.map((listing, i) => (
-                        <OwnerListing 
-                            key={i} 
-                            listing={listing} 
-                            callBack={() => { 
-                                setModal({ show: true, action: "Update", listing: listing }); }}
-                        />
-                    ))
-                }
-            </ul>
+            <Footer />
         </div>
     );
 };

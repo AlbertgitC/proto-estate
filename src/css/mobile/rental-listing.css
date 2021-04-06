@@ -1,0 +1,80 @@
+.rental-listing {
+    min-height: calc(100vh - 290px);
+    padding: 66px 15px 15px 15px;
+}
+
+.rental-listing__image-slide {
+    position: relative;
+    overflow-x: hidden;
+    color: var(--font-color-dark);
+    margin-bottom: 15px;
+}
+
+.rental-listing__image-wrapper {
+    width: 100%;
+    display: flex;
+    transition: transform .5s ease-out;
+}
+
+.rental-listing__tag {
+    position: absolute;
+    background-color: var(--brand-green-color);
+    width: fit-content;
+    font-size: 15px;
+    padding: 1px 3px;
+    border-radius: 10px;
+    top: 0%;
+    margin: 5px;
+}
+
+.rental-listing__img-idx {
+    position: absolute;
+    top: 90%;
+    left: 3%;
+}
+
+.rental-listing__image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.rental-listing__details {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.rental-listing__detail {
+    margin: 0 5px;
+}
+
+div:first-of-type.rental-listing__detail {
+    margin: 0;
+    margin-right: auto;
+}
+
+.rental-listing__details--important {
+    font-weight: 600;
+}
+
+.rental-listing__description {
+    margin-top: 15px;
+}
+
+.rental-listing__map-wrapper {
+    display: none;
+}
+
+.rental-listing__mobile-map-wrapper {
+    display: block;
+}
+
+.rental-listing__description-header {
+    font-size: 20px;
+}
+
+.rental-listing__modal {
+    display: none;
+}
