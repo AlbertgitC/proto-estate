@@ -8,9 +8,10 @@ function PhotoGallery(props) {
     const gallery = useRef(null);
     const [galleryWidth, setWidth] = useState(0);
     const imgsWrapper = useRef(null);
+    const [hoverClass, setHoverClass] = useState("");
+    const [imgIndex, setImgIndex] = useState({ one: 0, two: 0, three: 0 });
 
     useEffect(() => {
-        console.log(galleryWidth)
         function updateWidth() {
             setWidth(gallery.current.clientWidth - 14);
         };
@@ -49,31 +50,74 @@ function PhotoGallery(props) {
         };
     }, []);
 
+    useEffect(() => {
+        if (photos.length === 2) {
+            setImgIndex({ one: 0, two: 1, three: 0 });
+        } else if (photos.length > 2) {
+            setImgIndex({ one: 0, two: 1, three: 2 });
+        };
+    }, [photos]);
+
+    function setIndex(idx) { 
+        let maxIdx = photos.length - 1;
+        let one = idx;
+        let two = idx + 1;
+        let three = idx + 2;
+        if (one > -1) {
+            if (one > maxIdx) {
+                one = 0;
+                two = 1 > maxIdx ? 0 : 1;
+                three = 2 > maxIdx ? 0 : 2;
+            } else if (two > maxIdx) {
+                two = 0;
+                three = 1 > maxIdx ? 0 : 1;
+            } else if (three > maxIdx) {
+                three = 0;
+            };
+        } else {
+            one = maxIdx;
+            three = 1 > maxIdx ? 0 : 1;
+        };
+        setImgIndex({ one, two, three });
+    };
+
     return (
         <div className="photo-gallery" ref={gallery}>
             <div className="photo-gallery__main">
-                <img 
-                    className="photo-gallery__main-img" 
-                    src={photos[0] ? photos[0] : defaultImg} alt="listing" 
-                    style={{ width: `${galleryWidth * 0.60975609}px`, height: `${galleryWidth * 0.36585365}px` }}
-                />
-                <div className="photo-gallery__arrow-wrapper">
-                    <button
-                        className="photo-gallery__arrow"
-                        type="button"
-                        style={{ fontSize: `${Math.trunc(galleryWidth * 0.03968253)}px` }}
-                    >
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button
-                        className="photo-gallery__arrow"
-                        type="button"
-                        style={{ fontSize: `${Math.trunc(galleryWidth * 0.03968253)}px` }}
-                    >
-                        <FontAwesomeIcon icon={faChevronRight} />
-                    </button>
+                <div 
+                    className="photo-gallery__main-img"
+                    style={{ 
+                        width: `${galleryWidth * 0.60975609}px`,
+                        height: `${galleryWidth * 0.36585365}px`,
+                        backgroundImage: `url(${photos[0] ? photos[imgIndex.one] : defaultImg})`
+                    }}
+                    onMouseEnter={() => { setHoverClass("photo-gallery__main-img--hover") }}
+                    onMouseLeave={() => { setHoverClass("") }}
+                >   
+                    {
+                        photos[0] ?
+                            <div className={`photo-gallery__arrow-wrapper ${hoverClass}`}>
+                                <button
+                                    className="photo-gallery__arrow"
+                                    type="button"
+                                    style={{ fontSize: `${Math.trunc(galleryWidth * 0.03968253)}px` }}
+                                    onClick={() => { setIndex(imgIndex.one - 1) }}
+                                >
+                                    <FontAwesomeIcon icon={faChevronLeft} />
+                                </button>
+                                <button
+                                    className="photo-gallery__arrow"
+                                    type="button"
+                                    style={{ fontSize: `${Math.trunc(galleryWidth * 0.03968253)}px` }}
+                                    onClick={() => { setIndex(imgIndex.one + 1) }}
+                                >
+                                    <FontAwesomeIcon icon={faChevronRight} />
+                                </button>
+                            </div> 
+                            : null
+                    }
+                    <p className={`photo-galler__index ${hoverClass}`}>{photos[0] ? `${imgIndex.one + 1}/${photos.length}` : ""}</p>
                 </div>
-                <p className="photo-galler__index">{photos[0] ? `1/${photos.length}` : ""}</p>
                 <div 
                     className="photo-gallery__imgs-wrapper"
                     style={{ width: `${galleryWidth * 0.60975609}px`, height: `${galleryWidth * 0.14631465}px` }}
@@ -81,57 +125,43 @@ function PhotoGallery(props) {
                 >
                     {
                         photos[0] ? photos.map((photo, i) => 
-                            <img
+                            <div
                                 key={i}
                                 className="photo-gallery__img-small"
-                                src={photo} alt="listing"
-                                style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                                style={{ 
+                                    minWidth: `${galleryWidth * 0.13228746}px`,
+                                    backgroundImage: `url(${photo})`
+                                }}
+                                onClick={() => { setIndex(i); }}
                             />) :
-                            <img
+                            <div
                                 className="photo-gallery__img-small"
-                                src={defaultImg} alt="listing"
-                                style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
+                                style={{
+                                    minWidth: `${galleryWidth * 0.13228746}px`,
+                                    backgroundImage: `url(${defaultImg})`
+                                }}
                             />
                     }
-                    <img
-                        className="photo-gallery__img-small"
-                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
-                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
-                    />
-                    <img
-                        className="photo-gallery__img-small"
-                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
-                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
-                    />
-                    <img
-                        className="photo-gallery__img-small"
-                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
-                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
-                    />
-                    <img
-                        className="photo-gallery__img-small"
-                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
-                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
-                    />
-                    <img
-                        className="photo-gallery__img-small"
-                        src={photos[0] ? photos[0] : defaultImg} alt="listing"
-                        style={{ minWidth: `${galleryWidth * 0.13228746}px` }}
-                    />
                 </div>
             </div>
             <div className="photo-gallery__side">
-                <img
+                <div
                     className="photo-gallery__2nd-img"
-                    src={photos[0] ? photos[0] : defaultImg}
-                    alt="listing"
-                    style={{ width: `${galleryWidth * 0.3902439}px`, height: `${galleryWidth * 0.25609756}px` }}
+                    style={{ 
+                        width: `${galleryWidth * 0.3902439}px`, 
+                        height: `${galleryWidth * 0.25609756}px`,
+                        backgroundImage: `url(${photos[0] ? photos[imgIndex.two] : defaultImg})`
+                    }}
+                    onClick={() => { setIndex(imgIndex.two); }}
                 />
-                <img
+                <div
                     className="photo-gallery__3rd-img"
-                    src={photos[0] ? photos[0] : defaultImg}
-                    alt="listing"
-                    style={{ width: `${galleryWidth * 0.3902439}px`, height: `${galleryWidth * 0.25609756}px` }}
+                    style={{
+                        width: `${galleryWidth * 0.3902439}px`,
+                        height: `${galleryWidth * 0.25609756}px`,
+                        backgroundImage: `url(${photos[0] ? photos[imgIndex.three] : defaultImg})`
+                    }}
+                    onClick={() => { setIndex(imgIndex.three); }}
                 />
             </div>
         </div>
