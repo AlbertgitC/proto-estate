@@ -74,7 +74,7 @@ function RentalForm({ closeModal }) {
         if (!file) return;
         let nextState = { ...imageState };
         nextState.images.push(file);
-        if (nextState.images.length >= 3) {
+        if (nextState.images.length >= 20) {
             nextState.display = "none";
         };
         setImage(nextState);
@@ -258,7 +258,7 @@ function RentalForm({ closeModal }) {
                 />
             </div>
             <div className="rental-form__input rental-form__input--full-width">
-                <label htmlFor="description" className="rental-form__label">Detailed description</label>
+                <label htmlFor="description" className="rental-form__label">屋況詳細說明</label>
                 <textarea
                     className="rental-form__textarea"
                     id="description"
@@ -271,7 +271,7 @@ function RentalForm({ closeModal }) {
                 <small>{`${description.length}/500`}</small>
             </div>
             <div className="rental-form__input rental-form__input--full-width">
-                <label className="rental-form__label">上傳照片(最多3張)</label>
+                <label className="rental-form__label">上傳照片(最多20張)</label>
                 <div className="rental-form__image-wrapper">
                     {
                         imageState.images.map((image, i) => (
@@ -287,7 +287,6 @@ function RentalForm({ closeModal }) {
                                     />
                                 </div>
                             </div>
-                            
                         ))
                     }
                     <div className="rental-form__add-image" style={{ display: `${imageState.display}` }}>

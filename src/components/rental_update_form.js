@@ -46,7 +46,7 @@ function RentalUpdateForm({ closeModal, listing }) {
 
     function renderPlus() {
         let display = photos.length - deleteQueue.length +
-            images.length < 3 ? "block" : "none";
+            images.length < 20 ? "block" : "none";
 
         return (
             <div className="rental-form__add-image" style={{ display: `${display}` }}>
@@ -142,7 +142,7 @@ function RentalUpdateForm({ closeModal, listing }) {
             let idx = deleteQueue.indexOf(imageKey);
             deleteQueue.splice(idx, 1);
             let total = photos.length - deleteQueue.length + images.length;
-            if (total > 3) {
+            if (total > 20) {
                 let i = images.length - 1;
                 if (postPhoto === images[i].name) {
                     let diff = photos.filter(key => !deleteQueue.includes(key));
@@ -294,7 +294,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 />
             </div>
             <div className="rental-form__input rental-form__input--full-width">
-                <label htmlFor="description" className="rental-form__label">Detailed description</label>
+                <label htmlFor="description" className="rental-form__label">屋況詳細說明</label>
                 <textarea
                     className="rental-form__textarea"
                     id="description"
@@ -307,7 +307,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 <small>{`${description.length}/500`}</small>
             </div>
             <div className="rental-form__input rental-form__input--full-width">
-                <label className="rental-form__label">上傳照片(最多3張，點擊照片選擇封面照片)</label>
+                <label className="rental-form__label">上傳照片(最多20張，點擊照片選擇封面照片)</label>
                 <div className="rental-form__image-wrapper">
                     {
                         photos.map((imageKey, i) => {
