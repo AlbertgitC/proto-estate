@@ -13,7 +13,13 @@ import { useLocation } from 'react-router-dom';
 function RentalListings() {
     const dispatch = useDispatch();
     const publicRentalListings = useSelector(state => state.publicRentalListings);
-    const [mapState, setMap] = useState({ list: "flex", map: false, button: "MAP" });
+    const [mapState, setMap] = useState(
+        { 
+            list: "flex", 
+            map: "rental-listings__map-mobile--hide", 
+            button: "MAP"
+        }
+    );
     const location = useLocation();
     const [loading, setLoadingState] = useState(true);
     const [selectedId, setSelectedId] = useState(null);
@@ -44,9 +50,9 @@ function RentalListings() {
 
     function switchMap() {
         if (mapState.button === "MAP") {
-            setMap({ list: "none", map: true, button: "LIST" });
+            setMap({ list: "none", map: "", button: "LIST" });
         } else {
-            setMap({ list: "flex", map: false, button: "MAP" });
+            setMap({ list: "flex", map: "rental-listings__map-mobile--hide", button: "MAP" });
         };
     };
 
@@ -56,7 +62,6 @@ function RentalListings() {
                 <ErrBoundary>
                     <GoogleMap
                         listings={publicRentalListings.listings}
-                        display={true}
                         mode="desktop"
                         setSelectedId={setSelectedId}
                     />
@@ -69,13 +74,18 @@ function RentalListings() {
                     {
                         !publicRentalListings.listings[0] && !loading ? <p>No Result Found</p> : null
                     }
-                    <ErrBoundary>
-                        <GoogleMap 
-                            listings={publicRentalListings.listings} 
-                            display={mapState.map}
-                            mode="mobile"
-                        />
-                    </ErrBoundary>
+                    <div className={`rental-listings__map-mobile ${mapState.map}`}>
+                        {
+                            mapState.map === "" ?
+                                <ErrBoundary>
+                                    <GoogleMap
+                                        listings={publicRentalListings.listings}
+                                        mode="mobile"
+                                    />
+                                </ErrBoundary>
+                                : null
+                        }
+                    </div>
                     {
                         loading ? <p>讀取中...</p> :
                             <ul className="rental-listings__ul" style={{ display: `${mapState.list}` }}>

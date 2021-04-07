@@ -7,6 +7,15 @@
     padding-top: 10px;
 }
 
+.rental-listings__map-mobile {
+    display: flex;
+    height: calc(100vh - 186px);
+}
+
+.rental-listings__map-mobile--hide {
+    display: none;
+}
+
 .rental-listings__dt-map {
     display: none;
 }

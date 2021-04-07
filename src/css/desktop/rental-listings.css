@@ -5,7 +5,7 @@
     }
 
     .rental-listings__dt-map {
-        display: block;
+        display: flex;
         flex-grow: 1;
         margin-right: 7px;
     }
