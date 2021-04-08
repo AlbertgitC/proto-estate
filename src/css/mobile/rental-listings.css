@@ -7,6 +7,45 @@
     padding-top: 10px;
 }
 
+.rental-listings__filter {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.rental-listings__filter-rent-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.rental-listings__filter-rent {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.rental-listings__rent-input {
+    width: 68px;
+}
+
+.rental-listings__filter-option {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.rental-listings__filter-option-button {
+    width: 88px;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.rental-listings__filter-save-button {
+    width: 88px;
+    background-color: var(--brand-green-color);
+    color: var(--font-color-dark);
+}
+
 .rental-listings__map-mobile {
     display: flex;
     height: calc(100vh - 186px);

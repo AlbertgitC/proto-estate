@@ -70,9 +70,36 @@ function RentalListings() {
             <div className="rental-listings__list-wrapper">
                 <div className="rental-listings__list">
                     <SearchBar setLoadingState={setLoadingState} />
-                    <h2 className="rental-listings__header">Rental Listings</h2>
+                    <h2 className="rental-listings__header">租屋列表</h2>
+                    <div className="rental-listings__filter">
+                        <div className="rental-listings__filter-rent-wrapper">
+                            <div>月租:</div>
+                            <div className="rental-listings__filter-rent">
+                                <label htmlFor="rent-min">最低</label>
+                                <input 
+                                    className="rental-listings__rent-input"
+                                    id="rent-min"
+                                    placeholder="不限"
+                                    type="number"
+                                ></input>元 -
+                            </div>
+                            <div className="rental-listings__filter-rent">
+                                <label htmlFor="rent-max">最高</label>
+                                <input 
+                                    className="rental-listings__rent-input"
+                                    id="rent-max"
+                                    placeholder="不限"
+                                    type="number"
+                                ></input>元
+                            </div>
+                        </div>
+                        <div className="rental-listings__filter-option">
+                            <button type="button" className="rental-listings__filter-option-button">其他條件</button>
+                            <button type="button" className="rental-listings__filter-save-button">儲存選擇</button>
+                        </div>
+                    </div>
                     {
-                        !publicRentalListings.listings[0] && !loading ? <p>No Result Found</p> : null
+                        !publicRentalListings.listings[0] && !loading ? <p>找不到，抱歉啦...</p> : null
                     }
                     <div className={`rental-listings__map-mobile ${mapState.map}`}>
                         {
