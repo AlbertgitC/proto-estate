@@ -17,6 +17,23 @@
         overflow-y: scroll;
     }
 
+    .rental-listings__filter {
+        flex-direction: row;
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .rental-listings__filter-rent-wrapper {
+        width: 100%;
+        min-width: 306px;
+    }
+
+    .rental-listings__filter-option {
+        width: 100%;
+        margin: 0;
+        justify-content: space-evenly;
+    }
+
     .rental-listings__list {
         padding: 0;
         margin-right: 7px;
@@ -30,5 +47,17 @@
 
     .rental-listings__map-button {
         display: none;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .rental-listings__filter {
+            flex-direction: column;
+            margin: 10px 0 0 0;
+        }
+
+        .rental-listings__filter-option {
+            margin: inherit;
+            justify-content: space-between;
+        }
     }
 }
