@@ -19,6 +19,8 @@ function SearchBar(props) {
         if (location.search) {
             const searchParams = new URLSearchParams(location.search);
             const query = searchParams.get("q");
+            const rentLimit = JSON.parse(searchParams.get("rent"));
+            console.log(rentLimit);
             setInput(query);
 
             API.graphql({

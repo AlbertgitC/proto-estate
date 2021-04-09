@@ -8,7 +8,7 @@ import { API } from 'aws-amplify';
 import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 function RentalListings() {
     const dispatch = useDispatch();
@@ -23,6 +23,20 @@ function RentalListings() {
     const location = useLocation();
     const [loading, setLoadingState] = useState(true);
     const [selectedId, setSelectedId] = useState(null);
+    const [rentFilter, setRentFilter] = useState("");
+    const [rentFilterError, setRentFilterError] = useState("");
+    const defaultFilter = {
+        city: "",
+        district: "",
+        propertyType: "",
+        rentMin: "",
+        rentMax: "",
+        numberRooms: "",
+        areaPin: ""
+    };
+    const [filterState, setFilter] = useState(defaultFilter);
+    const { rentMin, rentMax } = filterState;
+    const history = useHistory();
 
     useEffect(() => {
         if (!location.search) {
@@ -45,7 +59,15 @@ function RentalListings() {
                     console.log("fetch rental listing error:", err);
                     setLoadingState(false);
                 });
-        }
+        } else {
+            const searchParams = new URLSearchParams(location.search);
+            if (searchParams.has("rent")) {
+                const rentLimit = JSON.parse(searchParams.get("rent"));
+                let min = rentLimit.min === "" ? "" : parseFloat(rentLimit.min);
+                let max = rentLimit.max === "" ? "" : parseFloat(rentLimit.max);
+                setFilter(s => ({ ...s, rentMin: min, rentMax: max }));
+            };
+        };
     }, [location.search, dispatch]);
 
     function switchMap() {
@@ -54,6 +76,29 @@ function RentalListings() {
         } else {
             setMap({ list: "flex", map: "rental-listings__map-mobile--hide", button: "MAP" });
         };
+    };
+
+    function confirmRentFilter() {
+        if (rentMin !== "" && rentMax !== "" && rentMin > rentMax) {
+            setRentFilterError("rental-listings__filter-error--show");
+        } else {
+            setTimeout(() => { setRentFilter(""); }, 450);
+            setRentFilterError("");
+            setRentFilter("rental-listings__filter-rent-wrapper--hide");
+            if (!location.search) {
+                /* should change to user's current location */
+                history.push(`/rental-listings?q=台北市&rent={"min":"${rentMin}","max":"${rentMax}"}`);
+            } else {
+                const searchParams = new URLSearchParams(location.search);
+                searchParams.set("rent", `{"min":"${rentMin}","max":"${rentMax}"}`);
+                history.replace(`/rental-listings?${searchParams.toString()}`);
+            };
+        };
+    };
+
+    function handleRentInput(e) {
+        let value = e.target.value === "" ? "" : parseFloat(e.target.value);
+        setFilter({ ...filterState, [e.target.name]: value });
     };
 
     return (
@@ -72,30 +117,47 @@ function RentalListings() {
                     <SearchBar setLoadingState={setLoadingState} />
                     <h2 className="rental-listings__header">租屋列表</h2>
                     <div className="rental-listings__filter">
-                        <div className="rental-listings__filter-rent-wrapper">
-                            <div>月租:</div>
-                            <div className="rental-listings__filter-rent">
-                                <label htmlFor="rent-min">最低</label>
-                                <input 
-                                    className="rental-listings__rent-input"
-                                    id="rent-min"
-                                    placeholder="不限"
-                                    type="number"
-                                ></input>元 -
-                            </div>
-                            <div className="rental-listings__filter-rent">
-                                <label htmlFor="rent-max">最高</label>
-                                <input 
-                                    className="rental-listings__rent-input"
-                                    id="rent-max"
-                                    placeholder="不限"
-                                    type="number"
-                                ></input>元
-                            </div>
-                        </div>
                         <div className="rental-listings__filter-option">
-                            <button type="button" className="rental-listings__filter-option-button">其他條件</button>
-                            <button type="button" className="rental-listings__filter-save-button">儲存選擇</button>
+                            <button 
+                                type="button" 
+                                className="rental-listings__filter-button"
+                                onClick={() => { setRentFilter("rental-listings__filter-rent-wrapper--show") }}
+                            >月租: 不限</button>
+                            <button type="button" className="rental-listings__filter-button">其他條件</button>
+                            <button type="button" className="rental-listings__filter-button-green">儲存選擇</button>
+                        </div>
+                        <div className={`rental-listings__filter-rent-wrapper ${rentFilter}`}>
+                            最低
+                            <input
+                                className="rental-listings__rent-input"
+                                id="rent-min"
+                                placeholder="不限"
+                                type="number"
+                                autoComplete="off"
+                                name="rentMin"
+                                onChange={handleRentInput}
+                                value={rentMin}
+                            ></input>元 - 最高
+                            <input
+                                className="rental-listings__rent-input"
+                                id="rent-max"
+                                placeholder="不限"
+                                type="number"
+                                autoComplete="off"
+                                name="rentMax"
+                                onChange={handleRentInput}
+                                value={rentMax}
+                            ></input>元
+                            <button 
+                                type="button" 
+                                className="rental-listings__filter-button-rent"
+                                onClick={confirmRentFilter}
+                            >確定</button>
+                            <div className={`rental-listings__filter-error ${rentFilterError}`}>
+                                <span style={{ color: "crimson" }}>!</span>
+                                最高租金不能低於最低租金
+                                <span style={{ color: "crimson" }}>!</span>
+                            </div>
                         </div>
                     </div>
                     {
