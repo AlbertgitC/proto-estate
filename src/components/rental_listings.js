@@ -25,47 +25,55 @@ function RentalListings() {
     const [selectedId, setSelectedId] = useState(null);
     const [rentFilter, setRentFilter] = useState("");
     const [rentFilterError, setRentFilterError] = useState("");
-    const defaultFilter = {
-        city: "",
-        district: "",
-        propertyType: "",
-        rentMin: "",
-        rentMax: "",
-        numberRooms: "",
-        areaPin: ""
-    };
-    const [filterState, setFilter] = useState(defaultFilter);
-    const { rentMin, rentMax } = filterState;
+    // const defaultFilter = {
+    //     city: "",
+    //     district: "",
+    //     propertyType: "",
+    //     rentMin: "",
+    //     rentMax: "",
+    //     numberRooms: "",
+    //     areaPin: ""
+    // };
+    const [rentLimit, setRentLimit] = useState({ min: "", max: "" });
     const history = useHistory();
 
     useEffect(() => {
         if (!location.search) {
-            API.graphql({
-                query: queries.rentalListingsSortByCreatedAt,
-                authMode: "AWS_IAM",
-                variables: {
-                    type: "RentalListing",
-                    sortDirection: "DESC",
-                /* should change to user's current location */
-                    filter: { address: { contains: "台北市" } }
-                }
-            })
-                .then(res => {
-                    let data = res.data.rentalListingsSortByCreatedAt.items;
-                    dispatch(ListingAction.fetchPublicRentalListings(data));
-                    setLoadingState(false);
-                })
-                .catch(err => {
-                    console.log("fetch rental listing error:", err);
-                    setLoadingState(false);
-                });
+            // API.graphql({
+            //     query: queries.rentalListingsSortByCreatedAt,
+            //     authMode: "AWS_IAM",
+            //     variables: {
+            //         type: "RentalListing",
+            //         sortDirection: "DESC",
+            //     /* should change to user's current location */
+            //         filter: { address: { contains: "台北市" } }
+            //     }
+            // })
+            //     .then(res => {
+            //         let data = res.data.rentalListingsSortByCreatedAt.items;
+            //         dispatch(ListingAction.fetchPublicRentalListings(data));
+            //         setLoadingState(false);
+            //     })
+            //     .catch(err => {
+            //         console.log("fetch rental listing error:", err);
+            //         setLoadingState(false);
+            //     });
+            history.replace("/rental-listings?q=");
         } else {
             const searchParams = new URLSearchParams(location.search);
-            if (searchParams.has("rent")) {
-                const rentLimit = JSON.parse(searchParams.get("rent"));
-                let min = rentLimit.min === "" ? "" : parseFloat(rentLimit.min);
-                let max = rentLimit.max === "" ? "" : parseFloat(rentLimit.max);
-                setFilter(s => ({ ...s, rentMin: min, rentMax: max }));
+            const filter = searchParams.get("filter") ? JSON.parse(searchParams.get("filter")) : null;
+            if (filter && filter.monthlyRent) {
+                let min = "";
+                let max = "";
+                if ("le" in filter.monthlyRent) {
+                    max = filter.monthlyRent.le;
+                } else if ("ge" in filter.monthlyRent) {
+                    min = filter.monthlyRent.ge;
+                } else if ("between" in filter.monthlyRent) {
+                    min = filter.monthlyRent.between[0];
+                    max = filter.monthlyRent.between[1];
+                };
+                setRentLimit({ min, max });
             };
         };
     }, [location.search, dispatch]);
@@ -79,26 +87,62 @@ function RentalListings() {
     };
 
     function confirmRentFilter() {
-        if (rentMin !== "" && rentMax !== "" && rentMin > rentMax) {
+        if (rentLimit.min !== "" && rentLimit.max !== "" && rentLimit.min > rentLimit.max) {
             setRentFilterError("rental-listings__filter-error--show");
         } else {
             setTimeout(() => { setRentFilter(""); }, 450);
             setRentFilterError("");
             setRentFilter("rental-listings__filter-rent-wrapper--hide");
-            if (!location.search) {
-                /* should change to user's current location */
-                history.push(`/rental-listings?q=台北市&rent={"min":"${rentMin}","max":"${rentMax}"}`);
+            const searchParams = new URLSearchParams(location.search);
+            const filter = searchParams.get("filter") ? JSON.parse(searchParams.get("filter")) : null;
+            if (rentLimit.min === "" && rentLimit.max === "") {
+                if (filter) {
+                    delete filter.monthlyRent;
+                    searchParams.set("filter", `${JSON.stringify(filter)}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                };
+            } else if (rentLimit.min === "" && rentLimit.max !== "") {
+                if (filter) {
+                    filter.monthlyRent = { le: rentLimit.max };
+                    searchParams.set("filter", `${JSON.stringify(filter)}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                } else {
+                    searchParams.set("filter", `${JSON.stringify({ monthlyRent: { le: rentLimit.max } })}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                };
+            } else if (rentLimit.min !== "" && rentLimit.max === "") {
+                if (filter) {
+                    filter.monthlyRent = { ge: rentLimit.min };
+                    searchParams.set("filter", `${JSON.stringify(filter)}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                } else {
+                    searchParams.set("filter", `${JSON.stringify({ monthlyRent: { ge: rentLimit.min } })}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                };
             } else {
-                const searchParams = new URLSearchParams(location.search);
-                searchParams.set("rent", `{"min":"${rentMin}","max":"${rentMax}"}`);
-                history.replace(`/rental-listings?${searchParams.toString()}`);
+                if (filter) {
+                    filter.monthlyRent = { between: [rentLimit.min, rentLimit.max] };
+                    searchParams.set("filter", `${JSON.stringify(filter)}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                } else {
+                    searchParams.set("filter", `${JSON.stringify({ monthlyRent: { between: [rentLimit.min, rentLimit.max] } })}`);
+                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                };
             };
+            // if (!location.search) {
+            //     /* should change to user's current location */
+            //     history.push(`/rental-listings?q=台北市&rent={"min":"${rentMin}","max":"${rentMax}"}`);
+            // } else {
+            //     const searchParams = new URLSearchParams(location.search);
+            //     searchParams.set("rent", `{"min":"${rentMin}","max":"${rentMax}"}`);
+            //     history.replace(`/rental-listings?${searchParams.toString()}`);
+            // };
         };
     };
 
     function handleRentInput(e) {
         let value = e.target.value === "" ? "" : parseFloat(e.target.value);
-        setFilter({ ...filterState, [e.target.name]: value });
+        setRentLimit({ ...rentLimit, [e.target.name]: value });
     };
 
     return (
@@ -134,9 +178,9 @@ function RentalListings() {
                                 placeholder="不限"
                                 type="number"
                                 autoComplete="off"
-                                name="rentMin"
+                                name="min"
                                 onChange={handleRentInput}
-                                value={rentMin}
+                                value={rentLimit.min}
                             ></input>元 - 最高
                             <input
                                 className="rental-listings__rent-input"
@@ -144,9 +188,9 @@ function RentalListings() {
                                 placeholder="不限"
                                 type="number"
                                 autoComplete="off"
-                                name="rentMax"
+                                name="max"
                                 onChange={handleRentInput}
-                                value={rentMax}
+                                value={rentLimit.max}
                             ></input>元
                             <button 
                                 type="button" 
