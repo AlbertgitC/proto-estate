@@ -94,7 +94,7 @@ function RentalListings() {
             setRentFilterError("");
             setRentFilter("rental-listings__filter-rent-wrapper--hide");
             const searchParams = new URLSearchParams(location.search);
-            const filter = searchParams.get("filter") ? JSON.parse(searchParams.get("filter")) : null;
+            const filter = JSON.parse(searchParams.get("filter"));
             if (rentLimit.min === "" && rentLimit.max === "") {
                 if (filter) {
                     delete filter.monthlyRent;

@@ -6,7 +6,6 @@ import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { API } from 'aws-amplify';
 import { useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
-import isEmpty from 'lodash/isEmpty';
 
 
 function SearchBar(props) {
@@ -22,65 +21,43 @@ function SearchBar(props) {
             const query = searchParams.get("q");
             const filter = JSON.parse(searchParams.get("filter"));
             setInput(query);
+
+            function fetchData(filter) {
+                API.graphql({
+                    query: queries.rentalListingsSortByCreatedAt,
+                    authMode: "AWS_IAM",
+                    variables: {
+                        type: "RentalListing",
+                        sortDirection: "DESC",
+                        filter: filter
+                    }
+                })
+                    .then(res => {
+                        let data = res.data.rentalListingsSortByCreatedAt.items;
+                        dispatch(ListingAction.fetchPublicRentalListings(data));
+                        setLoadingState(false);
+                    })
+                    .catch(err => {
+                        console.log("fetch rental listing error:", err);
+                        setLoadingState(false);
+                    });
+            };
+
             if (!filter && query === "") {
-                API.graphql({
-                    query: queries.rentalListingsSortByCreatedAt,
-                    authMode: "AWS_IAM",
-                    variables: {
-                        type: "RentalListing",
-                        sortDirection: "DESC",
-                        /* should change to user's location */
-                        filter: { city: { eq: "台北市" } }
-                    }
-                })
-                    .then(res => {
-                        let data = res.data.rentalListingsSortByCreatedAt.items;
-                        dispatch(ListingAction.fetchPublicRentalListings(data));
-                        setLoadingState(false);
-                    })
-                    .catch(err => {
-                        console.log("fetch rental listing error:", err);
-                        setLoadingState(false);
-                    });
+                /* should change to user's location */
+                let newFilter = { city: { eq: "台北市" } };
+                fetchData(newFilter);
             } else if (filter && query === "") {
-                API.graphql({
-                    query: queries.rentalListingsSortByCreatedAt,
-                    authMode: "AWS_IAM",
-                    variables: {
-                        type: "RentalListing",
-                        sortDirection: "DESC",
-                        /* should change to user's location */
-                        filter: { ...filter, city: { eq: "台北市" } }
-                    }
-                })
-                    .then(res => {
-                        let data = res.data.rentalListingsSortByCreatedAt.items;
-                        dispatch(ListingAction.fetchPublicRentalListings(data));
-                        setLoadingState(false);
-                    })
-                    .catch(err => {
-                        console.log("fetch rental listing error:", err);
-                        setLoadingState(false);
-                    });
-            }
-            // API.graphql({
-            //     query: queries.rentalListingsSortByCreatedAt,
-            //     authMode: "AWS_IAM",
-            //     variables: {
-            //         type: "RentalListing",
-            //         sortDirection: "DESC",
-            //         filter: { address: { contains: query } }
-            //     }
-            // })
-            //     .then(res => {
-            //         let data = res.data.rentalListingsSortByCreatedAt.items;
-            //         dispatch(ListingAction.fetchPublicRentalListings(data));
-            //         setLoadingState(false);
-            //     })
-            //     .catch(err => {
-            //         console.log("fetch rental listing error:", err);
-            //         setLoadingState(false);
-            //     });
+                /* should change to user's location */
+                let newFilter = { ...filter, city: { eq: "台北市" } };
+                fetchData(newFilter);
+            } else if (filter && query !== "") {
+                let newFilter = { ...filter, address: { contains: query } };
+                fetchData(newFilter);
+            } else {
+                let newFilter = { address: { contains: query } };
+                fetchData(newFilter);
+            };
         } else {
             setInput("");
         };
@@ -93,9 +70,13 @@ function SearchBar(props) {
     function search(e) {
         e.preventDefault();
 
-        // if (!searchInput) return;
-
-        history.push(`/rental-listings?q=${searchInput}`);
+        if (!location.search) {
+            history.push(`/rental-listings?q=${searchInput}`);
+        } else {
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.set("q", `${searchInput}`);
+            history.push(`/rental-listings?${searchParams.toString()}`);
+        };
     };
 
     return (
