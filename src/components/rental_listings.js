@@ -1,10 +1,7 @@
 import SearchBar from './search_bar';
 import ListingItem from './listing_item';
 import { useEffect, useState } from 'react';
-import * as queries from '../graphql/queries';
-import * as ListingAction from '../util/actions/public_rental_listing_actions';
 import { useSelector, useDispatch } from 'react-redux';
-import { API } from 'aws-amplify';
 import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
@@ -39,29 +36,10 @@ function RentalListings() {
 
     useEffect(() => {
         if (!location.search) {
-            // API.graphql({
-            //     query: queries.rentalListingsSortByCreatedAt,
-            //     authMode: "AWS_IAM",
-            //     variables: {
-            //         type: "RentalListing",
-            //         sortDirection: "DESC",
-            //     /* should change to user's current location */
-            //         filter: { address: { contains: "台北市" } }
-            //     }
-            // })
-            //     .then(res => {
-            //         let data = res.data.rentalListingsSortByCreatedAt.items;
-            //         dispatch(ListingAction.fetchPublicRentalListings(data));
-            //         setLoadingState(false);
-            //     })
-            //     .catch(err => {
-            //         console.log("fetch rental listing error:", err);
-            //         setLoadingState(false);
-            //     });
             history.replace("/rental-listings?q=");
         } else {
             const searchParams = new URLSearchParams(location.search);
-            const filter = searchParams.get("filter") ? JSON.parse(searchParams.get("filter")) : null;
+            const filter = parseJSONSafe(searchParams.get("filter"));
             if (filter && filter.monthlyRent) {
                 let min = "";
                 let max = "";
@@ -76,7 +54,15 @@ function RentalListings() {
                 setRentLimit({ min, max });
             };
         };
-    }, [location.search, dispatch]);
+    }, [location.search, dispatch, history]);
+
+    function parseJSONSafe(string) {
+        try {
+            return JSON.parse(string);
+        } catch (error) {
+            return null;
+        };
+    };
 
     function switchMap() {
         if (mapState.button === "MAP") {
@@ -87,56 +73,46 @@ function RentalListings() {
     };
 
     function confirmRentFilter() {
+        const searchParams = new URLSearchParams(location.search);
+        function applyFilter(filter) {
+            searchParams.set("filter", `${JSON.stringify(filter)}`);
+            history.replace(`/rental-listings?${searchParams.toString()}`);
+        };
+
         if (rentLimit.min !== "" && rentLimit.max !== "" && rentLimit.min > rentLimit.max) {
             setRentFilterError("rental-listings__filter-error--show");
         } else {
             setTimeout(() => { setRentFilter(""); }, 450);
             setRentFilterError("");
             setRentFilter("rental-listings__filter-rent-wrapper--hide");
-            const searchParams = new URLSearchParams(location.search);
-            const filter = JSON.parse(searchParams.get("filter"));
+            const filter = parseJSONSafe(searchParams.get("filter")); 
             if (rentLimit.min === "" && rentLimit.max === "") {
                 if (filter) {
                     delete filter.monthlyRent;
-                    searchParams.set("filter", `${JSON.stringify(filter)}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter(filter);
                 };
             } else if (rentLimit.min === "" && rentLimit.max !== "") {
                 if (filter) {
                     filter.monthlyRent = { le: rentLimit.max };
-                    searchParams.set("filter", `${JSON.stringify(filter)}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter(filter);
                 } else {
-                    searchParams.set("filter", `${JSON.stringify({ monthlyRent: { le: rentLimit.max } })}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter({ monthlyRent: { le: rentLimit.max } });
                 };
             } else if (rentLimit.min !== "" && rentLimit.max === "") {
                 if (filter) {
                     filter.monthlyRent = { ge: rentLimit.min };
-                    searchParams.set("filter", `${JSON.stringify(filter)}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter(filter);
                 } else {
-                    searchParams.set("filter", `${JSON.stringify({ monthlyRent: { ge: rentLimit.min } })}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter({ monthlyRent: { ge: rentLimit.min } });
                 };
             } else {
                 if (filter) {
                     filter.monthlyRent = { between: [rentLimit.min, rentLimit.max] };
-                    searchParams.set("filter", `${JSON.stringify(filter)}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter(filter);
                 } else {
-                    searchParams.set("filter", `${JSON.stringify({ monthlyRent: { between: [rentLimit.min, rentLimit.max] } })}`);
-                    history.replace(`/rental-listings?${searchParams.toString()}`);
+                    applyFilter({ monthlyRent: { between: [rentLimit.min, rentLimit.max] } });
                 };
             };
-            // if (!location.search) {
-            //     /* should change to user's current location */
-            //     history.push(`/rental-listings?q=台北市&rent={"min":"${rentMin}","max":"${rentMax}"}`);
-            // } else {
-            //     const searchParams = new URLSearchParams(location.search);
-            //     searchParams.set("rent", `{"min":"${rentMin}","max":"${rentMax}"}`);
-            //     history.replace(`/rental-listings?${searchParams.toString()}`);
-            // };
         };
     };
 

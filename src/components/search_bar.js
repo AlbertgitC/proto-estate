@@ -18,9 +18,18 @@ function SearchBar(props) {
     useEffect(() => {
         if (location.search) {
             const searchParams = new URLSearchParams(location.search);
-            const query = searchParams.get("q");
-            const filter = JSON.parse(searchParams.get("filter"));
+            const query = searchParams.get("q") === null ? "" : searchParams.get("q");
             setInput(query);
+
+            function parseJSONSafe(string) {
+                try {
+                    return JSON.parse(string);
+                } catch (error) {
+                    return null;
+                };
+            };
+
+            const filter = parseJSONSafe(searchParams.get("filter"));
 
             function fetchData(filter) {
                 API.graphql({
@@ -39,19 +48,20 @@ function SearchBar(props) {
                     })
                     .catch(err => {
                         console.log("fetch rental listing error:", err);
+                        dispatch(ListingAction.fetchPublicRentalListings([]));
                         setLoadingState(false);
                     });
             };
 
-            if (!filter && query === "") {
+            if (!filter && !query) {
                 /* should change to user's location */
                 let newFilter = { city: { eq: "台北市" } };
                 fetchData(newFilter);
-            } else if (filter && query === "") {
+            } else if (filter && !query) {
                 /* should change to user's location */
                 let newFilter = { ...filter, city: { eq: "台北市" } };
                 fetchData(newFilter);
-            } else if (filter && query !== "") {
+            } else if (filter && query) {
                 let newFilter = { ...filter, address: { contains: query } };
                 fetchData(newFilter);
             } else {
