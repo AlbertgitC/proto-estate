@@ -32,6 +32,7 @@ function RentalListings() {
     //     areaPin: ""
     // };
     const [rentLimit, setRentLimit] = useState({ min: "", max: "" });
+    const [rentDisplay, setRentDisplay] = useState("不限");
     const history = useHistory();
 
     useEffect(() => {
@@ -52,6 +53,7 @@ function RentalListings() {
                     max = filter.monthlyRent.between[1];
                 };
                 setRentLimit({ min, max });
+                setRentDisplay(parseRentLimit(min, max));
             };
         };
     }, [location.search, dispatch, history]);
@@ -82,11 +84,12 @@ function RentalListings() {
         if (rentLimit.min !== "" && rentLimit.max !== "" && rentLimit.min > rentLimit.max) {
             setRentFilterError("rental-listings__filter-error--show");
         } else {
-            setTimeout(() => { setRentFilter(""); }, 450);
+            setTimeout(() => { setRentFilter(""); }, 200);
             setRentFilterError("");
             setRentFilter("rental-listings__filter-rent-wrapper--hide");
             const filter = parseJSONSafe(searchParams.get("filter")); 
             if (rentLimit.min === "" && rentLimit.max === "") {
+                setRentDisplay("不限");
                 if (filter) {
                     delete filter.monthlyRent;
                     applyFilter(filter);
@@ -121,6 +124,27 @@ function RentalListings() {
         setRentLimit({ ...rentLimit, [e.target.name]: value });
     };
 
+    function toggleRentFilter() {
+        if (!rentFilter) {
+            setRentFilter("rental-listings__filter-rent-wrapper--show");
+        } else if (rentFilter === "rental-listings__filter-rent-wrapper--show") {
+            setTimeout(() => { setRentFilter(""); }, 200);
+            setRentFilter("rental-listings__filter-rent-wrapper--hide");
+        };
+    };
+
+    function parseRentLimit(min, max) {
+        if (min === "" && max === "") {
+            return "不限";
+        } else if (min === "" && max !== "") {
+            return `${max}元以下`;
+        } else if (min !== "" && max === "") {
+            return `${min}元以上`;
+        } else if (min !== "" && max !== "") {
+            return `${min} - ${max}元`;
+        };
+    };
+
     return (
         <div className="rental-listings">
             <div className="rental-listings__dt-map">
@@ -141,8 +165,8 @@ function RentalListings() {
                             <button 
                                 type="button" 
                                 className="rental-listings__filter-button"
-                                onClick={() => { setRentFilter("rental-listings__filter-rent-wrapper--show") }}
-                            >月租: 不限</button>
+                                onClick={toggleRentFilter}
+                            >月租: {rentDisplay}</button>
                             <button type="button" className="rental-listings__filter-button">其他條件</button>
                             <button type="button" className="rental-listings__filter-button-green">儲存選擇</button>
                         </div>
