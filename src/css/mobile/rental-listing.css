@@ -68,7 +68,13 @@ div:first-of-type.rental-listing__detail {
 }
 
 .rental-listing__mobile-map-wrapper {
-    display: block;
+    display: flex;
+    height: 180px;
+    transition: height 0.5s;
+}
+
+.rental-listing__mobile-map-wrapper--extend {
+    height: 70vh;
 }
 
 .rental-listing__description-header {

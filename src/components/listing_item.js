@@ -25,7 +25,7 @@ function ListingItem(props) {
     const selectedListingRef = useRef(null);
 
     useEffect(() => {
-        if (imgWrapper.current) setSwipeState(s => ({ 
+        if (imgWrapper.current.scrollWidth) setSwipeState(s => ({ 
             ...s, 
             imgWidth: imgWrapper.current.scrollWidth / listing.photos.length 
         }));

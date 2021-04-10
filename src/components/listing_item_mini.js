@@ -23,7 +23,7 @@ function ListingItemMini(props) {
 
     useEffect(() => {
         if (listing === null) return;
-        if (imgWrapper.current && listing.photos[0]) setSwipeState(s => ({
+        if (imgWrapper.current.scrollWidth && listing.photos[0]) setSwipeState(s => ({
             ...s,
             imgWidth: imgWrapper.current.scrollWidth / listing.photos.length
         }));
@@ -31,9 +31,7 @@ function ListingItemMini(props) {
         return(() => {
             setSwipeState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
         });
-    }, [listing]);
-
-    if (listing === null) return null;
+    }, [listing, imgWrapper.current.scrollWidth]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;

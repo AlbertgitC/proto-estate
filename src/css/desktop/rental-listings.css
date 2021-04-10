@@ -5,7 +5,7 @@
     }
 
     .rental-listings__dt-map {
-        display: block;
+        display: flex;
         flex-grow: 1;
         margin-right: 7px;
     }
@@ -15,6 +15,16 @@
         max-width: 700px;
         height: calc(100vh - 90px);
         overflow-y: scroll;
+    }
+
+    .rental-listings__filter {
+        flex-direction: row;
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .rental-listings__filter-option {
+        width: 100%;
     }
 
     .rental-listings__list {

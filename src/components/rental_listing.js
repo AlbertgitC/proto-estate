@@ -27,9 +27,10 @@ function RentalListing() {
     const [listing, setListing] = useState(null);
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(true);
-    const imgWrapper = useRef(null);
+    const imgWrapper = useRef({ scrollWidth: null });
     const [swipeState, setSwipeState] = useState({ idx: 0, tx: 0, touchX: null, imgWidth: 0 });
     const [mapModal, setMapModal] = useState("");
+    const [mapExtend, setMapExtend] = useState("");
 
     useEffect(() => {
         let curListing = null;
@@ -74,13 +75,13 @@ function RentalListing() {
     }, [listingId, publicRentalListings.listings]);
 
     useEffect(() => {
-        if (imgWrapper.current && listing) {
+        if (imgWrapper.current.scrollWidth && listing) {
             setSwipeState(s => ({
                 ...s,
                 imgWidth: imgWrapper.current.scrollWidth / listing.photos.length
             }));
         };
-    }, [listing]);
+    }, [listing, imgWrapper.current.scrollWidth]);
 
     function handleTouch(e) {
         if (listing.photos.length < 2) return;
@@ -128,9 +129,13 @@ function RentalListing() {
         return parsed;
     };
 
-    // function mapModal() {
-    //     console.log("map clicked")
-    // };
+    function extendMobileMap() {
+        if (mapExtend === "") {
+            setMapExtend("rental-listing__mobile-map-wrapper--extend");
+        } else {
+            setMapExtend("");
+        };
+    };
 
     if (loading) {
         return (
@@ -220,18 +225,17 @@ function RentalListing() {
                         <ErrBoundary>
                             <GoogleMap
                                 oneListing={listing}
-                                display={true}
                                 mode="desktopSingle"
                             />
                         </ErrBoundary>
                     </div>
                 </div>
-                <div className="rental-listing__mobile-map-wrapper">
+                <div className={`rental-listing__mobile-map-wrapper ${mapExtend}`} onClick={extendMobileMap}>
                     <ErrBoundary>
                         <GoogleMap
                             oneListing={listing}
-                            display={true}
                             mode="mobileSingle"
+                            extendMobileMap={extendMobileMap}
                         />
                     </ErrBoundary>
                 </div>
@@ -244,7 +248,6 @@ function RentalListing() {
                         <ErrBoundary>
                             <GoogleMap
                                 oneListing={listing}
-                                display={true}
                                 mode="desktopModal"
                             />
                         </ErrBoundary>

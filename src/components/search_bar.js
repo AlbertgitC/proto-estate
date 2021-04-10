@@ -18,27 +18,56 @@ function SearchBar(props) {
     useEffect(() => {
         if (location.search) {
             const searchParams = new URLSearchParams(location.search);
-            const query = searchParams.get("q");
+            const query = searchParams.get("q") === null ? "" : searchParams.get("q");
             setInput(query);
 
-            API.graphql({
-                query: queries.rentalListingsSortByCreatedAt,
-                authMode: "AWS_IAM",
-                variables: {
-                    type: "RentalListing",
-                    sortDirection: "DESC",
-                    filter: { address: { contains: query } }
-                }
-            })
-                .then(res => {
-                    let data = res.data.rentalListingsSortByCreatedAt.items;
-                    dispatch(ListingAction.fetchPublicRentalListings(data));
-                    setLoadingState(false);
+            function parseJSONSafe(string) {
+                try {
+                    return JSON.parse(string);
+                } catch (error) {
+                    return null;
+                };
+            };
+
+            const filter = parseJSONSafe(searchParams.get("filter"));
+
+            function fetchData(filter) {
+                API.graphql({
+                    query: queries.rentalListingsSortByCreatedAt,
+                    authMode: "AWS_IAM",
+                    variables: {
+                        type: "RentalListing",
+                        sortDirection: "DESC",
+                        filter: filter
+                    }
                 })
-                .catch(err => {
-                    console.log("fetch rental listing error:", err);
-                    setLoadingState(false);
-                });
+                    .then(res => {
+                        let data = res.data.rentalListingsSortByCreatedAt.items;
+                        dispatch(ListingAction.fetchPublicRentalListings(data));
+                        setLoadingState(false);
+                    })
+                    .catch(err => {
+                        console.log("fetch rental listing error:", err);
+                        dispatch(ListingAction.fetchPublicRentalListings([]));
+                        setLoadingState(false);
+                    });
+            };
+
+            if (!filter && !query) {
+                /* should change to user's location */
+                let newFilter = { city: { eq: "台北市" } };
+                fetchData(newFilter);
+            } else if (filter && !query) {
+                /* should change to user's location */
+                let newFilter = { ...filter, city: { eq: "台北市" } };
+                fetchData(newFilter);
+            } else if (filter && query) {
+                let newFilter = { ...filter, address: { contains: query } };
+                fetchData(newFilter);
+            } else {
+                let newFilter = { address: { contains: query } };
+                fetchData(newFilter);
+            };
         } else {
             setInput("");
         };
@@ -51,9 +80,13 @@ function SearchBar(props) {
     function search(e) {
         e.preventDefault();
 
-        if (!searchInput) return;
-
-        history.push(`/rental-listings?q=${searchInput}`);
+        if (!location.search) {
+            history.push(`/rental-listings?q=${searchInput}`);
+        } else {
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.set("q", `${searchInput}`);
+            history.push(`/rental-listings?${searchParams.toString()}`);
+        };
     };
 
     return (

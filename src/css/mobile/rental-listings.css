@@ -7,6 +7,107 @@
     padding-top: 10px;
 }
 
+.rental-listings__filter {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.rental-listings__filter-rent-wrapper {
+    display: none;
+    position: absolute;
+    top: 35px;
+    z-index: 1;
+    background-color: var(--bg-color-whitesmoke);
+    color: var(--font-color-dark);
+    padding: 5px;
+    border: 1px solid var(--font-color-dark);
+    border-radius: 3px;
+}
+
+.rental-listings__filter-rent-wrapper--show {
+    display: block;
+    animation: rentFilterShow 0.5s;
+}
+
+.rental-listings__filter-rent-wrapper--hide {
+    display: block;
+    animation: rentFilterHide 0.5s;
+}
+
+@keyframes rentFilterShow {
+    from {
+        height: 0px;
+        opacity: 0;
+    }
+    to {
+        height: 42px;
+        opacity: 1;
+    }
+}
+
+@keyframes rentFilterHide {
+    from {
+        height: 42px;
+        opacity: 1;
+    }
+    to {
+        height: 0px;
+        opacity: 0;
+    }
+}
+
+.rental-listings__filter-rent {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.rental-listings__rent-input {
+    width: 76px;
+    margin: 0 3px;
+}
+
+.rental-listings__filter-option {
+    display: flex;
+    justify-content: space-between;
+}
+
+.rental-listings__filter-button {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.rental-listings__filter-button-green {
+    background-color: var(--brand-green-color);
+    color: var(--font-color-dark);
+}
+
+.rental-listings__filter-button-rent {
+    background-color: var(--brand-green-color);
+    color: var(--font-color-dark);
+    margin-left: 10px;
+}
+
+.rental-listings__filter-error {
+    display: none;
+}
+
+.rental-listings__filter-error--show {
+    display: block;
+}
+
+.rental-listings__map-mobile {
+    display: flex;
+    height: calc(100vh - 186px);
+}
+
+.rental-listings__map-mobile--hide {
+    display: none;
+}
+
 .rental-listings__dt-map {
     display: none;
 }

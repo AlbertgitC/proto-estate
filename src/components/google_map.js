@@ -1,28 +1,17 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import ListingItemMini from './listing_item_mini';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 const GoogleMap = React.memo(function CreateGoogleMap(props) {
-    const { listings, display, mode, oneListing, setSelectedId } = props;
+    const { listings, mode, oneListing, setSelectedId, extendMobileMap } = props;
     const [markers, setMarkers] = useState([]);
     const [selectedListing, setListing] = useState({ listing: null, animation: "" });
     const gMap = useRef(null);
-    const [modeState, setModeState] = useState("");
     const history = useHistory();
 
     useEffect(() => {
-        if (mode === "mobileSingle") {
-            setModeState("google-map__map--mobile-single");
-        } else if (mode === "desktopSingle") {
-            setModeState("google-map__map--desktop-single");
-        } else if (mode === "desktopModal") {
-            setModeState("google-map__map--desktop-modal");
-        };
-    }, [mode]);
-
-    useEffect(() => {
-        if (!gMap.current || !display) return;
+        if (!gMap.current) return;
 
         setListing({ listing: null, animation: "" });
 
@@ -94,27 +83,15 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                 drawMap();
             });
         };
-    }, [display, listings, oneListing]);
+    }, [listings, oneListing]);
 
-    const removeListing = useCallback(() => {
+    function removeListing() {
         if (selectedListing.listing === null) return;
         setListing({ ...selectedListing, animation: "listing-mini--hide" });
         setTimeout(() => {
             setListing({ listing: null, animation: "" });
         }, 400);
-    }, [selectedListing]);
-
-    const handleClick = useCallback(() => {
-        if (mode === "mobile") {
-            removeListing();
-        } else if (mode === "mobileSingle") {
-            if (modeState === "google-map__map--mobile-expand") {
-                setModeState("google-map__map--mobile-single google-map__map--slideUp");
-            } else {
-                setModeState("google-map__map--mobile-expand");
-            };
-        };
-    }, [mode, modeState, removeListing]);
+    };
 
     /* add event listener to markers */
     useEffect(() => {
@@ -135,17 +112,21 @@ const GoogleMap = React.memo(function CreateGoogleMap(props) {
                     });
                 } else if (mode === "mobileSingle") {
                     markers[i].addListener("click", () => {
-                        handleClick();
+                        extendMobileMap();
                     });
                 };
             };
         };
-    }, [markers, selectedListing.listing, history, mode, listings, handleClick, setSelectedId]);
+    }, [markers, selectedListing.listing, history, mode, listings, setSelectedId, extendMobileMap]);
 
     return (
-        <div className="google-map" onClick={handleClick} style={{ display: display ? "block" : "none" }}>
-            <div ref={gMap} className={`google-map__map ${modeState}`} />
-            <ListingItemMini listing={selectedListing.listing} animation={selectedListing.animation} />
+        <div className="google-map" onClick={removeListing}>
+            <div ref={gMap} className="google-map__map" />
+            {
+                selectedListing.listing ?
+                    <ListingItemMini listing={selectedListing.listing} animation={selectedListing.animation} />
+                    : null
+            }
         </div>
     );
 });
