@@ -47,6 +47,12 @@
     padding: 5px;
 }
 
+.listing-item__info-p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .listing-item__price {
     font-weight: 600;
     font-size: 18px;

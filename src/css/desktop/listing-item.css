@@ -4,7 +4,7 @@
     }
 
     .listing-item--selected {
-        border: 8px solid var(--brand-green-color);
+        outline: 8px solid var(--brand-green-color);
     }
 
     .listing-item__image-wrapper {
@@ -42,11 +42,6 @@
         z-index: 1;
         top: 70%;
         left: 3%;
-    }
-
-    .listing-item__info {
-        background-color: var(--bg-color-whitesmoke);
-        border-radius: 0 0 3px 3px;
     }
 }
 

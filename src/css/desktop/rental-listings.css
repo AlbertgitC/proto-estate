@@ -7,7 +7,6 @@
     .rental-listings__dt-map {
         display: flex;
         flex-grow: 1;
-        margin-right: 10px;
     }
 
     .rental-listings__list-wrapper {
@@ -23,7 +22,7 @@
 
     .rental-listings__list {
         padding: 0;
-        margin-right: 10px;
+        margin: 0 10px;
     }
 
     ul.rental-listings__ul {
