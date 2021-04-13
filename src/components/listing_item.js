@@ -91,7 +91,7 @@ function ListingItem(props) {
     };
 
     return (
-        <li 
+        <div
             className={`listing-item ${selected ? "listing-item--selected" : ""}`} 
             onClick={toListing}
             ref={selectedListingRef}
@@ -161,7 +161,7 @@ function ListingItem(props) {
                     {listing.address}
                 </p>
             </div>
-        </li>
+        </div>
     );
 };
 

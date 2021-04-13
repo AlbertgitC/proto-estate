@@ -1,15 +1,14 @@
 .rental-listings__list {
     min-height: calc(100vh - 290px);
-    padding: 90px 15px 15px 15px;
+    padding: 90px 15px 0 15px;
 }
 
 .rental-listings__header {
-    padding-top: 10px;
+    margin-top: 10px;
 }
 
 .rental-listings__filter {
     display: flex;
-    position: relative;
     flex-direction: column;
     margin-top: 10px;
     font-size: 16px;
@@ -17,14 +16,8 @@
 
 .rental-listings__filter-rent-wrapper {
     display: none;
-    position: absolute;
-    top: 35px;
+    position: relative;
     z-index: 1;
-    background-color: var(--bg-color-whitesmoke);
-    color: var(--font-color-dark);
-    padding: 5px;
-    border: 1px solid var(--font-color-dark);
-    border-radius: 3px;
 }
 
 .rental-listings__filter-rent-wrapper--show {
@@ -38,31 +31,31 @@
 }
 
 @keyframes rentFilterShow {
-    from {
-        height: 0px;
-        opacity: 0;
+    0% {
+        transform: scaleY(0)
     }
-    to {
-        height: 42px;
-        opacity: 1;
+    100% {
+        transform: scaleY(1)
     }
 }
 
 @keyframes rentFilterHide {
-    from {
-        height: 42px;
-        opacity: 1;
+    0% {
+        transform: scaleY(1)
     }
-    to {
-        height: 0px;
-        opacity: 0;
+    100% {
+        transform: scaleY(0)
     }
 }
 
 .rental-listings__filter-rent {
-    display: flex;
-    align-items: center;
-    margin-left: 5px;
+    position: absolute;
+    top: 1px;
+    background-color: var(--bg-color-whitesmoke);
+    color: var(--font-color-dark);
+    padding: 5px;
+    border: 1px solid var(--font-color-dark);
+    border-radius: 3px;
 }
 
 .rental-listings__rent-input {
@@ -102,6 +95,7 @@
 .rental-listings__map-mobile {
     display: flex;
     height: calc(100vh - 186px);
+    margin: 15px 0;
 }
 
 .rental-listings__map-mobile--hide {
@@ -112,8 +106,13 @@
     display: none;
 }
 
-.rental-listings__ul {
+ul.rental-listings__ul {
     flex-direction: column;
+    margin-top: 15px;
+}
+
+.rental-listings__li {
+    margin-bottom: 10px;
 }
 
 .rental-listings__map-button {
