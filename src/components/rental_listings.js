@@ -6,6 +6,7 @@ import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
 import { useLocation, useHistory } from 'react-router-dom';
+import SearchFilter from './search_filter';
 
 function RentalListings() {
     const dispatch = useDispatch();
@@ -251,6 +252,11 @@ function RentalListings() {
                     </button>
                 </div>
                 <Footer />
+            </div>
+            <div className="rental-listings__modal">
+                <div className="rental-listings__modal-wrapper" onClick={e => e.stopPropagation()}>
+                    <SearchFilter />
+                </div>
             </div>
         </div>
     );

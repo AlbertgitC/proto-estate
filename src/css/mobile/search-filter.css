@@ -1,0 +1,15 @@
+.search-filter {
+    background-color: #ffffff;
+    color: var(--font-color-dark);
+}
+
+.search-filter__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-filter__input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}

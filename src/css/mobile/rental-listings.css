@@ -1,3 +1,7 @@
+.rental-listings {
+    position: relative;
+}
+
 .rental-listings__list {
     min-height: calc(100vh - 290px);
     padding: 90px 15px 0 15px;
@@ -122,4 +126,20 @@ ul.rental-listings__ul {
     left: 0;
     right: 0;
     background-color: var(--brand-green-color);
+}
+
+.rental-listings__modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.rental-listings__modal-wrapper {
+    margin: 90px 15px 15px 15px;
 }
