@@ -13,3 +13,36 @@
     flex-direction: column;
     margin-bottom: 24px;
 }
+
+.search-filter__district-input {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.search-filter__district-item {
+    min-width: 82px;
+    margin-bottom: 15px;
+    transform-origin: top center;
+}
+
+.search-filter__district-item--animation {
+    opacity: 0;
+    animation: showDistrictsTranslateX 300ms ease-in-out forwards;
+}
+
+@keyframes showDistrictsTranslateX {
+  0% {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  
+  80% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}

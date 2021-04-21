@@ -2,9 +2,15 @@ import { useState } from 'react';
 
 function SearchFilter() {
     const [selectedCity, setCity] = useState("台北市");
+    const [districtAnimation, setDistrictAnimation] = useState("");
 
     function handleCitySelect(e) {
+        if (selectedCity === e.target.value) return;
         setCity(e.target.value);
+        setDistrictAnimation("search-filter__district-item--animation");
+        setTimeout(() => {
+            setDistrictAnimation("");
+        }, 900);
     };
 
     function citySelection() {
@@ -64,16 +70,22 @@ function SearchFilter() {
 
         return (
             <div className="search-filter__input">鄉鎮
-                {
-                    districts[selectedCity].map((district, i) => {
-                        return(
-                            <div key={i}>
-                                <input type="checkbox" id={district} name="district" value={district} />
-                                <label htmlFor={district}>{district}</label>
-                            </div>
-                        );
-                    })
-                }
+                <div className="search-filter__district-input">
+                    {
+                        districts[selectedCity].map((district, i) => {
+                            return (
+                                <div
+                                    key={i}
+                                    className={`search-filter__district-item ${districtAnimation}`}
+                                    style={{ animationDelay: `${i * 20}ms` }}
+                                >
+                                    <input type="checkbox" id={district} name="district" value={district} />
+                                    <label htmlFor={district}>{district}</label>
+                                </div>
+                            );
+                        })
+                    }
+                </div>
             </div>
         );
     };
