@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortUp } from '@fortawesome/free-solid-svg-icons';
 
 function SearchFilter() {
     const [selectedCity, setCity] = useState("台北市");
     const [districtAnimation, setDistrictAnimation] = useState("");
+    const [districtInputState, setDistrictInputState] = useState({ button: "", input: "" });
 
     function handleCitySelect(e) {
         if (selectedCity === e.target.value) return;
@@ -58,6 +61,17 @@ function SearchFilter() {
         );
     };
 
+    function toggleDistricts() {
+        if (!districtInputState.button) {
+            setDistrictInputState({
+                button: "search-filter__district-button--clicked",
+                input: "search-filter__district-input--show"
+            });
+        } else {
+            setDistrictInputState({ button: "", input: "" });
+        };
+    };
+
     function districtSelection() {
         const districts = {
             "台北市": ["中山區", "大安區", "信義區", "內湖區", "士林區", "中正區", "萬華區", "松山區", "大同區", "北投區", "文山區", "南港區"],
@@ -69,8 +83,19 @@ function SearchFilter() {
         if (!districts[selectedCity]) return null;
 
         return (
-            <div className="search-filter__input">鄉鎮
-                <div className="search-filter__district-input">
+            <div className="search-filter__input">
+                <div className="search-filter__district-header">鄉鎮
+                    <div className="search-filter__district-button-wrapper" onClick={toggleDistricts}>
+                        <div className={`search-filter__district-button ${districtInputState.button}`}>
+                            <FontAwesomeIcon
+                                icon={faSortUp}
+                                rotation={90}
+                                transform="left-3 down-1.3"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className={`search-filter__district-input ${districtInputState.input}`}>
                     {
                         districts[selectedCity].map((district, i) => {
                             return (

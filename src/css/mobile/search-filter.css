@@ -14,15 +14,53 @@
     margin-bottom: 24px;
 }
 
+.search-filter__district-header {
+    display: flex;
+    align-items: flex-end;
+}
+
+.search-filter__district-button-wrapper {
+    border: 1px solid black;
+    border-radius: 3px;
+    margin-left: 10px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.search-filter__district-button {
+    width: 26px;
+    text-align: center;
+    transition: transform .2s;
+}
+
+.search-filter__district-button--clicked {
+    transform: rotate(90deg);
+}
+
 .search-filter__district-input {
+    display: none;
+}
+
+.search-filter__district-input--show {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    animation: districtInputShow 300ms;
+    transform-origin: top center;
+}
+
+@keyframes districtInputShow {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
 }
 
 .search-filter__district-item {
     min-width: 82px;
-    margin-bottom: 15px;
+    padding: 5px 0;
     transform-origin: top center;
 }
 
