@@ -16,19 +16,16 @@
 
 .search-filter__district-header {
     display: flex;
-    align-items: flex-end;
-}
-
-.search-filter__district-button-wrapper {
-    border: 1px solid black;
-    border-radius: 3px;
-    margin-left: 10px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    align-items: center;
 }
 
 .search-filter__district-button {
-    width: 26px;
+    border: 1px solid var(--font-color-dark);
+    margin-left: 10px;
+}
+
+.search-filter__district-button-icon {
+    width: 16px;
     text-align: center;
     transition: transform .2s;
 }
@@ -42,9 +39,8 @@
 }
 
 .search-filter__district-input--show {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
     animation: districtInputShow 300ms;
     transform-origin: top center;
 }
@@ -59,7 +55,6 @@
 }
 
 .search-filter__district-item {
-    min-width: 82px;
     padding: 5px 0;
     transform-origin: top center;
 }
