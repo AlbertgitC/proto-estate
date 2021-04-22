@@ -166,19 +166,18 @@ function SearchFilter() {
     return (
         <div className="search-filter">
             <div className="search-filter__header">
-                <h3>Filter</h3>
+                <h3>租屋條件選擇</h3>
                 <p>X</p>
             </div>
             { citySelection() }
             { districtSelection() }
             <div className="search-filter__input">
-                <label htmlFor="propertyType">類型</label>
+                <label htmlFor="propertyType">租屋類型</label>
                 <select
                     id="propertyType"
                     name="propertyType"
                 >
-                    <option value="" disabled>Testing</option>
-                    <option value="" disabled hidden>選擇類型</option>
+                    <option value="">不限</option>
                     <option value="整層住家">整層住家</option>
                     <option value="獨立套房">獨立套房</option>
                     <option value="分租套房">分租套房</option>
@@ -191,7 +190,7 @@ function SearchFilter() {
                     id="numberRooms"
                     name="numberRooms"
                 >
-                    <option value="" disabled hidden>選擇格局</option>
+                    <option value="">不限</option>
                     <option value="1">1房</option>
                     <option value="2">2房</option>
                     <option value="3">3房</option>
@@ -202,18 +201,65 @@ function SearchFilter() {
                     <option value="8">8房</option>
                 </select>
             </div>
-            <div className="search-filter__input">
-                <label htmlFor="areaPin">坪數</label>
-                <input
-                    id="areaPin"
-                    type="number"
-                    name="areaPin"
-                    placeholder="坪數"
-                    autoComplete="off"
-                />
+            <div className="search-filter__input">月租
+                <div>
+                    最低
+                    <input
+                        className="rental-listings__rent-input"
+                        id="rent-min"
+                        placeholder="不限"
+                        type="number"
+                        autoComplete="off"
+                        name="min"
+                        // onChange={handleRentInput}
+                        // value={rentLimit.min}
+                    ></input>元 - 最高
+                    <input
+                        className="rental-listings__rent-input"
+                        id="rent-max"
+                        placeholder="不限"
+                        type="number"
+                        autoComplete="off"
+                        name="max"
+                        // onChange={handleRentInput}
+                        // value={rentLimit.max}
+                    ></input>元
+                    <div>
+                        <span style={{ color: "crimson" }}>!</span>
+                        最高租金不能低於最低租金
+                        <span style={{ color: "crimson" }}>!</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <p>Error</p>
+            <div className="search-filter__input">坪數
+                <div>
+                    最低
+                    <input
+                        className="rental-listings__rent-input"
+                        id="rent-min"
+                        placeholder="不限"
+                        type="number"
+                        autoComplete="off"
+                        name="min"
+                    // onChange={handleRentInput}
+                    // value={rentLimit.min}
+                    ></input>坪 - 最高
+                    <input
+                        className="rental-listings__rent-input"
+                        id="rent-max"
+                        placeholder="不限"
+                        type="number"
+                        autoComplete="off"
+                        name="max"
+                    // onChange={handleRentInput}
+                    // value={rentLimit.max}
+                    ></input>坪
+                    <div>
+                        <span style={{ color: "crimson" }}>!</span>
+                        最高坪數不能低於最低坪數
+                        <span style={{ color: "crimson" }}>!</span>
+                    </div>
+                </div>
             </div>
             <div>
                 <button>確定</button>
