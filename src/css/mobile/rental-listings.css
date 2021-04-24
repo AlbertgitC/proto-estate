@@ -140,6 +140,10 @@ ul.rental-listings__ul {
     overscroll-behavior: contain;
 }
 
+.rental-listings__modal--hide {
+    display: none;
+}
+
 .rental-listings__modal-wrapper {
-    margin: 90px 15px 15px 15px;
+    margin: 90px 0 15px;
 }

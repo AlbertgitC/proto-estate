@@ -1,11 +1,16 @@
 .search-filter {
     background-color: #ffffff;
     color: var(--font-color-dark);
+    padding: 15px;
 }
 
 .search-filter__header {
     display: flex;
     justify-content: space-between;
+}
+
+.search-filter__close {
+    border: none;
 }
 
 .search-filter__input {
@@ -78,4 +83,13 @@
     opacity: 1;
     transform: translateX(0px);
   }
+}
+
+.search-filter__submit {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.search-filter__confirm-button {
+    background-color: var(--brand-green-color);
 }

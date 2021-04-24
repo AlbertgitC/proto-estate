@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { faSortUp, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-function SearchFilter() {
+function SearchFilter(props) {
     const [selectedCity, setCity] = useState("台北市");
     const [districtAnimation, setDistrictAnimation] = useState("");
     const [districtInputState, setDistrictInputState] = useState({ button: "", input: "" });
+    const { setFilterState } = props;
 
     function handleCitySelect(e) {
         if (selectedCity === e.target.value) return;
@@ -167,7 +168,16 @@ function SearchFilter() {
         <div className="search-filter">
             <div className="search-filter__header">
                 <h3>租屋條件選擇</h3>
-                <p>X</p>
+                <button 
+                    className="search-filter__close" 
+                    type="button"
+                    aria-label="關閉"
+                    onClick={() => { setFilterState("rental-listings__modal--hide"); }}
+                >
+                    <FontAwesomeIcon
+                        icon={faTimes}
+                    />
+                </button>
             </div>
             { citySelection() }
             { districtSelection() }
@@ -261,8 +271,12 @@ function SearchFilter() {
                     </div>
                 </div>
             </div>
-            <div>
-                <button>確定</button>
+            <div className="search-filter__submit">
+                <button className="search-filter__confirm-button" type="button">確定</button>
+                <button 
+                    type="button" 
+                    onClick={() => { setFilterState("rental-listings__modal--hide"); }}
+                >取消</button>
             </div>
         </div>
     );

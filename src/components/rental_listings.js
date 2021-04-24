@@ -35,6 +35,7 @@ function RentalListings() {
     const [rentLimit, setRentLimit] = useState({ min: "", max: "" });
     const [rentDisplay, setRentDisplay] = useState("不限");
     const history = useHistory();
+    const [filterState, setFilterState] = useState("rental-listings__modal--hide");
 
     useEffect(() => {
         if (!location.search) {
@@ -169,7 +170,12 @@ function RentalListings() {
                                 className="rental-listings__filter-button"
                                 onClick={toggleRentFilter}
                             >月租: {rentDisplay}</button>
-                            <button type="button" className="rental-listings__filter-button">其他條件</button>
+                            <button 
+                                type="button" 
+                                className="rental-listings__filter-button"
+                                onClick={() => { setFilterState(""); }}
+                            >其他條件
+                            </button>
                             <button type="button" className="rental-listings__filter-button-green">儲存選擇</button>
                         </div>
                         <div className={`rental-listings__filter-rent-wrapper ${rentFilter}`}>
@@ -253,9 +259,12 @@ function RentalListings() {
                 </div>
                 <Footer />
             </div>
-            <div className="rental-listings__modal">
+            <div 
+                className={`rental-listings__modal ${filterState}`} 
+                onClick={() => { setFilterState("rental-listings__modal--hide"); }}
+            >
                 <div className="rental-listings__modal-wrapper" onClick={e => e.stopPropagation()}>
-                    <SearchFilter />
+                    <SearchFilter setFilterState={setFilterState} />
                 </div>
             </div>
         </div>
