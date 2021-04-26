@@ -1,16 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortUp, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function SearchFilter(props) {
-    const [selectedCity, setCity] = useState("台北市");
     const [districtAnimation, setDistrictAnimation] = useState("");
     const [districtInputState, setDistrictInputState] = useState({ button: "", input: "" });
-    const { setFilterState } = props;
+    const { setFilter } = props;
+    const defaultState = {
+        /* city should default to user's loaction */
+        city: "台北市",
+        districts: {},
+        propertyType: "",
+        numberRooms: "",
+        rentMin: "",
+        rentMax: "",
+        areaMin: "",
+        areaMax: ""
+    };
+    const [filterState, setFilterState] = useState(defaultState);
+    const [errorState, setErrorState] = useState({
+        rentError: "search-filter__rent-error--hide",
+        areaError: "search-filter__area-error--hide",
+        rentErrorBorder: "",
+        areaErrorBorder: ""
+    });
+
+    useEffect(() => {
+        if (filterState.rentMin !== "" && filterState.rentMax !== "" && filterState.rentMin > filterState.rentMax) {
+            setErrorState({ ...errorState, rentError: "" });
+        } else {
+            setErrorState({ ...errorState, rentError: "search-filter__rent-error--hide", rentErrorBorder: "" });
+        };
+    }, [filterState.rentMin, filterState.rentMax]);
+
+    useEffect(() => {
+        if (filterState.areaMin !== "" && filterState.areaMax !== "" && filterState.areaMin > filterState.areaMax) {
+            setErrorState({ ...errorState, areaError: "" });
+        } else {
+            setErrorState({ ...errorState, areaError: "search-filter__rent-error--hide", areaErrorBorder: "" });
+        };
+    }, [filterState.areaMin, filterState.areaMax]);
 
     function handleCitySelect(e) {
-        if (selectedCity === e.target.value) return;
-        setCity(e.target.value);
+        if (filterState.city === e.target.value) return;
+        setFilterState({ ...filterState, city: e.target.value, districts: {} });
         setDistrictAnimation("search-filter__district-item--animation");
         setTimeout(() => {
             setDistrictAnimation("");
@@ -31,6 +64,7 @@ function SearchFilter(props) {
                 <select
                     id="city"
                     name="city"
+                    value={filterState.city}
                     onChange={handleCitySelect}
                 >
                     <option disabled>北部</option>
@@ -71,6 +105,16 @@ function SearchFilter(props) {
         } else {
             setDistrictInputState({ button: "", input: "" });
         };
+    };
+
+    function handleDistrictSelect(e) {
+        let nextDistricts = { ...filterState.districts };
+        if (!nextDistricts[e.target.value]) { 
+            nextDistricts[e.target.value] = true; 
+        } else { 
+            nextDistricts[e.target.value] = false; 
+        };
+        setFilterState({ ...filterState, districts: nextDistricts });
     };
 
     function districtSelection() {
@@ -123,7 +167,7 @@ function SearchFilter(props) {
             "連江縣": ["南竿鄉", "北竿鄉", "莒光鄉", "東引鄉", "東沙", "南沙"]
         };
 
-        if (!districts[selectedCity]) return null;
+        if (!districts[filterState.city]) return null;
 
         return (
             <div className="search-filter__input">
@@ -146,14 +190,21 @@ function SearchFilter(props) {
                 </div>
                 <div className={`search-filter__district-input ${districtInputState.input}`}>
                     {
-                        districts[selectedCity].map((district, i) => {
+                        districts[filterState.city].map((district, i) => {
                             return (
                                 <div
-                                    key={selectedCity + district}
+                                    key={filterState.city + district}
                                     className={`search-filter__district-item ${districtAnimation}`}
                                     style={{ animationDelay: `${i * 20}ms` }}
                                 >
-                                    <input type="checkbox" id={district} name="district" value={district} />
+                                    <input 
+                                        type="checkbox" 
+                                        id={district} 
+                                        name="district"
+                                        value={district}
+                                        checked={filterState.districts[district] ? true : false}
+                                        onChange={(e) => { handleDistrictSelect(e); }}
+                                    />
                                     <label htmlFor={district}>{district}</label>
                                 </div>
                             );
@@ -164,6 +215,32 @@ function SearchFilter(props) {
         );
     };
 
+    function handleInput(e) {
+        setFilterState({ ...filterState, [e.target.name]: e.target.value });
+    };
+
+    function handleNumInput(e) {
+        let value = e.target.value === "" ? "" : parseFloat(e.target.value);
+        setFilterState({ ...filterState, [e.target.name]: value });
+    };
+
+    function applyFilter() {
+        console.log(filterState);
+        if (!errorState.rentError || !errorState.areaError) {
+            if (!errorState.rentError && !errorState.areaError) {
+                setErrorState({ 
+                    ...errorState, 
+                    rentErrorBorder: "search-filter__input--error",
+                    areaErrorBorder: "search-filter__input--error"
+                });
+            } else if (!errorState.rentError) {
+                setErrorState({ ...errorState, rentErrorBorder: "search-filter__input--error" });
+            } else {
+                setErrorState({ ...errorState, areaErrorBorder: "search-filter__input--error" });
+            };
+        };
+    };
+
     return (
         <div className="search-filter">
             <div className="search-filter__header">
@@ -172,7 +249,7 @@ function SearchFilter(props) {
                     className="search-filter__close" 
                     type="button"
                     aria-label="關閉"
-                    onClick={() => { setFilterState("rental-listings__modal--hide"); }}
+                    onClick={() => { setFilter("rental-listings__modal--hide"); }}
                 >
                     <FontAwesomeIcon
                         icon={faTimes}
@@ -186,6 +263,8 @@ function SearchFilter(props) {
                 <select
                     id="propertyType"
                     name="propertyType"
+                    onChange={handleInput}
+                    value={filterState.propertyType}
                 >
                     <option value="">不限</option>
                     <option value="整層住家">整層住家</option>
@@ -199,6 +278,8 @@ function SearchFilter(props) {
                 <select
                     id="numberRooms"
                     name="numberRooms"
+                    onChange={handleNumInput}
+                    value={filterState.numberRooms}
                 >
                     <option value="">不限</option>
                     <option value="1">1房</option>
@@ -211,60 +292,56 @@ function SearchFilter(props) {
                     <option value="8">8房</option>
                 </select>
             </div>
-            <div className="search-filter__input">月租
+            <div className={`search-filter__input ${errorState.rentErrorBorder}`}>月租
                 <div>
                     最低
                     <input
-                        className="rental-listings__rent-input"
-                        id="rent-min"
+                        className="search-filter__num-input"
                         placeholder="不限"
                         type="number"
                         autoComplete="off"
-                        name="min"
-                        // onChange={handleRentInput}
-                        // value={rentLimit.min}
+                        name="rentMin"
+                        onChange={handleNumInput}
+                        value={filterState.rentMin}
                     ></input>元 - 最高
                     <input
-                        className="rental-listings__rent-input"
-                        id="rent-max"
+                        className="search-filter__num-input"
                         placeholder="不限"
                         type="number"
                         autoComplete="off"
-                        name="max"
-                        // onChange={handleRentInput}
-                        // value={rentLimit.max}
+                        name="rentMax"
+                        onChange={handleNumInput}
+                        value={filterState.rentMax}
                     ></input>元
-                    <div>
+                    <div className={errorState.rentError}>
                         <span style={{ color: "crimson" }}>!</span>
                         最高租金不能低於最低租金
                         <span style={{ color: "crimson" }}>!</span>
                     </div>
                 </div>
             </div>
-            <div className="search-filter__input">坪數
+            <div className={`search-filter__input ${errorState.areaErrorBorder}`}>坪數
                 <div>
                     最低
                     <input
-                        className="rental-listings__rent-input"
-                        id="rent-min"
+                        className="search-filter__num-input"
                         placeholder="不限"
                         type="number"
                         autoComplete="off"
-                        name="min"
-                    // onChange={handleRentInput}
-                    // value={rentLimit.min}
+                        name="areaMin"
+                        onChange={handleNumInput}
+                        value={filterState.areaMin}
                     ></input>坪 - 最高
                     <input
-                        className="rental-listings__rent-input"
-                        id="rent-max"
+                        className="search-filter__num-input"
                         placeholder="不限"
                         type="number"
                         autoComplete="off"
-                        name="max"
-                    // onChange={handleRentInput}
-                    // value={rentLimit.max}
+                        name="areaMax"
+                        onChange={handleNumInput}
+                        value={filterState.areaMax}
                     ></input>坪
-                    <div>
+                    <div className={errorState.areaError}>
                         <span style={{ color: "crimson" }}>!</span>
                         最高坪數不能低於最低坪數
                         <span style={{ color: "crimson" }}>!</span>
@@ -272,10 +349,14 @@ function SearchFilter(props) {
                 </div>
             </div>
             <div className="search-filter__submit">
-                <button className="search-filter__confirm-button" type="button">確定</button>
+                <button 
+                    className="search-filter__confirm-button" 
+                    type="button"
+                    onClick={applyFilter}
+                >確定</button>
                 <button 
                     type="button" 
-                    onClick={() => { setFilterState("rental-listings__modal--hide"); }}
+                    onClick={() => { setFilter("rental-listings__modal--hide"); }}
                 >取消</button>
             </div>
         </div>

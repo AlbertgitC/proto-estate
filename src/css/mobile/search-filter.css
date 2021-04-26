@@ -19,6 +19,11 @@
     margin-bottom: 24px;
 }
 
+.search-filter__input--error {
+    box-shadow: 0 0 0 2px #dc143c;
+    border-radius: 3px;
+}
+
 .search-filter__district-header {
     display: flex;
     align-items: center;
@@ -85,6 +90,11 @@
   }
 }
 
+.search-filter__num-input {
+    width: 76px;
+    margin: 0 3px;
+}
+
 .search-filter__submit {
     display: flex;
     justify-content: space-evenly;
@@ -92,4 +102,12 @@
 
 .search-filter__confirm-button {
     background-color: var(--brand-green-color);
+}
+
+.search-filter__rent-error--hide {
+    display: none;
+}
+
+.search-filter__area-error--hide {
+    display: none;
 }
