@@ -7,6 +7,7 @@ import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchFilter from './search_filter';
+import { parseJSONSafe } from '../util/util_functions';
 
 function RentalListings() {
     const dispatch = useDispatch();
@@ -61,14 +62,6 @@ function RentalListings() {
             };
         };
     }, [location.search, dispatch, history]);
-
-    function parseJSONSafe(string) {
-        try {
-            return JSON.parse(string);
-        } catch (error) {
-            return null;
-        };
-    };
 
     function switchMap() {
         if (mapState.button === "MAP") {

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortUp, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { parseJSONSafe } from '../util/util_functions';
+import { useLocation, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function SearchFilter(props) {
     const [districtAnimation, setDistrictAnimation] = useState("");
@@ -24,20 +27,96 @@ function SearchFilter(props) {
         rentErrorBorder: "",
         areaErrorBorder: ""
     });
+    const location = useLocation();
+    const history = useHistory();
+    const rentalListings = useSelector(state => state.publicRentalListings).listings;
+
+    useEffect(() => {
+        let searchParams = new URLSearchParams(location.search);
+        let filter = parseJSONSafe(searchParams.get("filter")) || {};
+
+        if (!filter.city && rentalListings[0]) {
+            setFilterState(
+                filterState => ({ ...filterState, city: rentalListings[0].city })
+            );
+        } else if (filter.city) {
+            setFilterState(
+                filterState => ({ ...filterState, city: filter.city.eq })
+            );
+        };
+
+        if (filter.or) {
+            let districts = {};
+            for (let districtObj of filter.or) {
+                districts[districtObj.district.eq] = true;
+            };
+            setFilterState(
+                filterState => ({ ...filterState, districts: districts })
+            );
+        };
+
+        if (filter.propertyType) {
+            setFilterState(
+                filterState => ({ ...filterState, propertyType: filter.propertyType.eq })
+            );
+        };
+
+        if (filter.numberRooms) {
+            setFilterState(
+                filterState => ({ ...filterState, numberRooms: filter.numberRooms.eq })
+            );
+        };
+
+        if (filter.monthlyRent) {
+            let min = "";
+            let max = "";
+            if (filter.monthlyRent.ge) min = filter.monthlyRent.ge;
+            if (filter.monthlyRent.le) max = filter.monthlyRent.le;
+            if (filter.monthlyRent.between) {
+                min = filter.monthlyRent.between[0];
+                max = filter.monthlyRent.between[1];
+            };
+            setFilterState(
+                filterState => ({ ...filterState, rentMin: min, rentMax: max })
+            );
+        };
+
+        if (filter.areaPin) {
+            let min = "";
+            let max = "";
+            if (filter.areaPin.ge) min = filter.areaPin.ge;
+            if (filter.areaPin.le) max = filter.areaPin.le;
+            if (filter.areaPin.between) {
+                min = filter.areaPin.between[0];
+                max = filter.areaPin.between[1];
+            };
+            setFilterState(
+                filterState => ({ ...filterState, areaMin: min, areaMax: max })
+            );
+        };
+    }, [rentalListings, location.search]);
 
     useEffect(() => {
         if (filterState.rentMin !== "" && filterState.rentMax !== "" && filterState.rentMin > filterState.rentMax) {
-            setErrorState({ ...errorState, rentError: "" });
+            setErrorState(
+                errorState => ({ ...errorState, rentError: "" })
+            );
         } else {
-            setErrorState({ ...errorState, rentError: "search-filter__rent-error--hide", rentErrorBorder: "" });
+            setErrorState(
+                errorState => ({ ...errorState, rentError: "search-filter__rent-error--hide", rentErrorBorder: "" })
+            );
         };
     }, [filterState.rentMin, filterState.rentMax]);
 
     useEffect(() => {
         if (filterState.areaMin !== "" && filterState.areaMax !== "" && filterState.areaMin > filterState.areaMax) {
-            setErrorState({ ...errorState, areaError: "" });
+            setErrorState(
+                errorState => ({ ...errorState, areaError: "" })
+            );
         } else {
-            setErrorState({ ...errorState, areaError: "search-filter__rent-error--hide", areaErrorBorder: "" });
+            setErrorState(
+                errorState => ({ ...errorState, areaError: "search-filter__rent-error--hide", areaErrorBorder: "" })
+            );
         };
     }, [filterState.areaMin, filterState.areaMax]);
 
@@ -224,8 +303,45 @@ function SearchFilter(props) {
         setFilterState({ ...filterState, [e.target.name]: value });
     };
 
-    function applyFilter() {
-        console.log(filterState);
+    function parseFilter() {
+        let filter = {};
+        filter.city = { eq: filterState.city };
+
+        const filterDistricts = [];
+        for (let districtName in filterState.districts) {
+            if (filterState.districts[districtName]) filterDistricts.push({ district: { eq: districtName } });
+        };
+        if (filterDistricts[0]) {
+            filter.or = filterDistricts;
+        };
+
+        if (filterState.propertyType) {
+            filter.propertyType = { eq: filterState.propertyType };
+        };
+
+        if (filterState.numberRooms) {
+            filter.numberRooms = { eq: filterState.numberRooms };
+        };
+
+        function pasrseNumRange(min, max) {
+            if (!min && !max) return {};
+            if (min && !max) return { ge: min };
+            if (!min && max) return { le: max };
+            return { between: [min, max] };
+        };
+
+        if (filterState.rentMin || filterState.rentMax) {
+            filter.monthlyRent = pasrseNumRange(filterState.rentMin, filterState.rentMax);
+        };
+
+        if (filterState.areaMin || filterState.areaMax) {
+            filter.areaPin = pasrseNumRange(filterState.areaMin, filterState.areaMax);
+        };
+
+        return filter;
+    };
+
+    function confirmFilter() {
         if (!errorState.rentError || !errorState.areaError) {
             if (!errorState.rentError && !errorState.areaError) {
                 setErrorState({ 
@@ -238,7 +354,14 @@ function SearchFilter(props) {
             } else {
                 setErrorState({ ...errorState, areaErrorBorder: "search-filter__input--error" });
             };
+            return;
         };
+
+        let searchParams = new URLSearchParams(location.search);
+        let filter = parseFilter();
+        searchParams.set("filter", `${JSON.stringify(filter)}`);
+        history.replace(`/rental-listings?${searchParams.toString()}`);
+        setFilter("rental-listings__modal--hide");
     };
 
     return (
@@ -352,7 +475,7 @@ function SearchFilter(props) {
                 <button 
                     className="search-filter__confirm-button" 
                     type="button"
-                    onClick={applyFilter}
+                    onClick={confirmFilter}
                 >確定</button>
                 <button 
                     type="button" 
