@@ -7,7 +7,6 @@
     .rental-listings__dt-map {
         display: flex;
         flex-grow: 1;
-        margin-right: 7px;
     }
 
     .rental-listings__list-wrapper {
@@ -18,27 +17,41 @@
     }
 
     .rental-listings__filter {
-        flex-direction: row;
-        margin: 10px 0;
         font-size: 18px;
-    }
-
-    .rental-listings__filter-option {
-        width: 100%;
     }
 
     .rental-listings__list {
         padding: 0;
-        margin-right: 7px;
+        margin: 0 10px;
     }
 
-    .rental-listings__ul {
+    ul.rental-listings__ul {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
     }
 
+    .rental-listings__li {
+        width: 50%;
+        padding: 0 5px 0 0;
+    }
+
+    .rental-listings__li--odd {
+        padding: 0 0 0 5px;
+    }
+
     .rental-listings__map-button {
         display: none;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .rental-listings__li {
+            width: 100%;
+            padding: 0;
+        }
+
+        .rental-listings__li--odd {
+            padding: 0;
+        }
     }
 }

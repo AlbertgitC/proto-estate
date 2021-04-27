@@ -1,5 +1,4 @@
 .listing-item {
-    margin-top: 15px;
     background-color: var(--bg-color-whitesmoke);
     color: var(--font-color-dark);
     border-radius: 3px;
@@ -46,6 +45,12 @@
 
 .listing-item__info {
     padding: 5px;
+}
+
+.listing-item__info-p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .listing-item__price {

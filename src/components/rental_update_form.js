@@ -221,7 +221,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 <p>地址: {address}</p>
             </div>
             <div className="rental-form__input">
-                <label htmlFor="subAddress" className="rental-form__label">樓層/房號</label>
+                <label htmlFor="subAddress">樓層/房號</label>
                 <input
                     id="subAddress"
                     name="subAddress"
@@ -233,7 +233,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 />
             </div>
             <div className="rental-form__input">
-                <label htmlFor="propertyType" className="rental-form__label">類型<span style={{ color: "crimson" }}>*</span></label>
+                <label htmlFor="propertyType">類型<span style={{ color: "crimson" }}>*</span></label>
                 <select
                     id="propertyType"
                     name="propertyType"
@@ -249,7 +249,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 </select>
             </div>
             <div className="rental-form__input">
-                <label htmlFor="monthlyRent" className="rental-form__label">租金(月租)<span style={{ color: "crimson" }}>*</span></label>
+                <label htmlFor="monthlyRent">租金(月租)<span style={{ color: "crimson" }}>*</span></label>
                 <input
                     id="monthlyRent"
                     type="number"
@@ -262,7 +262,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 />
             </div>
             <div className="rental-form__input">
-                <label htmlFor="numberRooms" className="rental-form__label">格局<span style={{ color: "crimson" }}>*</span></label>
+                <label htmlFor="numberRooms">格局<span style={{ color: "crimson" }}>*</span></label>
                 <select
                     id="numberRooms"
                     name="numberRooms"
@@ -282,7 +282,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 </select>
             </div>
             <div className="rental-form__input">
-                <label htmlFor="areaPin" className="rental-form__label">坪數</label>
+                <label htmlFor="areaPin">坪數</label>
                 <input
                     id="areaPin"
                     type="number"
@@ -294,7 +294,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 />
             </div>
             <div className="rental-form__input rental-form__input--full-width">
-                <label htmlFor="description" className="rental-form__label">屋況詳細說明</label>
+                <label htmlFor="description">屋況詳細說明</label>
                 <textarea
                     className="rental-form__textarea"
                     id="description"
@@ -307,7 +307,7 @@ function RentalUpdateForm({ closeModal, listing }) {
                 <small>{`${description.length}/500`}</small>
             </div>
             <div className="rental-form__input rental-form__input--full-width">
-                <label className="rental-form__label">上傳照片(最多20張，點擊照片選擇封面照片)</label>
+                <label>上傳照片(最多20張，點擊照片選擇封面照片)</label>
                 <div className="rental-form__image-wrapper">
                     {
                         photos.map((imageKey, i) => {

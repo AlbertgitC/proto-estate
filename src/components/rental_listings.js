@@ -6,6 +6,8 @@ import Footer from './footer';
 import GoogleMap from './google_map';
 import ErrBoundary from '../util/error_boundary';
 import { useLocation, useHistory } from 'react-router-dom';
+import SearchFilter from './search_filter';
+import { parseJSONSafe } from '../util/util_functions';
 
 function RentalListings() {
     const dispatch = useDispatch();
@@ -34,6 +36,7 @@ function RentalListings() {
     const [rentLimit, setRentLimit] = useState({ min: "", max: "" });
     const [rentDisplay, setRentDisplay] = useState("不限");
     const history = useHistory();
+    const [filterState, setFilter] = useState("rental-listings__modal--hide");
 
     useEffect(() => {
         if (!location.search) {
@@ -54,17 +57,11 @@ function RentalListings() {
                 };
                 setRentLimit({ min, max });
                 setRentDisplay(parseRentLimit(min, max));
+            } else {
+                setRentDisplay("不限");
             };
         };
     }, [location.search, dispatch, history]);
-
-    function parseJSONSafe(string) {
-        try {
-            return JSON.parse(string);
-        } catch (error) {
-            return null;
-        };
-    };
 
     function switchMap() {
         if (mapState.button === "MAP") {
@@ -89,7 +86,6 @@ function RentalListings() {
             setRentFilter("rental-listings__filter-rent-wrapper--hide");
             const filter = parseJSONSafe(searchParams.get("filter")); 
             if (rentLimit.min === "" && rentLimit.max === "") {
-                setRentDisplay("不限");
                 if (filter) {
                     delete filter.monthlyRent;
                     applyFilter(filter);
@@ -167,40 +163,47 @@ function RentalListings() {
                                 className="rental-listings__filter-button"
                                 onClick={toggleRentFilter}
                             >月租: {rentDisplay}</button>
-                            <button type="button" className="rental-listings__filter-button">其他條件</button>
+                            <button 
+                                type="button" 
+                                className="rental-listings__filter-button"
+                                onClick={() => { setFilter(""); }}
+                            >其他條件
+                            </button>
                             <button type="button" className="rental-listings__filter-button-green">儲存選擇</button>
                         </div>
                         <div className={`rental-listings__filter-rent-wrapper ${rentFilter}`}>
-                            最低
-                            <input
-                                className="rental-listings__rent-input"
-                                id="rent-min"
-                                placeholder="不限"
-                                type="number"
-                                autoComplete="off"
-                                name="min"
-                                onChange={handleRentInput}
-                                value={rentLimit.min}
-                            ></input>元 - 最高
-                            <input
-                                className="rental-listings__rent-input"
-                                id="rent-max"
-                                placeholder="不限"
-                                type="number"
-                                autoComplete="off"
-                                name="max"
-                                onChange={handleRentInput}
-                                value={rentLimit.max}
-                            ></input>元
-                            <button 
-                                type="button" 
-                                className="rental-listings__filter-button-rent"
-                                onClick={confirmRentFilter}
-                            >確定</button>
-                            <div className={`rental-listings__filter-error ${rentFilterError}`}>
-                                <span style={{ color: "crimson" }}>!</span>
-                                最高租金不能低於最低租金
-                                <span style={{ color: "crimson" }}>!</span>
+                            <div className="rental-listings__filter-rent">
+                                最低
+                                <input
+                                    className="rental-listings__rent-input"
+                                    id="rent-min"
+                                    placeholder="不限"
+                                    type="number"
+                                    autoComplete="off"
+                                    name="min"
+                                    onChange={handleRentInput}
+                                    value={rentLimit.min}
+                                ></input>元 - 最高
+                                <input
+                                    className="rental-listings__rent-input"
+                                    id="rent-max"
+                                    placeholder="不限"
+                                    type="number"
+                                    autoComplete="off"
+                                    name="max"
+                                    onChange={handleRentInput}
+                                    value={rentLimit.max}
+                                ></input>元
+                                <button 
+                                    type="button" 
+                                    className="rental-listings__filter-button-rent"
+                                    onClick={confirmRentFilter}
+                                >確定</button>
+                                <div className={`rental-listings__filter-error ${rentFilterError}`}>
+                                    <span style={{ color: "crimson" }}>!</span>
+                                    最高租金不能低於最低租金
+                                    <span style={{ color: "crimson" }}>!</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -225,12 +228,15 @@ function RentalListings() {
                                 {
                                     publicRentalListings.listings[0] ?
                                         publicRentalListings.listings.map((listing, i) => {
+                                            let liClass = i % 2 === 0 ? "rental-listings__li" 
+                                                : "rental-listings__li rental-listings__li--odd";
                                             return (
-                                                <ListingItem 
-                                                    key={i} 
-                                                    listing={listing} 
-                                                    selected={selectedId === listing.id ? true : false}
-                                                />
+                                                <li className={liClass} key={i}>
+                                                    <ListingItem
+                                                        listing={listing} 
+                                                        selected={selectedId === listing.id ? true : false}
+                                                    />
+                                                </li>
                                             );
                                         }) : null
                                 }
@@ -245,6 +251,14 @@ function RentalListings() {
                     </button>
                 </div>
                 <Footer />
+            </div>
+            <div 
+                className={`rental-listings__modal ${filterState}`} 
+                onClick={() => { setFilter("rental-listings__modal--hide"); }}
+            >
+                <div className="rental-listings__modal-wrapper" onClick={e => e.stopPropagation()}>
+                    <SearchFilter setFilter={setFilter} />
+                </div>
             </div>
         </div>
     );

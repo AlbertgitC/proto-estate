@@ -57,14 +57,16 @@ function SearchBar(props) {
                 /* should change to user's location */
                 let newFilter = { city: { eq: "台北市" } };
                 fetchData(newFilter);
-            } else if (filter && !query) {
+            } else if (filter && !query && !filter.city) {
                 /* should change to user's location */
                 let newFilter = { ...filter, city: { eq: "台北市" } };
                 fetchData(newFilter);
-            } else if (filter && query) {
+            } else if (filter && !query && filter.city) {
+                fetchData(filter);
+            }else if (filter && query) {
                 let newFilter = { ...filter, address: { contains: query } };
                 fetchData(newFilter);
-            } else {
+            } else if (!filter && query) {
                 let newFilter = { address: { contains: query } };
                 fetchData(newFilter);
             };

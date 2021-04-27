@@ -1,0 +1,113 @@
+.search-filter {
+    background-color: #ffffff;
+    color: var(--font-color-dark);
+    padding: 15px;
+}
+
+.search-filter__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-filter__close {
+    border: none;
+}
+
+.search-filter__input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.search-filter__input--error {
+    box-shadow: 0 0 0 2px #dc143c;
+    border-radius: 3px;
+}
+
+.search-filter__district-header {
+    display: flex;
+    align-items: center;
+}
+
+.search-filter__district-button {
+    border: 1px solid var(--font-color-dark);
+    margin-left: 10px;
+}
+
+.search-filter__district-button-icon {
+    width: 16px;
+    text-align: center;
+    transition: transform .2s;
+}
+
+.search-filter__district-button--clicked {
+    transform: rotate(90deg);
+}
+
+.search-filter__district-input {
+    display: none;
+}
+
+.search-filter__district-input--show {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
+    animation: districtInputShow 300ms;
+    transform-origin: top center;
+}
+
+@keyframes districtInputShow {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+.search-filter__district-item {
+    padding: 5px 0;
+    transform-origin: top center;
+}
+
+.search-filter__district-item--animation {
+    opacity: 0;
+    animation: showDistrictsTranslateX 300ms ease-in-out forwards;
+}
+
+@keyframes showDistrictsTranslateX {
+  0% {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  
+  80% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.search-filter__num-input {
+    width: 76px;
+    margin: 0 3px;
+}
+
+.search-filter__submit {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.search-filter__confirm-button {
+    background-color: var(--brand-green-color);
+}
+
+.search-filter__rent-error--hide {
+    display: none;
+}
+
+.search-filter__area-error--hide {
+    display: none;
+}

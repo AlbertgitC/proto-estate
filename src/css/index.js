@@ -19,6 +19,7 @@ exports.google_map = require("./mobile/google-map.css");
 exports.listing_mini = require("./mobile/listing-mini.css");
 exports.rental_listing = require("./mobile/rental-listing.css");
 exports.photo_gallery = require("./mobile/photo-gallery.css");
+exports.search_filter = require("./mobile/search-filter.css");
 
 // for desktop
 exports.landing_d = require("./desktop/landing.css");

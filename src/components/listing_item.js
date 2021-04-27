@@ -91,7 +91,7 @@ function ListingItem(props) {
     };
 
     return (
-        <li 
+        <div
             className={`listing-item ${selected ? "listing-item--selected" : ""}`} 
             onClick={toListing}
             ref={selectedListingRef}
@@ -155,13 +155,13 @@ function ListingItem(props) {
             </div>
             <div className="listing-item__tag">New</div>
             <div className="listing-item__info">
-                <p>
+                <p className="listing-item__info-p">
                     <span className="listing-item__price">{listing.monthlyRent}</span> 元/月<br />
                     {listing.numberRooms}房 {listing.areaPin ? `${listing.areaPin}坪` : ""}<br />
                     {listing.address}
                 </p>
             </div>
-        </li>
+        </div>
     );
 };
 
