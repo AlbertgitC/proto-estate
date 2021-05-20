@@ -30,3 +30,11 @@ type RentalListing @model @auth (
   description: String
   photos: [String]
 }
+
+type User @model {
+  id: ID!
+  email: String
+  phoneNumber: String
+  name: String
+  savedFilter: AWSJSON
+}

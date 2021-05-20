@@ -24,15 +24,6 @@ function RentalListings() {
     const [selectedId, setSelectedId] = useState(null);
     const [rentFilter, setRentFilter] = useState("");
     const [rentFilterError, setRentFilterError] = useState("");
-    // const defaultFilter = {
-    //     city: "",
-    //     district: "",
-    //     propertyType: "",
-    //     rentMin: "",
-    //     rentMax: "",
-    //     numberRooms: "",
-    //     areaPin: ""
-    // };
     const [rentLimit, setRentLimit] = useState({ min: "", max: "" });
     const [rentDisplay, setRentDisplay] = useState("不限");
     const history = useHistory();
