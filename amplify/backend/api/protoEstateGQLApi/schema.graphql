@@ -31,7 +31,13 @@ type RentalListing @model @auth (
   photos: [String]
 }
 
-type User @model {
+type User @model @auth (
+    rules: [
+      { allow: owner, ownerField: "id" },
+      { allow: private, operations: [read] },
+      { allow: public, operations: [read], provider: iam }
+    ]
+  ) {
   id: ID!
   email: String
   phoneNumber: String
