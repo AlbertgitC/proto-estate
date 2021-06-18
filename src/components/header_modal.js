@@ -23,7 +23,7 @@ function HeaderModal(props) {
             <div className={`modal__wrapper ${modalState.animation}`} onClick={e => e.stopPropagation()}>
                 <div className="modal__head">
                     <div className="modal__title">
-                        { user ? user.attributes.name : "PState" }
+                        { user ? user.name : "PState" }
                     </div>
                     <FontAwesomeIcon
                         className="modal__close"

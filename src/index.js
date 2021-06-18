@@ -8,7 +8,8 @@ import { createStore } from 'redux';
 import rootReducer from './util/reducers';
 import { Provider } from 'react-redux';
 import { HashRouter } from "react-router-dom";
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
+import * as queries from './graphql/queries';
 const gMapApiKey = require('./util/keys/keys').gMapApiKey;
 Amplify.configure(config);
 require("./css");
@@ -31,29 +32,9 @@ if (persistedData) {
 };
 */
 
-Auth.currentAuthenticatedUser()
-  .then(res => { 
-    const preloadedState = { user: res };
-    const store = createStore(rootReducer, preloadedState,
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+async function initialRender() {
 
-    return(
-      ReactDOM.render(
-        <React.StrictMode>
-          <HashRouter>
-            <Provider store={store}>
-              <App />
-            </Provider>
-          </HashRouter>
-        </React.StrictMode>,
-        document.getElementById('root')
-      )
-    );
-  })
-  .catch(err => { 
-    console.log(err);
-    const store = createStore(rootReducer, ...[,],
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+  function renderingDOM(store) {
     return (
       ReactDOM.render(
         <React.StrictMode>
@@ -66,7 +47,30 @@ Auth.currentAuthenticatedUser()
         document.getElementById('root')
       )
     );
-  });
+  };
+
+  try {
+    const authUser = await Auth.currentAuthenticatedUser();
+    const userData = await API.graphql({
+      query: queries.getUser,
+      variables: {
+        id: authUser.username
+      }
+    });
+    const store = createStore(rootReducer, { user: userData.data.getUser },
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    
+    return renderingDOM(store);
+  } catch (err) {
+    console.log(err);
+    const store = createStore(rootReducer, ...[,],
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    
+    return renderingDOM(store);
+  };
+};
+
+initialRender();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

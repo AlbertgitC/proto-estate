@@ -20,7 +20,7 @@ function RentalPanel() {
         API.graphql({
             query: queries.rentalListingsByAuthor,
             variables: {
-                createdBy: user.username, sortDirection: "DESC"
+                createdBy: user.id, sortDirection: "DESC"
             }
         })
             .then(res => {
@@ -29,7 +29,7 @@ function RentalPanel() {
             .catch(err => {
                 console.log("fetch rental listing error:", err);
             });
-    }, [dispatch, user.username]);
+    }, [dispatch, user.id]);
 
     return (
         <div>
