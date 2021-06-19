@@ -57,6 +57,9 @@ async function initialRender() {
         id: authUser.username
       }
     });
+
+    if (userData.data.getUser === null) throw "authenticated user not in database";
+
     const store = createStore(rootReducer, { user: userData.data.getUser },
       window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
     

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import { ConfirmSignUp } from './sign_up';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../util/actions/auth_actions';
 import NavLinks from './nav_links';
 import { useHistory } from "react-router-dom";
+import * as queries from '../graphql/queries';
 
 
 function SignIn(props) {
@@ -27,9 +28,20 @@ function SignIn(props) {
 
         Auth.signIn(email, password)
             .then(res => {
-                dispatch(AuthActions.signIn(res));
+                return API.graphql({
+                    query: queries.getUser,
+                    variables: {
+                        id: res.username
+                    }
+                });
+            })
+            .then(res => {
+                dispatch(AuthActions.signIn(res.data.getUser));
                 if (setModalComponent) setModalComponent({ component: NavLinks, props: {} });
                 if (desktop) closeModal();
+
+                if (res.data.getUser === null) throw "authenticated user not in database";
+
                 if (location) {
                     if (!location.state) {
                         history.push("/");
