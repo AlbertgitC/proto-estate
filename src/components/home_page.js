@@ -8,7 +8,7 @@ function HomePage() {
         <div className="home-page">
             <Landing
                 imgFileName="patrick-perkins-3wylDrjxH-E-unsplash.jpg"
-                title="Some Cheesy Slogan01 廣告01放這"
+                title="Your Dream Place Just One Click Away"
             >
                 <SearchBar />
             </Landing>

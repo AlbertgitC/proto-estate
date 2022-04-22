@@ -12,7 +12,7 @@ function ListingRentalLanding() {
         <div>
             <Landing
                 imgFileName="jarek-ceborski-jn7uVeCdf6U-unsplash.jpg"
-                title="Promo for Listing Rental Here"
+                title="List Your Rentals Here"
                 content="馬推型美外心果四制也造論期馬、業精的人夜常如，心一媽；提變人合包目者取士書太，故只區車課驗。"
             >
                 <button type="button" className="promo__button">
