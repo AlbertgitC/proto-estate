@@ -70,3 +70,42 @@ export const onDeleteRentalListing = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser {
+    onCreateUser {
+      id
+      email
+      phoneNumber
+      name
+      savedFilter
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser {
+    onUpdateUser {
+      id
+      email
+      phoneNumber
+      name
+      savedFilter
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser {
+    onDeleteUser {
+      id
+      email
+      phoneNumber
+      name
+      savedFilter
+      createdAt
+      updatedAt
+    }
+  }
+`;

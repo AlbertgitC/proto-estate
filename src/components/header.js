@@ -119,7 +119,7 @@ function Header() {
                 </ul>
                 <div className={`nav__user-options ${displayUser}`}>
                     <p onMouseEnter={() => { setOptionState("nav__user-wrapper--show") }}>
-                        {user ? user.attributes.name : ""}
+                        {user ? user.name : ""}
                     </p>
                     <div 
                         className={`nav__user-wrapper ${optionState}`} 

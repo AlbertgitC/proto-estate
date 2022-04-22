@@ -4,7 +4,7 @@
     }
 
     .listing-item--selected {
-        outline: 8px solid var(--brand-green-color);
+        box-shadow: 0 0 0 7px var(--brand-green-color);
     }
 
     .listing-item__image-wrapper {
@@ -44,4 +44,3 @@
         left: 3%;
     }
 }
-
